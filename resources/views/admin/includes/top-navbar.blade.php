@@ -138,14 +138,20 @@
                                 Faq
                             </a>
                         </li>
-                        <li><a rel="nofollow" href="pages-login.html" class="dropdown-item logout text-center"><i
-                                    class="ti-power-off"></i></a></li>
+                        <li>
+                            <a rel="nofollow" href="{{ route('logout') }}"
+                                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="dropdown-item logout text-center"><i class="ti-power-off"></i>
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST">
+                                @csrf
+                            </form>
+                        </li>
                     </ul>
                 </li>
                 <!-- End User -->
                 <!-- Begin Quick Actions -->
-                <li class="nav-item"><a href="#off-canvas" class="open-sidebar"><i class="la la-ellipsis-h"></i></a>
-                </li>
+                {{-- <li class="nav-item"><a href="#off-canvas" class="open-sidebar"><i class="la la-ellipsis-h"></i></a>
+                </li> --}}
                 <!-- End Quick Actions -->
             </ul>
             <!-- End Navbar Menu -->

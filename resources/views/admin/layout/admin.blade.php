@@ -9,7 +9,7 @@
                     @yield('content')
                     <!-- End Page Footer -->
                     <a href="#" class="go-top"><i class="la la-arrow-up"></i></a>
-@include('admin.includes.offcanvas')
+{{-- @include('admin.includes.offcanvas') --}}
                 </div>
                 <!-- End Content -->
             </div>
