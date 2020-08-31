@@ -618,57 +618,57 @@ input {
 }
 
 .elisyam-bg.background-01 {
-    background: url(../../../../assets/img/background/01.jpg) no-repeat;
+    background: url(../../../adimg/bg-login.jpg) no-repeat;
     background-size: cover
 }
 
 .elisyam-bg.background-02 {
-    background: url(../../../../assets/img/background/02.jpg) no-repeat;
+    background: url(../../../adimg/bg-login.jpg) no-repeat;
     background-size: cover
 }
 
 .elisyam-bg.background-03 {
-    background: url(../../../../assets/img/background/03.jpg) no-repeat;
+    background: url(../../../adimg/bg-login.jpg) no-repeat;
     background-size: cover
 }
 
 .elisyam-bg.background-04 {
-    background: url(../../../../assets/img/background/04.jpg) no-repeat;
+    background: url(../../../adimg/bg-login.jpg) no-repeat;
     background-size: cover
 }
 
 .elisyam-bg.background-05 {
-    background: url(../../../../assets/img/background/05.jpg) no-repeat;
+    background: url(../../../adimg/01.jpg) no-repeat;
     background-size: cover
 }
 
 .elisyam-bg.background-06 {
-    background: url(../../../../assets/img/background/06.jpg) no-repeat;
+    background: url(../../../adimg/01.jpg) no-repeat;
     background-size: cover
 }
 
 .bg-fixed-01 {
-    background: linear-gradient(135deg, rgba(46, 52, 81, .4) 0%, rgba(205, 95, 109, .95) 100%), url(../../../../assets/img/background/01.jpg) no-repeat center center
+    background: linear-gradient(135deg, rgba(46, 52, 81, .4) 0%, rgba(205, 95, 109, .95) 100%), url(../../../adimg/background/01.jpg) no-repeat center center
 }
 
 .bg-fixed-02 {
-    background: linear-gradient(135deg, rgba(46, 52, 81, .4) 0%, rgba(205, 95, 109, .95) 100%), url(../../../../assets/img/background/02.jpg) no-repeat center center
+    background: linear-gradient(135deg, rgba(46, 52, 81, .4) 0%, rgba(205, 95, 109, .95) 100%), url(../../../adimg/background/02.jpg) no-repeat center center
 }
 
 .bg-fixed-03 {
-    background: linear-gradient(135deg, rgba(255, 195, 113, .4) 0%, rgba(205, 95, 109, .95) 100%), url(../../../../assets/img/background/03.jpg) no-repeat center center
+    background: linear-gradient(135deg, rgba(255, 195, 113, .4) 0%, rgba(205, 95, 109, .95) 100%), url(../../../adimg/background/03.jpg) no-repeat center center
 }
 
 .bg-fixed-04 {
-    background: linear-gradient(135deg, rgba(46, 52, 81, .5) 0%, rgba(46, 52, 81, .95) 100%), url(../../../../assets/img/background/04.jpg) no-repeat center center
+    background: linear-gradient(135deg, rgba(46, 52, 81, .5) 0%, rgba(46, 52, 81, .95) 100%), url(../../../adimg/background/04.jpg) no-repeat center center
 }
 
 .bg-fixed-05 {
-    background: linear-gradient(135deg, rgba(0, 201, 255, .4) 0%, rgba(146, 254, 157, .95) 100%), url(../../../../assets/img/background/05.jpg) no-repeat center center
+    background: linear-gradient(135deg, rgba(0, 201, 255, .4) 0%, rgba(146, 254, 157, .95) 100%), url(../../../adimg/background/05.jpg) no-repeat center center
 }
 
 .bg-fixed-06 {
-    background: linear-gradient(135deg, rgba(66, 39, 90, .4) 0%, rgba(115, 75, 109, .95) 100%), url(../../../../assets/img/background/06.jpg) no-repeat center center
+    background: linear-gradient(135deg, rgba(66, 39, 90, .4) 0%, rgba(115, 75, 109, .95) 100%), url(../../../adimg/background/06.jpg) no-repeat center center
 }
 
 .bg-fixed-01,
@@ -5710,7 +5710,7 @@ section.forms form small {
 
 .db-social .jumbotron {
     margin: 0;
-    background: url(../../../../assets/img/background/05.jpg);
+    background: url(../../../adimg/background/05.jpg);
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
@@ -6355,7 +6355,7 @@ section.forms form small {
 
 .db-smarthome.page {
     background-color: #252946;
-    background: url(../../../../assets/img/background/db-smarthome-dark.jpg);
+    background: url(../../../adimg/background/db-smarthome-dark.jpg);
     background-position: bottom right;
     background-attachment: fixed;
     background-repeat: no-repeat;
@@ -8316,7 +8316,7 @@ nav.navbar .user-size.dropdown-menu a.logout:hover {
 }
 
 .widget-03.blog-image {
-    background: url(../../../../assets/img/blog/blog-01.jpg);
+    background: url(../../../adimg/blog/blog-01.jpg);
     display: block;
     background-position: 50% 0%;
     background-size: cover
@@ -9897,7 +9897,7 @@ nav.navbar .user-size.dropdown-menu a.logout:hover {
 }
 
 .widget-24.bg-image {
-    background: url(../../../../assets/img/background/08.jpg);
+    background: url(../../../adimg/background/08.jpg);
     display: block;
     background-position: 50% 0%;
     background-size: cover
@@ -10311,7 +10311,7 @@ nav.navbar .user-size.dropdown-menu a.logout:hover {
 }
 
 .widget-30.bg-image {
-    background: url(../../../../assets/img/smarthome/06.jpg);
+    background: url(../../../adimg/smarthome/06.jpg);
     display: block;
     background-position: 50% 0%;
     background-size: cover
@@ -10481,7 +10481,7 @@ nav.navbar .user-size.dropdown-menu a.logout:hover {
 }
 
 .widget-32.bg-image {
-    background: url(../../../../assets/img/background/06.jpg);
+    background: url(../../../adimg/background/06.jpg);
     display: block;
     background-position: 50% 0%;
     background-size: cover
@@ -13406,7 +13406,7 @@ a.fc-more:hover {
 }
 
 .bg-error-01 {
-    background: #675e8e url(../../../../assets/img/clouds.png) no-repeat bottom center
+    background: #675e8e url(../../../adimg/clouds.png) no-repeat bottom center
 }
 
 .error-01 .error-container {
@@ -13439,7 +13439,7 @@ a.fc-more:hover {
 }
 
 .bg-error-02 {
-    background: url(../../../../assets/img/background/07.jpg) no-repeat center center;
+    background: url(../../../adimg/background/07.jpg) no-repeat center center;
     background-size: cover
 }
 
@@ -15154,57 +15154,57 @@ input {
 }
 
 .elisyam-bg.background-01 {
-    background: url(../../../../assets/img/background/01.jpg) no-repeat;
+    background: url(../../../adimg/background/01.jpg) no-repeat;
     background-size: cover
 }
 
 .elisyam-bg.background-02 {
-    background: url(../../../../assets/img/background/02.jpg) no-repeat;
+    background: url(../../../adimg/background/02.jpg) no-repeat;
     background-size: cover
 }
 
 .elisyam-bg.background-03 {
-    background: url(../../../../assets/img/background/03.jpg) no-repeat;
+    background: url(../../../adimg/background/03.jpg) no-repeat;
     background-size: cover
 }
 
 .elisyam-bg.background-04 {
-    background: url(../../../../assets/img/background/04.jpg) no-repeat;
+    background: url(../../../adimg/background/04.jpg) no-repeat;
     background-size: cover
 }
 
 .elisyam-bg.background-05 {
-    background: url(../../../../assets/img/background/05.jpg) no-repeat;
+    background: url(../../../adimg/background/05.jpg) no-repeat;
     background-size: cover
 }
 
 .elisyam-bg.background-06 {
-    background: url(../../../../assets/img/background/06.jpg) no-repeat;
+    background: url(../../../adimg/background/06.jpg) no-repeat;
     background-size: cover
 }
 
 .bg-fixed-01 {
-    background: linear-gradient(135deg, rgba(46, 52, 81, .4) 0%, rgba(205, 95, 109, .95) 100%), url(../../../../assets/img/background/01.jpg) no-repeat center center
+    background: linear-gradient(135deg, rgba(46, 52, 81, .4) 0%, rgba(205, 95, 109, .95) 100%), url(../../../adimg/background/01.jpg) no-repeat center center
 }
 
 .bg-fixed-02 {
-    background: linear-gradient(135deg, rgba(46, 52, 81, .4) 0%, rgba(205, 95, 109, .95) 100%), url(../../../../assets/img/background/02.jpg) no-repeat center center
+    background: linear-gradient(135deg, rgba(46, 52, 81, .4) 0%, rgba(205, 95, 109, .95) 100%), url(../../../adimg/background/02.jpg) no-repeat center center
 }
 
 .bg-fixed-03 {
-    background: linear-gradient(135deg, rgba(255, 195, 113, .4) 0%, rgba(205, 95, 109, .95) 100%), url(../../../../assets/img/background/03.jpg) no-repeat center center
+    background: linear-gradient(135deg, rgba(255, 195, 113, .4) 0%, rgba(205, 95, 109, .95) 100%), url(../../../adimg/background/03.jpg) no-repeat center center
 }
 
 .bg-fixed-04 {
-    background: linear-gradient(135deg, rgba(46, 52, 81, .5) 0%, rgba(46, 52, 81, .95) 100%), url(../../../../assets/img/background/04.jpg) no-repeat center center
+    background: linear-gradient(135deg, rgba(46, 52, 81, .5) 0%, rgba(46, 52, 81, .95) 100%), url(../../../adimg/background/04.jpg) no-repeat center center
 }
 
 .bg-fixed-05 {
-    background: linear-gradient(135deg, rgba(0, 201, 255, .4) 0%, rgba(146, 254, 157, .95) 100%), url(../../../../assets/img/background/05.jpg) no-repeat center center
+    background: linear-gradient(135deg, rgba(0, 201, 255, .4) 0%, rgba(146, 254, 157, .95) 100%), url(../../../adimg/background/05.jpg) no-repeat center center
 }
 
 .bg-fixed-06 {
-    background: linear-gradient(135deg, rgba(66, 39, 90, .4) 0%, rgba(115, 75, 109, .95) 100%), url(../../../../assets/img/background/06.jpg) no-repeat center center
+    background: linear-gradient(135deg, rgba(66, 39, 90, .4) 0%, rgba(115, 75, 109, .95) 100%), url(../../../adimg/background/06.jpg) no-repeat center center
 }
 
 .bg-fixed-01,
@@ -20246,7 +20246,7 @@ section.forms form small {
 
 .db-social .jumbotron {
     margin: 0;
-    background: url(../../../../assets/img/background/05.jpg);
+    background: url(../../../adimg/background/05.jpg);
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
@@ -20891,7 +20891,7 @@ section.forms form small {
 
 .db-smarthome.page {
     background-color: #252946;
-    background: url(../../../../assets/img/background/db-smarthome-dark.jpg);
+    background: url(../../../adimg/background/db-smarthome-dark.jpg);
     background-position: bottom right;
     background-attachment: fixed;
     background-repeat: no-repeat;
@@ -22852,7 +22852,7 @@ nav.navbar .user-size.dropdown-menu a.logout:hover {
 }
 
 .widget-03.blog-image {
-    background: url(../../../../assets/img/blog/blog-01.jpg);
+    background: url(../../../adimg/blog/blog-01.jpg);
     display: block;
     background-position: 50% 0%;
     background-size: cover
@@ -24433,7 +24433,7 @@ nav.navbar .user-size.dropdown-menu a.logout:hover {
 }
 
 .widget-24.bg-image {
-    background: url(../../../../assets/img/background/08.jpg);
+    background: url(../../../adimg/background/08.jpg);
     display: block;
     background-position: 50% 0%;
     background-size: cover
@@ -24847,7 +24847,7 @@ nav.navbar .user-size.dropdown-menu a.logout:hover {
 }
 
 .widget-30.bg-image {
-    background: url(../../../../assets/img/smarthome/06.jpg);
+    background: url(../../../adimg/smarthome/06.jpg);
     display: block;
     background-position: 50% 0%;
     background-size: cover
@@ -25017,7 +25017,7 @@ nav.navbar .user-size.dropdown-menu a.logout:hover {
 }
 
 .widget-32.bg-image {
-    background: url(../../../../assets/img/background/06.jpg);
+    background: url(../../../adimg/background/06.jpg);
     display: block;
     background-position: 50% 0%;
     background-size: cover
@@ -27942,7 +27942,7 @@ a.fc-more:hover {
 }
 
 .bg-error-01 {
-    background: #675e8e url(../../../../assets/img/clouds.png) no-repeat bottom center
+    background: #675e8e url(../../../adimg/clouds.png) no-repeat bottom center
 }
 
 .error-01 .error-container {
@@ -27975,7 +27975,7 @@ a.fc-more:hover {
 }
 
 .bg-error-02 {
-    background: url(../../../../assets/img/background/07.jpg) no-repeat center center;
+    background: url(../../../adimg/background/07.jpg) no-repeat center center;
     background-size: cover
 }
 
@@ -29690,57 +29690,57 @@ input {
 }
 
 .elisyam-bg.background-01 {
-    background: url(../../../../assets/img/background/01.jpg) no-repeat;
+    background: url(../../../adimg/background/01.jpg) no-repeat;
     background-size: cover
 }
 
 .elisyam-bg.background-02 {
-    background: url(../../../../assets/img/background/02.jpg) no-repeat;
+    background: url(../../../adimg/background/02.jpg) no-repeat;
     background-size: cover
 }
 
 .elisyam-bg.background-03 {
-    background: url(../../../../assets/img/background/03.jpg) no-repeat;
+    background: url(../../../adimg/background/03.jpg) no-repeat;
     background-size: cover
 }
 
 .elisyam-bg.background-04 {
-    background: url(../../../../assets/img/background/04.jpg) no-repeat;
+    background: url(../../../adimg/background/04.jpg) no-repeat;
     background-size: cover
 }
 
 .elisyam-bg.background-05 {
-    background: url(../../../../assets/img/background/05.jpg) no-repeat;
+    background: url(../../../adimg/background/05.jpg) no-repeat;
     background-size: cover
 }
 
 .elisyam-bg.background-06 {
-    background: url(../../../../assets/img/background/06.jpg) no-repeat;
+    background: url(../../../adimg/background/06.jpg) no-repeat;
     background-size: cover
 }
 
 .bg-fixed-01 {
-    background: linear-gradient(135deg, rgba(46, 52, 81, .4) 0%, rgba(205, 95, 109, .95) 100%), url(../../../../assets/img/background/01.jpg) no-repeat center center
+    background: linear-gradient(135deg, rgba(46, 52, 81, .4) 0%, rgba(205, 95, 109, .95) 100%), url(../../../adimg/background/01.jpg) no-repeat center center
 }
 
 .bg-fixed-02 {
-    background: linear-gradient(135deg, rgba(46, 52, 81, .4) 0%, rgba(205, 95, 109, .95) 100%), url(../../../../assets/img/background/02.jpg) no-repeat center center
+    background: linear-gradient(135deg, rgba(46, 52, 81, .4) 0%, rgba(205, 95, 109, .95) 100%), url(../../../adimg/background/02.jpg) no-repeat center center
 }
 
 .bg-fixed-03 {
-    background: linear-gradient(135deg, rgba(255, 195, 113, .4) 0%, rgba(205, 95, 109, .95) 100%), url(../../../../assets/img/background/03.jpg) no-repeat center center
+    background: linear-gradient(135deg, rgba(255, 195, 113, .4) 0%, rgba(205, 95, 109, .95) 100%), url(../../../adimg/background/03.jpg) no-repeat center center
 }
 
 .bg-fixed-04 {
-    background: linear-gradient(135deg, rgba(46, 52, 81, .5) 0%, rgba(46, 52, 81, .95) 100%), url(../../../../assets/img/background/04.jpg) no-repeat center center
+    background: linear-gradient(135deg, rgba(46, 52, 81, .5) 0%, rgba(46, 52, 81, .95) 100%), url(../../../adimg/background/04.jpg) no-repeat center center
 }
 
 .bg-fixed-05 {
-    background: linear-gradient(135deg, rgba(0, 201, 255, .4) 0%, rgba(146, 254, 157, .95) 100%), url(../../../../assets/img/background/05.jpg) no-repeat center center
+    background: linear-gradient(135deg, rgba(0, 201, 255, .4) 0%, rgba(146, 254, 157, .95) 100%), url(../../../adimg/background/05.jpg) no-repeat center center
 }
 
 .bg-fixed-06 {
-    background: linear-gradient(135deg, rgba(66, 39, 90, .4) 0%, rgba(115, 75, 109, .95) 100%), url(../../../../assets/img/background/06.jpg) no-repeat center center
+    background: linear-gradient(135deg, rgba(66, 39, 90, .4) 0%, rgba(115, 75, 109, .95) 100%), url(../../../adimg/background/06.jpg) no-repeat center center
 }
 
 .bg-fixed-01,
@@ -34782,7 +34782,7 @@ section.forms form small {
 
 .db-social .jumbotron {
     margin: 0;
-    background: url(../../../../assets/img/background/05.jpg);
+    background: url(../../../adimg/background/05.jpg);
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
@@ -35427,7 +35427,7 @@ section.forms form small {
 
 .db-smarthome.page {
     background-color: #252946;
-    background: url(../../../../assets/img/background/db-smarthome-dark.jpg);
+    background: url(../../../adimg/background/db-smarthome-dark.jpg);
     background-position: bottom right;
     background-attachment: fixed;
     background-repeat: no-repeat;
@@ -37388,7 +37388,7 @@ nav.navbar .user-size.dropdown-menu a.logout:hover {
 }
 
 .widget-03.blog-image {
-    background: url(../../../../assets/img/blog/blog-01.jpg);
+    background: url(../../../adimg/blog/blog-01.jpg);
     display: block;
     background-position: 50% 0%;
     background-size: cover
@@ -38969,7 +38969,7 @@ nav.navbar .user-size.dropdown-menu a.logout:hover {
 }
 
 .widget-24.bg-image {
-    background: url(../../../../assets/img/background/08.jpg);
+    background: url(../../../adimg/background/08.jpg);
     display: block;
     background-position: 50% 0%;
     background-size: cover
@@ -39383,7 +39383,7 @@ nav.navbar .user-size.dropdown-menu a.logout:hover {
 }
 
 .widget-30.bg-image {
-    background: url(../../../../assets/img/smarthome/06.jpg);
+    background: url(../../../adimg/smarthome/06.jpg);
     display: block;
     background-position: 50% 0%;
     background-size: cover
@@ -39553,7 +39553,7 @@ nav.navbar .user-size.dropdown-menu a.logout:hover {
 }
 
 .widget-32.bg-image {
-    background: url(../../../../assets/img/background/06.jpg);
+    background: url(../../../adimg/background/06.jpg);
     display: block;
     background-position: 50% 0%;
     background-size: cover
@@ -42478,7 +42478,7 @@ a.fc-more:hover {
 }
 
 .bg-error-01 {
-    background: #675e8e url(../../../../assets/img/clouds.png) no-repeat bottom center
+    background: #675e8e url(../../../adimg/clouds.png) no-repeat bottom center
 }
 
 .error-01 .error-container {
@@ -42511,7 +42511,7 @@ a.fc-more:hover {
 }
 
 .bg-error-02 {
-    background: url(../../../../assets/img/background/07.jpg) no-repeat center center;
+    background: url(../../../adimg/background/07.jpg) no-repeat center center;
     background-size: cover
 }
 
