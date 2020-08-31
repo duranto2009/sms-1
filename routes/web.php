@@ -18,7 +18,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
+Auth::routes(['register' => false]);
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::view('admin','admin.partials.dashboard');
+Route::view('admin','admin.partials.dashboard')->name('admin');

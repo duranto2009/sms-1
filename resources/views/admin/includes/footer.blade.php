@@ -14,6 +14,7 @@
 <!-- Begin Page Snippets -->
 <script src="{{asset('admin/js/dashboard/db-default-dark.js')}}"></script>
 <!-- End Page Snippets -->
+@include('sweetalert::alert')
 </body>
 
 </html>
