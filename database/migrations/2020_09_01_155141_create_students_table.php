@@ -19,7 +19,7 @@ class CreateStudentsTable extends Migration
             $table->string('email');
             $table->string('password');
             $table->foreignId('guardian_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignId('classtable_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('class_table_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->string('section');
             $table->date('dob')->nullable();
             $table->string('gender');
