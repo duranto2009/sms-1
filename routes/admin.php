@@ -5,4 +5,6 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::view('widget','admin.partials.widget');
-Route::view('admin', 'admin.partials.dashboard')->name('admin');
+Route::middleware(['role:admin','auth'])->prefix('dashboard')->group(function () {
+    Route::view('index', 'admin.partials.dashboard')->name('admin');
+});
