@@ -13,8 +13,33 @@
 <!-- End Page Vendor Js -->
 <!-- Begin Page Snippets -->
 <script src="{{asset('admin/js/dashboard/db-default-dark.js')}}"></script>
+<script src="{{asset('admin/vendors/js/datatables/datatables.min.js')}}"></script>
+<script src="{{asset('js/toast.js')}}"></script>
 <!-- End Page Snippets -->
 @include('sweetalert::alert')
+@yield('js')
+<script>
+function toast(status,header,msg) {
+    Command: toastr[status](header, msg)
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "500",
+        "hideDuration": "1000",
+        "timeOut": "2000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+}
+</script>
 </body>
 
 </html>

@@ -81,11 +81,11 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    {{config('app.name')}}
+                    {{config('app.name','LARAVEL')}}
                 </div>
 
                 <div class="links">
-                    <a href="https://laravel.com/docs">Docs</a>
+                    <a href="">Docs</a>
                 </div>
             </div>
         </div>
