@@ -26,7 +26,7 @@
         <link rel="stylesheet" href="{{asset('admin/vendors/css/base/elisyam-1.5-dark.min.css')}}">
         <link rel="stylesheet" href="{{asset('admin/css/owl-carousel/owl.carousel.min.css')}}">
         <link rel="stylesheet" href="{{asset('admin/css/owl-carousel/owl.theme.min.css')}}">
-        <link rel="stylesheet" href="{{asset('admin/css/datatables/datatables.min.css')}}">
+        {{-- <link rel="stylesheet" href="{{asset('admin/css/datatables/datatables.min.css')}}"> --}}
         <link rel="stylesheet" href="{{asset('css/toast.css')}}">
         <!-- Tweaks for older IEs-->
         <!--[if lt IE 9]>

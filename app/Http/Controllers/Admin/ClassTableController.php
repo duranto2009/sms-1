@@ -70,9 +70,10 @@ class ClassTableController extends Controller
             $html.='</span>';
             $html.='</td>';
             $html.='<td class="td-actions">';
-            $html.='<a href="#" data-id='.$cls->id.'><i class="la la-arrows edit" title="Update Section"></i></a>';
-            $html.='<a href="#" data-id='.$cls->id.'><i class="la la-edit edit" title="Edit Class"></i></a>';
-            $html.='<a href="#" data-id='.$cls->id.'><i class="la la-close delete" title="Delete Class"></i></a>';
+            $editRoute = route("class.edit",$cls->id);
+            $deleteRoute = route("class.destroy",$cls->id);
+            $html.='<a href="javascript:void(0);" onclick="editModal('. "'{$editRoute}'".','."'Update Section'" .')"><i data-id='.$cls->id.' id="edit" class="la la-edit edit" title="Edit Class"></i></a>';
+            $html.='<a href="javascript:void(0);" onclick="deleteModal('. "'{$deleteRoute}'".','."'Delete Section'" .')"><i data-id='.$cls->id.' id="delete" class="la la-close delete" title="Delete Class"></i></a>';
             $html.='</td>';
             $html.='</tr>';
         }
@@ -82,22 +83,26 @@ class ClassTableController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\ClassTable  $classTable
+     * @param  \App\Models\ClassTable  $class
      * @return \Illuminate\Http\Response
      */
-    public function edit(ClassTable $classTable)
+    public function edit(ClassTable $class)
     {
-        //
+        $section = '';
+        foreach (json_decode($class->section) as $i => $sec) {
+            $section .= '<div class="form-group row" id="row'. ($i+1) .'"><label class="col-md-3 my-2 col-form-label text-md-right">Section '. $sec .'</label><div class="col-md-6 my-2"><input type="text" class="form-control" name="section[]" value="'. $sec .'" required autocomplete="off"></div><div class="col-md-2 my-2"></div></div>';
+        }
+        return json_encode(['data'=>$class,'status'=>200,'section'=>$section]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ClassTable  $classTable
+     * @param  \App\Models\ClassTable  $class
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ClassTable $classTable)
+    public function update(Request $request, ClassTable $class)
     {
         //
     }
@@ -105,11 +110,16 @@ class ClassTableController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\ClassTable  $classTable
+     * @param  \App\Models\ClassTable  $class
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ClassTable $classTable)
+    public function destroy(ClassTable $class)
     {
-        //
+        try {
+            $class->delete();
+            return json_encode(['status'=>200,'message'=>'Class Deleted Successful!']);
+        } catch (\Exception $e) {
+            return json_encode(['status'=>500,'message'=>$e->getMessage()]);
+        }
     }
 }

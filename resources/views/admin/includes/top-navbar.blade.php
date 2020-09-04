@@ -45,7 +45,7 @@
                             <div class="notifications-header">
                                 <div class="title">Notifications (4)</div>
                                 <div class="notifications-overlay"></div>
-                                <img src="{{asset('admin/img/notifications/01.jpg')}}" alt="..." class="img-fluid">
+                                <img src="{{asset('admin/img/01.jpg')}}" alt="..." class="img-fluid">
                             </div>
                         </li>
                         <li>

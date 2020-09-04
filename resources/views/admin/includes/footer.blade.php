@@ -13,12 +13,34 @@
 <!-- End Page Vendor Js -->
 <!-- Begin Page Snippets -->
 <script src="{{asset('admin/js/dashboard/db-default-dark.js')}}"></script>
-<script src="{{asset('admin/vendors/js/datatables/datatables.min.js')}}"></script>
+{{-- <script src="{{asset('admin/vendors/js/datatables/datatables.min.js')}}"></script> --}}
 <script src="{{asset('js/toast.js')}}"></script>
 <!-- End Page Snippets -->
 @include('sweetalert::alert')
 @yield('js')
 <script>
+// Delete Data Modal Script
+$("#delete-form").on('submit',e=>{
+    e.preventDefault();
+    const data = $("#delete-form").serialize();
+    const url = $("#delete-form").attr('action');
+    const method = $("#delete-form").attr('method');
+    $.ajax({
+        url:url,
+        method:method,
+        data:data,
+        success:res=>{
+            res = $.parseJSON(res);
+            if(res.status == 200){
+                toast('success',res.message);
+                $("#delete-form .close").click();
+                readData();
+            }else{
+                toast('error',res.message);
+            }
+        }
+    });
+});
 function toast(status,header,msg) {
     Command: toastr[status](header, msg)
     toastr.options = {

@@ -47,7 +47,6 @@
                                         </span>
                                     </td>
                                     <td class="td-actions">
-                                        <a href="#"><i class="la la-arrows edit" title="Update Section"></i></a>
                                         <a href="#"><i class="la la-edit edit" title="Edit Class"></i></a>
                                         <a href="#"><i class="la la-close delete" title="Delete Class"></i></a>
                                     </td>
@@ -92,7 +91,7 @@
                         <div class="form-group row">
                             <label for="section" class="col-md-3 col-form-label text-md-right">{{ __('Section') }}</label>
                             <div class="col-md-6">
-                                <input id="section" type="text" class="form-control @error('section') is-invalid @enderror" name="section[]" value="{{ old('section') }}" required autocomplete="off" autofocus>
+                                <input id="section" type="text" class="form-control @error('section') is-invalid @enderror" name="section[]" value="{{ old('section') }}" required autocomplete="off" autofocus >
                                 @error('section')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -100,7 +99,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-2">
-                                <button type="button" id="addSection" class="btn btn-info"> <i class="la la-plus"></i></button>
+                                <button type="button" id="addSection" class="btn btn-outline-info"> <i class="la la-plus"></i></button>
                             </div>
                         </div>
                         <div id="dynamic_field"></div>
@@ -113,72 +112,115 @@
             </form>
         </div>
     </div>
+    <!--Update Class Modal -->
+    <div class="modal modal-top fade" id="update" tabindex="-1" role="dialog" aria-labelledby="update"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form action="" id="update-form" method="POST">
+                @csrf
+                @method('put')
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="update">Update Section</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="updateInput"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
+<!-- End Container -->
+@endsection
 @section('js')
 <script>
-    $(document).ready( function () {
-        readData();
-        $('#dbTable').DataTable();
-        $("#addClassForm").on('submit',(e)=>{
-            e.preventDefault();
-            const data = $("#addClassForm").serialize();
-            const url = $("#addClassForm").attr('action');
-            const method = $("#addClassForm").attr('method');
-            $.ajax({
-                url:url,
-                method:method,
-                data:data,
-                success: res=>{
-                    res = $.parseJSON(res);
-                    if(res.status == 200){
-                        $("form").trigger("reset");
-                        toast('success','Class Create Successful!');
-                        $("#addClass .close").click();
-                        readData();
-                    }else{
-                        toast('error',res.error);
-                    }
-                },
-                error: err=>{
-                    const errors = err.responseJSON;
-                    if($.isEmptyObject(errors) == false){
-                        $.each(errors.errors,function(key,value){
-                            toast('error',value);
-                        });
-                    }
-                }
-            });
-        });
-        function readData(){
-            const url = '{{route("class.readData")}}';
-            $.ajax({
-                url:url,
-                method:'get',
-                success: res=>{
-                    res = $.parseJSON(res);
-                    if(res.status == 200){
-                        $(".table-content").html(res.data);
-                    }else{
-                        toast('error',res.error);
-                    }
-                }
-            });
+readData();
+// $('#dbTable').DataTable();
+$("#addClassForm").on('submit',(e)=>{
+    e.preventDefault();
+    const data = $("#addClassForm").serialize();
+    const url = $("#addClassForm").attr('action');
+    const method = $("#addClassForm").attr('method');
+    $.ajax({
+        url:url,
+        method:method,
+        data:data,
+        success: res=>{
+            res = $.parseJSON(res);
+            if(res.status == 200){
+                $("form").trigger("reset");
+                toast('success','Class Create Successful!');
+                $("#addClass .close").click();
+                readData();
+            }else{
+                toast('error',res.error);
+            }
+        },
+        error: err=>{
+            const errors = err.responseJSON;
+            if($.isEmptyObject(errors) == false){
+                $.each(errors.errors,function(key,value){
+                    toast('error',value);
+                });
+            }
         }
-        var i = 1;
-
-        $('#addSection').on('click',(e)=> {
-            var section = $("#section").val();
-            i++;
-            // $('#dynamic_field').append('<tr id="row' + i + '" class="dynamic-added"><td><input type="text" name="section[]" placeholder="Enter section" class="form-control name_list"value="' + section + '" /></td><td><button type="button" name="remove" id="' + i + '" class="btn btn-danger btn_remove">X</button></td></tr>');
-            $('#dynamic_field').append('<div class="form-group row" id="row' + i + '"><label class="col-md-3 my-2 col-form-label text-md-right">Section</label><div class="col-md-6 my-2"><input type="text" class="form-control" name="section[]" value="' + section + '" required autocomplete="off" autofocus></div><div class="col-md-2 my-2"><button type="button" name="remove" id="' + i + '" name="add" id="add" class="btn btn-danger btn_remove">X</button></div></div>');
-        });
-
-        $(document).on('click', '.btn_remove', function() {
-        var button_id = $(this).attr("id");
-        $('#row' + button_id + '').remove();
-        });
     });
+});
+function readData(){
+    const url = '{{route("class.readData")}}';
+    $.ajax({
+        url:url,
+        method:'get',
+        success: res=>{
+            res = $.parseJSON(res);
+            if(res.status == 200){
+                $(".table-content").html(res.data);
+            }else{
+                toast('error',res.error);
+            }
+        }
+    });
+}
+var i = 1;
+
+$('#addSection').on('click',(e)=> {
+    var section = $("#section").val();
+    i++;
+    $('#dynamic_field').append('<div class="form-group row" id="row' + i + '"><label class="col-md-3 my-2 col-form-label text-md-right">Section</label><div class="col-md-6 my-2"><input type="text" class="form-control" name="section[]" value="' + section + '" required autocomplete="off" autofocus></div><div class="col-md-2 my-2"><button type="button" name="remove" id="' + i + '" name="add" id="add" class="btn btn-outline-danger btn_remove">X</button></div></div>');
+});
+
+$(document).on('click', '.btn_remove', function() {
+    var button_id = $(this).attr("id");
+    $('#row' + button_id + '').remove();
+});
+
+function editModal(url,header){
+    $('#update').modal('show');
+        $.ajax({
+        url: url,
+        method: 'get',
+        success:res=>{
+            res = $.parseJSON(res);
+            $('#update #updateInput').html(res.section);
+            $('#update .modal-title').html(header);
+        }
+    });
+}
+function deleteModal(url,header){
+    $('#delete-modal').modal('show');
+    $('#delete-form').attr('action',url)
+}
+
+
+
+
 </script>
-@endsection
-<!-- End Container -->
 @endsection

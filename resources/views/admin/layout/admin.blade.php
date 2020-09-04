@@ -7,6 +7,7 @@
                 @include('admin.includes.left-sidebar')
                 <div class="content-inner">
                     @yield('content')
+                    @include('admin.layout.delete')
                     <!-- End Page Footer -->
                     <a href="#" class="go-top"><i class="la la-arrow-up"></i></a>
 {{-- @include('admin.includes.offcanvas') --}}
@@ -16,7 +17,7 @@
             <!-- End Page Content -->
         </div>
         <!-- Begin Success Modal -->
-        <div id="delay-modal" class="modal fade">
+        {{-- <div id="delay-modal" class="modal fade">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-body text-center">
@@ -32,10 +33,10 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <!-- End Success Modal -->
         <!-- Begin Modal -->
-        <div id="modal-view-event" class="modal modal-top fade calendar-modal">
+        {{-- <div id="modal-view-event" class="modal modal-top fade calendar-modal">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -60,6 +61,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <!-- End Modal -->
+
 @include('admin.includes.footer')
