@@ -10,5 +10,6 @@ Route::middleware(['role:admin','auth'])->prefix('dashboard')->namespace('Admin'
     Route::resource('class', 'ClassTableController');
     Route::get('read-data', 'ClassTableController@readData')->name('class.readData');
     Route::resource('guardian', 'GuardianController');
+    Route::get('read-guardian', 'GuardianController@readData')->name('guardian.readData');
     Route::resource('student', 'StudentController');
 });

@@ -29,6 +29,14 @@ function editModal(url,header){
             $('#update-form').attr('action',res.route);
             $('#update #updateInput').html(res.section);
             $('#update .modal-title').html(header);
+        },
+        error: err=>{
+            const errors = err.responseJSON;
+            if($.isEmptyObject(errors) == false){
+                $.each(errors.errors,function(key,value){
+                    toast('error',value);
+                });
+            }
         }
     });
 }
@@ -49,6 +57,14 @@ $('#update').on('submit',e=>{
                 readData();
             }else{
                 toast('error',res.message);
+            }
+        },
+        error: err=>{
+            const errors = err.responseJSON;
+            if($.isEmptyObject(errors) == false){
+                $.each(errors.errors,function(key,value){
+                    toast('error',value);
+                });
             }
         }
     });

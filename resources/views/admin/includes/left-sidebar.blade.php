@@ -17,7 +17,7 @@
                     <li><a href="">Admission</a></li>
                     <li><a href="">Teacher</a></li>
                     <li><a href="">Teacher Permission</a></li>
-                    <li><a href="">Parent</a></li>
+                    <li><a href="{{route('guardian.index')}}">Parent</a></li>
                     <li><a href="">Accountant</a></li>
                     <li><a href="">Librarian</a></li>
                 </ul>
