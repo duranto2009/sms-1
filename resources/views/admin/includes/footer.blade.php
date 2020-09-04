@@ -26,9 +26,7 @@ function editModal(url,header){
         method: 'get',
         success:res=>{
             res = $.parseJSON(res);
-            let url = '{{route("class.update","manoar")}}';
-            let url2 = url.replace('manoar',res.data['id'])
-            $('#update-form').attr('action',url2);
+            $('#update-form').attr('action',res.route);
             $('#update #updateInput').html(res.section);
             $('#update .modal-title').html(header);
         }

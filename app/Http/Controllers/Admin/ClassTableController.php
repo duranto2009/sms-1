@@ -92,7 +92,8 @@ class ClassTableController extends Controller
         foreach (json_decode($class->section) as $i => $sec) {
             $section .= '<div class="form-group row" id="row'. ($i+1) .'"><label class="col-md-3 my-2 col-form-label text-md-right">Section '. $sec .'</label><div class="col-md-6 my-2"><input type="text" class="form-control" name="section[]" value="'. $sec .'" required autocomplete="off"></div><div class="col-md-2 my-2"></div></div>';
         }
-        return json_encode(['data'=>$class,'status'=>200,'section'=>$section]);
+        $route = route("class.update",$class->id);
+        return json_encode(['data'=>$class,'status'=>200,'section'=>$section,'route'=>$route]);
     }
 
     /**
