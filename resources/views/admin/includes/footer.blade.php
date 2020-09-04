@@ -19,6 +19,47 @@
 @include('sweetalert::alert')
 @yield('js')
 <script>
+function editModal(url,header){
+    $('#update').modal('show');
+    $.ajax({
+        url: url,
+        method: 'get',
+        success:res=>{
+            res = $.parseJSON(res);
+            let url = '{{route("class.update","manoar")}}';
+            let url2 = url.replace('manoar',res.data['id'])
+            $('#update-form').attr('action',url2);
+            $('#update #updateInput').html(res.section);
+            $('#update .modal-title').html(header);
+        }
+    });
+}
+$('#update').on('submit',e=>{
+    e.preventDefault();
+    const data = $("#update-form").serialize();
+    const url = $("#update-form").attr('action');
+    const method = $("#update-form").attr('method');
+    $.ajax({
+        url:url,
+        method:method,
+        data:data,
+        success:res=>{
+            res = $.parseJSON(res);
+            if(res.status == 200){
+                toast('success',res.message);
+                $("#update-form .close").click();
+                readData();
+            }else{
+                toast('error',res.message);
+            }
+        }
+    });
+
+});
+function deleteModal(url,header){
+    $('#delete-modal').modal('show');
+    $('#delete-form').attr('action',url)
+}
 // Delete Data Modal Script
 $("#delete-form").on('submit',e=>{
     e.preventDefault();

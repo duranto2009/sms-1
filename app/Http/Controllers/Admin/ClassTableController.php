@@ -104,7 +104,16 @@ class ClassTableController extends Controller
      */
     public function update(Request $request, ClassTable $class)
     {
-        //
+        $data = $request->validate([
+            'section'=>'required|array'
+        ]);
+        try {
+            $class->update($data);
+            return json_encode(['status'=>200,'message'=>'Class Updated Successful!']);
+        } catch (\Exception $e) {
+            return json_encode(['status'=>500,'message'=>$e->getMessage()]);
+        }
+
     }
 
     /**

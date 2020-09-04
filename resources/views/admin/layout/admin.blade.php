@@ -7,6 +7,7 @@
                 @include('admin.includes.left-sidebar')
                 <div class="content-inner">
                     @yield('content')
+                    @include('admin.layout.update')
                     @include('admin.layout.delete')
                     <!-- End Page Footer -->
                     <a href="#" class="go-top"><i class="la la-arrow-up"></i></a>
