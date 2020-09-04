@@ -138,6 +138,14 @@
                     }else{
                         toast('error',res.error);
                     }
+                },
+                error: err=>{
+                    const errors = err.responseJSON;
+                    if($.isEmptyObject(errors) == false){
+                        $.each(errors.errors,function(key,value){
+                            toast('error',value);
+                        });
+                    }
                 }
             });
         });
