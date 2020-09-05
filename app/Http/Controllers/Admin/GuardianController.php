@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\User;
 use App\Models\Guardian;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -46,10 +47,18 @@ class GuardianController extends Controller
             "blood"    => "required|string",
             "address"  => "required|string"
         ]);
-        $data['password'] = bcrypt($data['password']);
-        $data['email_verified_at'] = now();
-        $data['remember_token'] = Str::random(24);
+        $password = bcrypt($data['password']);
+        $user = [
+            'name'=>$data['name'],
+            'email'=>$data['email'],
+            'password'=>$password,
+            'role'=>'parent',
+            'email_verified_at'=>now(),
+            'remember_token'=>Str::random(64)
+        ];
         try {
+            $user_id = User::create($user);
+            $data['user_id'] = $user_id->id;
             Guardian::create($data);
             return json_encode(['status'=>200,'data'=>$data]);
         } catch (\Exception $e) {
@@ -143,7 +152,13 @@ class GuardianController extends Controller
             "blood"    => "required|string",
             "address"  => "required|string"
         ]);
+        $user = User::find($guardian->user_id);
+        $userData = [
+            'name'=> $data['name'],
+            'email'=> $data['email']
+        ];
         try {
+            $user->update($userData);
             $guardian->update($data);
             return json_encode(['status'=>200,'message'=>'Parent Updated Successful!']);
         } catch (\Exception $e) {

@@ -15,15 +15,13 @@ class CreateGuardiansTable extends Migration
     {
         Schema::create('guardians', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('password');
             $table->string('phone');
             $table->string('gender');
             $table->string('blood');
             $table->text('address');
-            $table->timestamp('email_verified_at')->nullable();
-            $table->rememberToken()->nullable();
             $table->timestamps();
         });
     }

@@ -1,7 +1,7 @@
 <?php
 
 namespace App;
-
+use App\Models\Guardian;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','role',
+        'name', 'email', 'password','role','remember_token','email_verified_at'
     ];
 
     /**
@@ -37,4 +37,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public function guardian(){
+        return $this->hasOne(Guardian::class);
+    }
 }
