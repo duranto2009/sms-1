@@ -170,6 +170,7 @@ class GuardianController extends Controller
     public function destroy(Guardian $guardian)
     {
         try {
+            User::find($guardian->user_id)->delete();
             $guardian->delete();
             return json_encode(['status'=>200,'message'=>'Class Deleted Successful!']);
         } catch (\Exception $e) {
