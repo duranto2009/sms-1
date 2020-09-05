@@ -13,7 +13,7 @@
                 <a href="#dropdown-app" aria-expanded="false" data-toggle="collapse"><i
                         class="la la-user"></i><span>Users</span></a>
                 <ul id="dropdown-app" class="collapse list-unstyled pt-0">
-                    <li><a href="">Student</a></li>
+                    <li><a href="{{route('student.index')}}">Student</a></li>
                     <li><a href="">Admission</a></li>
                     <li><a href="">Teacher</a></li>
                     <li><a href="">Teacher Permission</a></li>

@@ -2,83 +2,96 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\StudentCreateRequest;
+use App\Models\ClassTable;
+use App\Models\Guardian;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class StudentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        $class = ClassTable::all();
+        return view('admin.partials.student.index',compact('class'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function section(Request $r)
+    {
+        $class = ClassTable::findOrFail($r->className);
+        $opt = '';
+        $opt .= '<select id="section" name="section" class="form-control" required>';
+        $opt .= '<option selected value="" disabled>Select Section</option>';
+        foreach(json_decode($class->section) as $cls){
+            $opt .= '<option value="'.$cls.'">'.$cls.'</option>';
+        }
+        $opt .= '</select>';
+        return json_encode(['status'=>200,'opt'=>$opt]);
+    }
+    public function filter(Request $r)
+    {
+        return $r;
+        $student = '';
+        $student .='<div class="table-responsive">';
+        $student .='    <table id="dbTable" class="table mb-0 table-hover">';
+        $student .='        <thead>';
+        $student .='            <tr>';
+        $student .='                <th>student Id</th>';
+        $student .='                <th>Photo</th>';
+        $student .='                <th>Name</th>';
+        $student .='                <th>Email</th>';
+        $student .='                <th>Actions</th>';
+        $student .='            </tr>';
+        $student .='        </thead>';
+        $student .='        <tbody class="table-content">';
+        $student .='            <tr>';
+        $student .='                <td></td>';
+        $student .='                <td></td>';
+        $student .='                <td></td>';
+        $student .='                <td></td>';
+        $student .='                <td></td>';
+        $student .='            </tr>';
+        $student .='        </tbody>';
+        $student .='    </table>';
+        $student .='</div>';
+    }
     public function create()
     {
-        //
+        $class = ClassTable::all();
+        $guardian = Guardian::all();
+        return view('admin.partials.student.create',compact('class','guardian'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(StudentCreateRequest $request)
     {
-        //
+        $data = $request->validated();
+        return $data;
     }
+    // public function store(Request $request)
+    // {
+    //     return $request;
+    // }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Student  $student
-     * @return \Illuminate\Http\Response
-     */
+
     public function show(Student $student)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Student  $student
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit(Student $student)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Student  $student
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, Student $student)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Student  $student
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(Student $student)
     {
         //

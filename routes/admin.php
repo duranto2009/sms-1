@@ -12,4 +12,6 @@ Route::middleware(['role:admin','auth'])->prefix('dashboard')->namespace('Admin'
     Route::resource('guardian', 'GuardianController');
     Route::get('read-guardian', 'GuardianController@readData')->name('guardian.readData');
     Route::resource('student', 'StudentController');
+    Route::get('student-section', 'StudentController@section')->name('student.section');
+    Route::get('student-filer', 'StudentController@filter')->name('student.filter');
 });

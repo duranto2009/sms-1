@@ -131,7 +131,7 @@
 <!-- End Container -->
 @endsection
 @section('js')
-<script src="{{asset('admin/vendors/js/bootstrap-select/bootstrap-select.min.js')}}"></script>
+<script src="{{asset('admin/vendors/js/bootstrap-select/bootstrap-select.js')}}"></script>
 <script>
 readData();
 // $('#dbTable').DataTable();
