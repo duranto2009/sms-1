@@ -45,9 +45,9 @@
         </div>
 
         <div class="form-group row mb-3">
-            <label class="col-md-3 col-form-label" for="guradian_id">Parent</label>
+            <label class="col-md-3 col-form-label" for="guardian_id">Parent</label>
             <div class="col-md-9">
-                <select id="guradian_id" name="guradian_id"  class="form-control selectpicker show-menu-arrow form-control" data-live-search="true">
+                <select id="guardian_id" name="guardian_id"  class="form-control selectpicker show-menu-arrow form-control" data-live-search="true">
                     <option selected disabled>Selete Parent</option>
                     @forelse ($guardian as $parent)
                         <option value="{{$parent->id}}">{{$parent->name}}</option>
@@ -122,13 +122,12 @@
                     <img id="blah" src="{{asset('admin/img/user.jpg')}}" alt="your image" style="height: 100%;"/>
                 </div>
                 <div class="upload-options">
-                    <label for="student_image" class="form-control" style="cursor: pointer"> <i class="la la-camera"></i> Upload An Image
+                    <label for="image" class="form-control" style="cursor: pointer"> <i class="la la-camera"></i> Upload An Image
                     </label>
-                    <input id="student_image" type="file" class="image-upload" name="image" accept="image/*" style="visibility:hidden">
+                    <input id="image" type="file" class="image-upload" name="image" accept="image/*" style="visibility:hidden">
                 </div>
             </div>
         </div>
-        {{-- <input type="file" name="image" id="image"> --}}
 
         <div class="text-center">
             <button type="submit" class="btn btn-outline-info col-md-4 col-sm-12 mb-4">Add
@@ -161,7 +160,7 @@ function readURL(input) {
         reader.readAsDataURL(input.files[0]);
     }
 }
-$("#student_image").change(function() {
+$("#image").change(function() {
     readURL(this);
 });
 // End image
@@ -186,24 +185,28 @@ $("#className").on('change',(e)=>{
     });
 });
 
-$("#student_admission").on('submit',(e)=>{
+$("#student_admission").submit(function(e){
     e.preventDefault();
-    const data = $("#student_admission").serialize();
+    // const data = $("#student_admission").serialize();
+    const data = new FormData(this);
     const url = $("#student_admission").attr('action');
     const method = $("#student_admission").attr('method');
     $.ajax({
         url:url,
         method:method,
+        cache:false,
+        contentType: false,
+        processData: false,
         data:data,
         success: res=>{
             res = $.parseJSON(res);
             if(res.status == 200){
                 $("form").trigger("reset");
-                toast('success','Class Create Successful!');
+                toast('success',res.message);
                 $("#addClass .close").click();
                 readData();
             }else{
-                toast('error',res.error);
+                toast('error',res.message);
             }
         },
         error: err=>{

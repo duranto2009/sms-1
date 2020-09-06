@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\StudentCreateRequest;
-use App\Models\ClassTable;
-use App\Models\Guardian;
 use App\Models\Student;
+use App\Models\Guardian;
+use App\Models\ClassTable;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use App\Http\Requests\StudentCreateRequest;
 
 class StudentController extends Controller
 {
@@ -66,12 +67,41 @@ class StudentController extends Controller
     public function store(StudentCreateRequest $request)
     {
         $data = $request->validated();
-        return $data;
+        $data['class_table_id']=$data['className'];
+        $avater  = $request->file('image');
+        if ($request->hasFile('image')) {
+            $avaterNew  = "Student_" . Str::random(10) . '.' . $avater->getClientOriginalExtension();
+            if ($avater->isValid()) {
+                $avater->storeAs('images', $avaterNew);
+                $data['image']  = '/uploads/images' . $avaterNew;
+            }
+        }
+        try {
+            Student::create($data);
+            return json_encode(['status'=>200,'message'=>'Admission Successful!']);
+        } catch (\Exception $e) {
+            return json_encode(['status'=>200,'message'=>$e->getMessage()]);
+        }
+
     }
-    // public function store(Request $request)
-    // {
-    //     return $request;
-    // }
+
+
+    public function image(Request $r)
+    {
+        $r->validate([
+            'image'=>'required|image'
+        ]);
+        $cover  = $r->file('image');
+        if ($r->hasFile('image')) {
+            $coverNew  = "Cover_" . Str::random(5) . '.' . $cover->getClientOriginalExtension();
+            // if ($cover->isValid()) {
+            //     $cover->storeAs('uploads', $coverNew);
+            //     $data['cover']  = '/images/uploads/' . $coverNew;
+            // }
+        }
+
+        return $coverNew;
+    }
 
 
     public function show(Student $student)
