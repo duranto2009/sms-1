@@ -14,7 +14,7 @@
                         {{-- <button class="btn btn-outline-info" data-toggle="modal" data-target="#addClass">
                             <i class="la la-plus"></i> Add New Student
                         </button> --}}
-                        <a href="{{route('student.create')}} " class="btn btn-outline-info"><i class="la la-plus"></i> Add New Student</a>
+                        <a href="{{route('student.create')}}" class="btn btn-outline-info"><i class="la la-plus"></i> Add New Student</a>
                     </span>
                 </div>
                 <div class="widget-body">
@@ -90,6 +90,7 @@ $("#getStudentlist").on('submit',(e)=>{
             res = $.parseJSON(res);
             if(res.status == 200){
                 toast('success','Class Create Successful!');
+                $(".student-table").html(res.student);
             }else{
                 toast('error',res.error);
             }

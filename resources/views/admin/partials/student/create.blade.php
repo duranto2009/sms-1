@@ -203,8 +203,6 @@ $("#student_admission").submit(function(e){
             if(res.status == 200){
                 $("form").trigger("reset");
                 toast('success',res.message);
-                $("#addClass .close").click();
-                readData();
             }else{
                 toast('error',res.message);
             }

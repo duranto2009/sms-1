@@ -32,7 +32,7 @@ class StudentController extends Controller
     }
     public function filter(Request $r)
     {
-        return $r;
+        $students = Student::where('class_table_id',$r->className)->where('section',$r->section)->get();
         $student = '';
         $student .='<div class="table-responsive">';
         $student .='    <table id="dbTable" class="table mb-0 table-hover">';
@@ -45,17 +45,21 @@ class StudentController extends Controller
         $student .='                <th>Actions</th>';
         $student .='            </tr>';
         $student .='        </thead>';
-        $student .='        <tbody class="table-content">';
-        $student .='            <tr>';
-        $student .='                <td></td>';
-        $student .='                <td></td>';
-        $student .='                <td></td>';
-        $student .='                <td></td>';
-        $student .='                <td></td>';
-        $student .='            </tr>';
+        $student .='        <tbody>';
+        foreach ($students as $st) {
+            $student .='            <tr>';
+            $student .='                <td>'.$st->id.'</td>';
+            $student .='<td> <img src="'.asset($st->image).'" class="img-fluid" width="85px"></td>';
+            $student .='                <td>'.$st->name.'</td>';
+            $student .='                <td>'.$st->email.'</td>';
+            $student .='                <td>ACTIONS</td>';
+            $student .='            </tr>';
+        }
         $student .='        </tbody>';
         $student .='    </table>';
         $student .='</div>';
+        return json_encode(['status'=>200,'student'=>$student]);
+
     }
     public function create()
     {
@@ -73,7 +77,7 @@ class StudentController extends Controller
             $avaterNew  = "Student_" . Str::random(10) . '.' . $avater->getClientOriginalExtension();
             if ($avater->isValid()) {
                 $avater->storeAs('images', $avaterNew);
-                $data['image']  = '/uploads/images' . $avaterNew;
+                $data['image']  = '/uploads/images/' . $avaterNew;
             }
         }
         try {
