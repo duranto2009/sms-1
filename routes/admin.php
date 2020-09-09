@@ -14,4 +14,5 @@ Route::middleware(['role:admin','auth'])->prefix('dashboard')->namespace('Admin'
     Route::resource('student', 'StudentController');
     Route::get('student-section', 'StudentController@section')->name('student.section');
     Route::get('student-filer', 'StudentController@filter')->name('student.filter');
+    Route::resource('session', 'SessionYearController');
 });

@@ -89,7 +89,7 @@ $("#getStudentlist").on('submit',(e)=>{
         success: res=>{
             res = $.parseJSON(res);
             if(res.status == 200){
-                toast('success','Class Create Successful!');
+                toast('success','Successful!');
                 $(".student-table").html(res.student);
             }else{
                 toast('error',res.error);
