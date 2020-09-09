@@ -15,4 +15,6 @@ Route::middleware(['role:admin','auth'])->prefix('dashboard')->namespace('Admin'
     Route::get('student-section', 'StudentController@section')->name('student.section');
     Route::get('student-filer', 'StudentController@filter')->name('student.filter');
     Route::resource('session', 'SessionYearController');
+    Route::get('read-data', 'SessionYearController@readData')->name('session.readData');
+    Route::get('session-active', 'SessionYearController@active')->name('session.active');
 });

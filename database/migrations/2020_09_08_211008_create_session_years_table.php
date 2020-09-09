@@ -16,7 +16,7 @@ class CreateSessionYearsTable extends Migration
         Schema::create('session_years', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('status')->;
+            $table->tinyInteger('status')->default(0);
             $table->timestamps();
         });
     }

@@ -29,32 +29,26 @@
                 <div class="widget-body">
                     <div class="row">
                         <div class="col-md-6">
-                                    <div class="row">
-                                        <div class="col-md-12 col-sm-12 col-xs-12 mt-1">
-                                            <div class="alert alert-info" role="alert">
-                                                Active Session <span class="badge badge-success pt-1" id="active_session">2029</span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-8 col-sm-12 col-xs-12">
-                                            <select class="selectpicker show-menu-arrow form-control" data-live-search="true" id="session_dropdown">
-                                                <option value="">Select A Session</option>
-                                                <option value="13">2017</option>
-                                                <option value="14">2018</option>
-                                                <option value="23">2029</option>
-                                                <option value="24">2020</option>
-                                                <option value="25">2021</option>
-                                                <option value="28">2022</option>
-                                                <option value="29">2023</option>
-                                                <option value="30">2024</option>
-                                                <option value="33">2025</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-4 col-sm-12 col-xs-12" style="float: left;">
-                                            <button type="button" class="btn btn-icon btn-secondary" onclick="makeSessionActive()">
-                                                <i class="la la-check"></i>Activate
-                                            </button>
-                                        </div>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12 mt-1">
+                                    <div class="alert alert-info" role="alert">
+                                        Active Session <span class="badge badge-success pt-1" id="active_session">0000</span>
                                     </div>
+                                </div>
+                                <div class="col-md-8 col-sm-12 col-xs-12">
+                                    <select class="selectpicker show-menu-arrow form-control" data-live-search="true" id="session_dropdown">
+                                        <option value disabled>Select A Session</option>
+                                        @foreach ($sessions as $item)
+                                        <option value="{{$item->id}}" {{$item->status == 1 ?'selected':''}} >{{$item->title}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4 col-sm-12 col-xs-12" style="float: left;">
+                                    <button type="button" class="btn btn-icon btn-outline-success" onclick="makeSessionActive()">
+                                        <i class="la la-check"></i>Activate
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="table-responsive">
@@ -150,7 +144,7 @@ $("#addSessionForm").on('submit',(e)=>{
     });
 });
 function readData(){
-    const url = '{{route("class.readData")}}';
+    const url = '{{route("session.readData")}}';
     $.ajax({
         url:url,
         method:'get',
@@ -158,10 +152,37 @@ function readData(){
             res = $.parseJSON(res);
             if(res.status == 200){
                 $(".table-content").html(res.data);
+                $("#active_session").html(res.active)
             }else{
                 toast('error',res.error);
             }
         }
+    });
+}
+function makeSessionActive(e){
+    const data = $("#session_dropdown").val();
+    const url = '{{route("session.active")}}';
+    $.ajax({
+    url:url,
+    method:'get',
+    data:{id:data},
+    success: res=>{
+        res = $.parseJSON(res);
+        if(res.status == 200){
+            toast('success',res.message);
+            readData();
+        }else{
+            toast('error',res.error);
+        }
+    },
+    error: err=>{
+        const errors = err.responseJSON;
+        if($.isEmptyObject(errors) == false){
+            $.each(errors.errors,function(key,value){
+                toast('error',value);
+            });
+        }
+    }
     });
 }
 </script>
