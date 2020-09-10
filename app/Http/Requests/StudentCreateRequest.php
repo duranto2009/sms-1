@@ -26,6 +26,7 @@ class StudentCreateRequest extends FormRequest
         return [
             "name"        => 'required',
             "email"       => 'required|email|unique:students,email',
+            "password"    => 'required',
             "guardian_id" => 'required|integer',
             "className"   => 'required|integer',
             "section"     => 'required',

@@ -18,6 +18,7 @@ class CreateStudentsTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('student_id')->unique();
+            $table->foreignId('user_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('guardian_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('class_table_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->string('section');

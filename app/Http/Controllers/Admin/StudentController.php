@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Http\Requests\StudentCreateRequest;
 use App\Models\SessionYear;
+use App\User;
 
 class StudentController extends Controller
 {
@@ -88,7 +89,18 @@ class StudentController extends Controller
                 $data['image']  = '/uploads/images/' . $avaterNew;
             }
         }
+        $user = [
+            'name'=>$data['name'],
+            'email'=>$data['email'],
+            'password'=>bcrypt($request->password),
+            'role'=>'student',
+            'email_verified_at'=>now(),
+            'remember_token'=>Str::random(64)
+        ];
+
         try {
+            $user = User::create($user);
+            $data['user_id'] = $user->id;
             Student::create($data);
             return json_encode(['status'=>200,'message'=>'Admission Successful!']);
         } catch (\Exception $e) {
