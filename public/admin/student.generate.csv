@@ -1,1 +1,1 @@
-StudentName,Email,Password,Phone,ParentID,Gender
+name,email,password,guardian_id,gender

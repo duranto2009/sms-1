@@ -50,29 +50,25 @@
 
                                 <div class="tab-content">
                                     <div class="tab-pane active">
-                                        <form method="POST" class="col-md-12 ajaxForm" action="" id="student_admission_form">
+                                        <form method="POST" class="col-md-12 ajaxForm" action="{{route('student.csvStore')}}" id="csv_form" enctype="multipart/form-data">
+                                            @csrf
                                             <div class="row justify-content-md-center">
                                                 <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3 mb-lg-0">
-                                                    <select name="class_id" id="class_id" class="form-control"
-                                                        onchange="classWiseSection(this.value)" required>
+                                                    <select id="className" name="className" class="selectpicker show-menu-arrow form-control" data-live-search="true" required>
                                                         <option value="">Select A Class</option>
-                                                        <option value="1">Class One</option>
-                                                        <option value="2">Class Two</option>
-                                                        <option value="3">Class Three</option>
-                                                        <option value="4">Class Four</option>
-                                                        <option value="5">Class Five</option>
-                                                        <option value="6">Class Six</option>
-                                                        <option value="7">Class Seven</option>
-                                                        <option value="8">Class Eight</option>
-                                                        <option value="9">Class Nine</option>
-                                                        <option value="10">Class Ten</option>
+                                                        @foreach ($class as $cls)
+                                                        <option value="{{$cls->id}}">{{$cls->name}}</option>
+                                                        @endforeach
                                                     </select>
                                                 </div>
                                                 <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3 mb-lg-0" id="section_content">
-                                                    <select name="section_id" id="section_id"
-                                                        class="form-control" required>
-                                                        <option value="" data-select2-id="4">Select Section</option>
-                                                    </select>
+                                                    <div class="opt"></div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row my-3 justify-content-center">
+                                                <label class="col-md-2 col-form-label" for="studentCsv">Select CSV File</label>
+                                                <div class="col-md-4">
+                                                    <input type="file" class="form-control" id="studentCsv" name="studentCsv" required accept=".csv">
                                                 </div>
                                             </div>
                                             <br>
@@ -98,7 +94,6 @@
 @section('js')
 <script src="{{asset('admin/vendors/js/bootstrap-select/bootstrap-select.js')}}"></script>
 <script>
-readData();
 // $('#dbTable').DataTable();
 $("#className").on('change',(e)=>{
     const data = $("#className").serialize();
@@ -118,51 +113,24 @@ $("#className").on('change',(e)=>{
         }
     });
 });
-$("#getStudentlist").on('submit',(e)=>{
+$("#csv_form").submit(function(e){
     e.preventDefault();
-    const data = $("#getStudentlist").serialize();
-    const url = $("#getStudentlist").attr('action');
-    const method = $("#getStudentlist").attr('method');
+    // const data = $("#csv_form").serialize();
+    const data = new FormData(this);
+    const url = $("#csv_form").attr('action');
+    const method = $("#csv_form").attr('method');
     $.ajax({
         url:url,
         method:method,
         data:data,
-        success: res=>{
-            res = $.parseJSON(res);
-            if(res.status == 200){
-                toast('success','Successful!');
-                $(".student-table").html(res.student);
-            }else{
-                toast('error',res.error);
-            }
-        },
-        error: err=>{
-            const errors = err.responseJSON;
-            if($.isEmptyObject(errors) == false){
-                $.each(errors.errors,function(key,value){
-                    toast('error',value);
-                });
-            }
-        }
-    });
-});
-
-$("#addClassForm").on('submit',(e)=>{
-    e.preventDefault();
-    const data = $("#addClassForm").serialize();
-    const url = $("#addClassForm").attr('action');
-    const method = $("#addClassForm").attr('method');
-    $.ajax({
-        url:url,
-        method:method,
-        data:data,
+        cache:false,
+        contentType: false,
+        processData: false,
         success: res=>{
             res = $.parseJSON(res);
             if(res.status == 200){
                 $("form").trigger("reset");
-                toast('success','Class Create Successful!');
-                $("#addClass .close").click();
-                readData();
+                toast('success','Student Create Successful!');
             }else{
                 toast('error',res.error);
             }
@@ -177,21 +145,6 @@ $("#addClassForm").on('submit',(e)=>{
         }
     });
 });
-function readData(){
-    const url = '{{route("class.readData")}}';
-    $.ajax({
-        url:url,
-        method:'get',
-        success: res=>{
-            res = $.parseJSON(res);
-            if(res.status == 200){
-                $(".table-content").html(res.data);
-            }else{
-                toast('error',res.error);
-            }
-        }
-    });
-}
 
 </script>
 @endsection

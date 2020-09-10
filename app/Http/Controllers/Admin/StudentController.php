@@ -9,8 +9,10 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Http\Requests\StudentCreateRequest;
+use App\Imports\StudentImport;
 use App\Models\SessionYear;
 use App\User;
+use Maatwebsite\Excel\Facades\Excel;
 
 class StudentController extends Controller
 {
@@ -110,24 +112,6 @@ class StudentController extends Controller
     }
 
 
-    // public function image(Request $r)
-    // {
-    //     $r->validate([
-    //         'image'=>'required|image'
-    //     ]);
-    //     $cover  = $r->file('image');
-    //     if ($r->hasFile('image')) {
-    //         $coverNew  = "Cover_" . Str::random(5) . '.' . $cover->getClientOriginalExtension();
-    //         if ($cover->isValid()) {
-    //             $cover->storeAs('uploads', $coverNew);
-    //             $data['cover']  = '/images/uploads/' . $coverNew;
-    //         }
-    //     }
-
-    //     return $coverNew;
-    // }
-
-
     public function bulk()
     {
         $class = ClassTable::all();
@@ -186,12 +170,26 @@ class StudentController extends Controller
 
     public function csv()
     {
-        return view('admin.partials.student.csv');
+        $class = ClassTable::all();
+        return view('admin.partials.student.csv',compact('class'));
     }
 
     public function csvStore(Request $r)
     {
-       return $r;
+        $r->validate([
+            'className'     => 'required',
+            'section'       => 'required',
+            'studentCsv'        => 'required|mimes:csv,txt|max:2040',
+        ]);
+
+        $session = SessionYear::where('status', 1)->first()->title;
+
+        try {
+            Excel::import(new StudentImport($r->className,$r->section,$session),$r->studentCsv);
+            return json_encode(['status'=>200,'message'=>'Admission Successful!']);
+        } catch (\Exception $e) {
+            return json_encode(['status'=>200,'message'=>$e->getMessage()]);
+        }
     }
     public function show(Student $student)
     {
