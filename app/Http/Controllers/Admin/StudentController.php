@@ -55,7 +55,7 @@ class StudentController extends Controller
         foreach ($students as $st) {
             $student .='            <tr>';
             $student .='                <td>'.$st->id.'</td>';
-            $student .='<td> <img src="'.asset($st->image).'" class="img-fluid" width="85px"></td>';
+            $student .='<td> <img src="'.asset($st->image??'admin/img/user.jpg').'" class="img-fluid" width="85px"></td>';
             $student .='                <td>'.$st->name.'</td>';
             $student .='                <td>'.$st->email.'</td>';
             $student .='                <td>ACTIONS</td>';
@@ -135,11 +135,64 @@ class StudentController extends Controller
         return view('admin.partials.student.bulk',compact('class','guardians'));
     }
 
+    public function bulkStore(Request $r)
+    {
+       $r->validate([
+            'className'     => 'required',
+            'section'       => 'required',
+            'name.*'        => 'required',
+            'email.*'       => 'required|email|distinct',
+            'password.*'    => 'required',
+            'gender.*'      => 'required',
+            'guardian_id.*' => 'required',
+        ]);
+
+        $session = SessionYear::where('status', 1)->first()->title;
+
+        if($r->has('email')){
+            foreach($r->email as $i=>$v){
+                $student_id=$session.$r->guardian_id[$i].rand(1111, 9999);
+                $user = [
+                    'name'=>$r->name[$i],
+                    'email'=>$r->email[$i],
+                    'password'=>bcrypt($r->password[$i]),
+                    'role'=>'student',
+                    'email_verified_at'=>now(),
+                    'remember_token'=>Str::random(64)
+                ];
+                $user = User::create($user);
+
+                $data = [
+                    'name'           => $r->name[$i],
+                    'email'          => $r->email[$i],
+                    'student_id'     => $student_id,
+                    'user_id'        => $user->id,
+                    'guardian_id'    => $r->guardian_id[$i],
+                    'class_table_id' => $r->className,
+                    'section'        => $r->section,
+                    'session'        => $session,
+                    'gender'         => $r->gender[$i],
+                ];
+                Student::create($data);
+            }
+        }
+        try {
+            return json_encode(['status'=>200,'message'=>'Admission Successful!']);
+        } catch (\Exception $e) {
+            return json_encode(['status'=>200,'message'=>$e->getMessage()]);
+        }
+
+    }
+
     public function csv()
     {
         return view('admin.partials.student.csv');
     }
 
+    public function csvStore(Request $r)
+    {
+       return $r;
+    }
     public function show(Student $student)
     {
         //
