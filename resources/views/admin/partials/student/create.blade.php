@@ -15,6 +15,30 @@
                     </span>
                 </div>
                 <div class="widget-body">
+                    <div class="row">
+                        <div class="col-12">
+                                <ul class="nav nav-pills bg-nav-pills nav-justified mb-3">
+                                    <li class="nav-item">
+                                        <a href="{{route('student.create')}}"
+                                            class="nav-link rounded-0 {{ Route::is('student.create') ? 'active' : ''}}">
+                                            <i class="mdi mdi-home-variant d-lg-none d-block mr-1"></i>
+                                            <span class="d-none d-lg-block">Single Student Admission</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{route('student.bulk')}}" class="nav-link rounded-0 {{ Route::is('student.bulk') ? 'active' : ''}}">
+                                            <i class="mdi mdi-account-circle d-lg-none d-block mr-1"></i>
+                                            <span class="d-none d-lg-block">Bulk Student Admission</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{route('student.csv')}}" class="nav-link rounded-0 {{ Route::is('student.csv') ? 'active' : ''}}">
+                                            <i class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i>
+                                            <span class="d-none d-lg-block">Excel Upload</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            <div class="tab-content">
                     <div class="row justify-content-center">
                         <div class="col-lg-8">
 <form method="POST" action="{{route('student.store')}}" id="student_admission" enctype="multipart/form-data">
@@ -135,6 +159,10 @@
         </div>
     </div>
 </form>
+                        </div>
+                        </div>
+                        </div>
+                        </div>
                         </div>
                     </div>
 

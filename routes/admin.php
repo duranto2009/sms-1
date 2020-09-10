@@ -14,6 +14,8 @@ Route::middleware(['role:admin','auth'])->prefix('dashboard')->namespace('Admin'
     Route::resource('student', 'StudentController');
     Route::get('student-section', 'StudentController@section')->name('student.section');
     Route::get('student-filer', 'StudentController@filter')->name('student.filter');
+    Route::get('bulk/student-admission', 'StudentController@bulk')->name('student.bulk');
+    Route::get('csv/student-admission', 'StudentController@csv')->name('student.csv');
     Route::resource('session', 'SessionYearController');
     Route::get('read-data/session', 'SessionYearController@readData')->name('session.readData');
     Route::get('session-active', 'SessionYearController@active')->name('session.active');

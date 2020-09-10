@@ -110,23 +110,35 @@ class StudentController extends Controller
     }
 
 
-    public function image(Request $r)
-    {
-        $r->validate([
-            'image'=>'required|image'
-        ]);
-        $cover  = $r->file('image');
-        if ($r->hasFile('image')) {
-            $coverNew  = "Cover_" . Str::random(5) . '.' . $cover->getClientOriginalExtension();
-            // if ($cover->isValid()) {
-            //     $cover->storeAs('uploads', $coverNew);
-            //     $data['cover']  = '/images/uploads/' . $coverNew;
-            // }
-        }
+    // public function image(Request $r)
+    // {
+    //     $r->validate([
+    //         'image'=>'required|image'
+    //     ]);
+    //     $cover  = $r->file('image');
+    //     if ($r->hasFile('image')) {
+    //         $coverNew  = "Cover_" . Str::random(5) . '.' . $cover->getClientOriginalExtension();
+    //         if ($cover->isValid()) {
+    //             $cover->storeAs('uploads', $coverNew);
+    //             $data['cover']  = '/images/uploads/' . $coverNew;
+    //         }
+    //     }
 
-        return $coverNew;
+    //     return $coverNew;
+    // }
+
+
+    public function bulk()
+    {
+        $class = ClassTable::all();
+        $guardians = Guardian::all();
+        return view('admin.partials.student.bulk',compact('class','guardians'));
     }
 
+    public function csv()
+    {
+        return view('admin.partials.student.csv');
+    }
 
     public function show(Student $student)
     {

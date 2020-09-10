@@ -11,9 +11,6 @@
                 <div class="widget-header bordered no-actions d-flex align-items-center">
                     <h4>All Student List</h4>
                     <span class="ml-auto">
-                        {{-- <button class="btn btn-outline-info" data-toggle="modal" data-target="#addClass">
-                            <i class="la la-plus"></i> Add New Student
-                        </button> --}}
                         <a href="{{route('student.create')}}" class="btn btn-outline-info"><i class="la la-plus"></i> Add New Student</a>
                     </span>
                 </div>
