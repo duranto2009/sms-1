@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Http\Requests\StudentCreateRequest;
+use App\Models\SessionYear;
 
 class StudentController extends Controller
 {
@@ -32,7 +33,11 @@ class StudentController extends Controller
     }
     public function filter(Request $r)
     {
-        $students = Student::where('class_table_id',$r->className)->where('section',$r->section)->get();
+        $session = SessionYear::where('status', 1)->first()->title;
+        $students = Student::where('class_table_id',$r->className)
+                    ->where('section',$r->section)
+                    ->where('session',$session)
+                    ->get();
         $student = '';
         $student .='<div class="table-responsive">';
         $student .='    <table id="dbTable" class="table mb-0 table-hover">';
@@ -71,7 +76,10 @@ class StudentController extends Controller
     public function store(StudentCreateRequest $request)
     {
         $data = $request->validated();
+        $session = SessionYear::where('status',1)->first()->title;
         $data['class_table_id']=$data['className'];
+        $data['student_id']=$session.$data['guardian_id'].rand(1111,9999);
+        $data['session']=$session;
         $avater  = $request->file('image');
         if ($request->hasFile('image')) {
             $avaterNew  = "Student_" . Str::random(10) . '.' . $avater->getClientOriginalExtension();

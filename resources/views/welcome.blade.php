@@ -12,8 +12,8 @@
         <!-- Styles -->
         <style>
             html, body {
-                background-color: #fff;
-                color: #636b6f;
+                background-color: rgb(41, 41, 41);
+                color: #565d61;
                 font-family: 'Nunito', sans-serif;
                 font-weight: 200;
                 height: 100vh;
@@ -63,7 +63,7 @@
             }
         </style>
     </head>
-    <body background="#0f0f0f">
+    <body>
         <div class="flex-center position-ref full-height">
             @if (Route::has('login'))
                 <div class="top-right links">
@@ -85,7 +85,7 @@
                 </div>
 
                 <div class="links">
-                    <a href="">Docs</a>
+                    <a href=""></a>
                 </div>
             </div>
         </div>

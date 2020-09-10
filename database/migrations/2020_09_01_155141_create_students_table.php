@@ -16,11 +16,12 @@ class CreateStudentsTable extends Migration
         Schema::create('students', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email');
-            $table->string('password');
+            $table->string('email')->unique();
+            $table->string('student_id')->unique();
             $table->foreignId('guardian_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('class_table_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->string('section');
+            $table->string('session')->nullable();
             $table->date('dob')->nullable();
             $table->string('gender');
             $table->text('address')->nullable();
