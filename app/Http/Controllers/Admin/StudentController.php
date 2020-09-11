@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\User;
 use App\Models\Student;
 use App\Models\Guardian;
 use App\Models\ClassTable;
+use App\Models\SessionYear;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Imports\StudentImport;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\File;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\StudentCreateRequest;
 use App\Http\Requests\StudentUpdateRequest;
-use App\Imports\StudentImport;
-use App\Models\SessionYear;
-use App\User;
-use Maatwebsite\Excel\Facades\Excel;
 
 class StudentController extends Controller
 {
@@ -57,7 +58,7 @@ class StudentController extends Controller
         $student .='        <tbody>';
         foreach ($students as $st) {
             $student .='            <tr>';
-            $student .='                <td>'.$st->id.'</td>';
+            $student .='                <td>'.$st->student_id.'</td>';
             $student .='<td> <img src="'.asset($st->image??'admin/img/user.jpg').'" class="img-fluid" width="85px"></td>';
             $student .='                <td>'.$st->name.'</td>';
             $student .='                <td>'.$st->email.'</td>';
@@ -281,6 +282,25 @@ class StudentController extends Controller
     public function update(StudentUpdateRequest $request, Student $student)
     {
         $data = $request->validated();
+
+        $avater  = $request->file('image');
+        if ($request->hasFile('image')) {
+            $avaterNew  = "Student_" . Str::random(10) . '.' . $avater->getClientOriginalExtension();
+            if ($avater->isValid()) {
+
+                $path1 = public_path() . $student->image;
+                if ($student->image) {
+                    if (File::exists($path1)) {
+                        File::delete($path1);
+                    }
+                }
+                $avater->storeAs('images', $avaterNew);
+                $data['image']  = '/uploads/images/' . $avaterNew;
+            }
+        }else{
+            $data['image'] = $student->image;
+        }
+
         try {
             $student->update($data);
             return json_encode(['status'=>200,'message'=>'Student Info Updated Successful!']);
@@ -294,6 +314,13 @@ class StudentController extends Controller
     public function destroy(Student $student)
     {
         try {
+            $path = public_path() . $student->image;
+            if ($student->image) {
+                if (File::exists($path)) {
+                    File::delete($path);
+                }
+            }
+            User::find($student->user_id)->delete();
             $student->delete();
             return json_encode(['status'=>200,'message'=>'Student Kicked Successful!']);
         } catch (\Exception $e) {

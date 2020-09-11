@@ -9,7 +9,7 @@
             <!-- Sorting -->
             <div class="widget has-shadow">
                 <div class="widget-header bordered no-actions d-flex align-items-center">
-                    <h4>All Student List</h4>
+                    <h1> <i class="la la-user-secret"></i> All Student List</h1>
                     <span class="ml-auto">
                         <a href="{{route('student.create')}}" class="btn btn-outline-info"><i class="la la-plus"></i> Add New Student</a>
                     </span>
@@ -54,7 +54,6 @@
 @section('js')
 <script src="{{asset('admin/vendors/js/bootstrap-select/bootstrap-select.js')}}"></script>
 <script>
-readData();
 // $('#dbTable').DataTable();
 $("#className").on('change',(e)=>{
     const data = $("#className").serialize();
@@ -134,33 +133,30 @@ $("#addClassForm").on('submit',(e)=>{
     });
 });
 function readData(){
-    const url = '{{route("class.readData")}}';
+    const data = $("#getStudentlist").serialize();
+    const url = $("#getStudentlist").attr('action');
+    const method = $("#getStudentlist").attr('method');
     $.ajax({
-        url:url,
-        method:'get',
-        success: res=>{
-            res = $.parseJSON(res);
-            if(res.status == 200){
-                $(".table-content").html(res.data);
-            }else{
-                toast('error',res.error);
-            }
-        }
+    url:url,
+    method:method,
+    data:data,
+    success: res=>{
+    res = $.parseJSON(res);
+    if(res.status == 200){
+    $(".student-table").html(res.student);
+    }else{
+    toast('error',res.error);
+    }
+    },
+    error: err=>{
+    const errors = err.responseJSON;
+    if($.isEmptyObject(errors) == false){
+    $.each(errors.errors,function(key,value){
+    toast('error',value);
+    });
+    }
+    }
     });
 }
-
-// read image before submit
-function readURL(input) {
-if (input.files && input.files[0]) {
-var reader = new FileReader();
-reader.onload = function(e) {
-$('#blah').attr('src', e.target.result);
-}
-reader.readAsDataURL(input.files[0]);
-}
-}
-$("#image").change(function() {
-    readURL(this);
-});
 </script>
 @endsection

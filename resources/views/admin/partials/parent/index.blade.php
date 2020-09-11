@@ -4,22 +4,12 @@
 @endsection
 @section('content')
 <div class="container-fluid">
-    <!-- Begin Page Header-->
-    <div class="row">
-        <div class="col-12">
-            <div class="page-header">
-                <div class="d-flex align-items-center">
-                    <h2 class="page-header-title">Parent List</h2>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="row">
         <div class="col-xl-12">
             <!-- Sorting -->
             <div class="widget has-shadow">
                 <div class="widget-header bordered no-actions d-flex align-items-center">
-                    <h4>All Parent</h4>
+                    <h1> <i class="la la-users"></i> All Parent List</h1>
                     <span class="ml-auto">
                         <button class="btn btn-outline-info" data-toggle="modal" data-target="#addParent">
                             <i class="la la-plus"></i> Add New Parent
@@ -78,7 +68,7 @@
                         <div class="form-group row">
                             <label for="password" class="col-md-3 col-form-label text-md-right">Password</label>
                             <div class="col-md-8">
-                                <input id="password" type="text" class="form-control" name="password"  required autocomplete="off" autofocus>
+                                <input id="password" type="password" class="form-control" name="password"  required autocomplete="off" autofocus>
                             </div>
                         </div>
                         <div class="form-group row">

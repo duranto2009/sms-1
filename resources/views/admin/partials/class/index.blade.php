@@ -1,22 +1,12 @@
 @extends('admin.layout.admin')
 @section('content')
 <div class="container-fluid">
-    <!-- Begin Page Header-->
-    <div class="row">
-        <div class="col-12">
-            <div class="page-header">
-                <div class="d-flex align-items-center">
-                    <h2 class="page-header-title">Class List</h2>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="row">
         <div class="col-xl-12">
             <!-- Sorting -->
             <div class="widget has-shadow">
                 <div class="widget-header bordered no-actions d-flex align-items-center">
-                    <h4>All Class List</h4>
+                    <h1><i class="la la-home"></i> All Class List</h1>
                     <span class="ml-auto">
                         <button class="btn btn-outline-info" data-toggle="modal" data-target="#addClass">
                             <i class="la la-plus"></i> Add New class
