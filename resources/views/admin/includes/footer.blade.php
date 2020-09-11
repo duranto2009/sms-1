@@ -40,15 +40,20 @@ function editModal(url,header){
         }
     });
 }
-$('#update').on('submit',e=>{
+// $('#update').on('submit',e=>{
+$("#update-form").submit(function(e){
     e.preventDefault();
-    const data = $("#update-form").serialize();
+    // const data = $("#update-form").serialize();
+    const data = new FormData(this);
     const url = $("#update-form").attr('action');
     const method = $("#update-form").attr('method');
     $.ajax({
         url:url,
         method:method,
         data:data,
+        cache:false,
+        contentType: false,
+        processData: false,
         success:res=>{
             res = $.parseJSON(res);
             if(res.status == 200){

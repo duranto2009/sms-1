@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Http\Requests\StudentCreateRequest;
+use App\Http\Requests\StudentUpdateRequest;
 use App\Imports\StudentImport;
 use App\Models\SessionYear;
 use App\User;
@@ -60,7 +61,12 @@ class StudentController extends Controller
             $student .='<td> <img src="'.asset($st->image??'admin/img/user.jpg').'" class="img-fluid" width="85px"></td>';
             $student .='                <td>'.$st->name.'</td>';
             $student .='                <td>'.$st->email.'</td>';
-            $student .='                <td>ACTIONS</td>';
+            $student .='                <td class="td-actions">';
+            $editRoute = route("student.edit", $st->id);
+            $deleteRoute = route("student.destroy", $st->id);
+            $student.='<a href="javascript:void(0);" onclick="editModal('. "'{$editRoute}'".','."'Update Section'" .')"><i data-id='.$st->id.' id="edit" class="la la-edit edit" title="Edit Class"></i></a>';
+            $student.='<a href="javascript:void(0);" onclick="deleteModal('. "'{$deleteRoute}'".','."'Delete Section'" .')"><i data-id='.$st->id.' id="delete" class="la la-close delete" title="Delete Class"></i></a>';
+            $student .='                </td>';
             $student .='            </tr>';
         }
         $student .='        </tbody>';
@@ -199,18 +205,100 @@ class StudentController extends Controller
 
     public function edit(Student $student)
     {
-        //
+        $section = '';
+        $section .= '
+        <div class="col-md-12">
+            <div class="form-group row mb-3">
+                <label class="col-md-3 col-form-label" for="name">Name</label>
+                <div class="col-md-9">
+                    <input type="text" id="name" name="name" class="form-control" value="'.$student->name.'">
+                </div>
+            </div>
+
+            <div class="form-group row mb-3">
+                <label class="col-md-3 col-form-label" for="email">Email</label>
+                <div class="col-md-9">
+                    <input type="email" class="form-control" id="email" name="email" value="'.$student->email.'">
+                </div>
+            </div>
+
+            <div class="form-group row mb-3">
+                <label class="col-md-3 col-form-label" for="dob">Birthday</label>
+                <div class="col-md-9">
+                    <input type="date" class="form-control date" name="dob" id="dob" value="'.($student->dob != ""?$student->dob->format('Y-m-d'):"").'">
+                </div>
+            </div>
+
+            <div class="form-group row mb-3">
+                <label class="col-md-3 col-form-label" for="gender">Gender</label>
+                <div class="col-md-9">
+                    <select name="gender" id="gender" class="form-control ">
+                        <option '.($student->gender == "Male"?"selected":"").' value="Male">Male</option>
+                        <option '.($student->gender == "Female"?"selected":"").' value="Female">Female</option>
+                        <option '.($student->gender == "Others"?"selected":"").' value="Others">Others</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group row mb-3">
+                <label class="col-md-3 col-form-label" for="example-textarea">Address</label>
+                <div class="col-md-9">
+                    <textarea class="form-control" id="example-textarea" rows="6" name="address"
+                        placeholder="address" style="resize: none">'.$student->address.'</textarea>
+                </div>
+            </div>
+
+            <div class="form-group row mb-3">
+                <label class="col-md-3 col-form-label" for="phone">Phone</label>
+                <div class="col-md-9">
+                    <input type="text" id="phone" name="phone" class="form-control"
+                        value="'.$student->phone.'">
+                </div>
+            </div>
+
+            <div class="form-group row mb-3">
+                <label class="col-md-3 col-form-label" for="example-fileinput">Student Profile
+                    Image</label>
+                <div class="col-md-9 text-center">
+                    <div class="image-preview" style="height: 250px;width: 250px;margin: 0 auto;">
+                        <img id="blah" src="'.asset($student->image).'" alt="Please Select image" class="img-fluid"/>
+                    </div>
+                    <div class="upload-options">
+                        <label for="image" class="form-control" style="cursor: pointer"> <i class="la la-camera"></i> Upload An Image
+                        </label>
+                        <input id="image" type="file" class="image-upload" name="image" accept="image/*" style="visibility:hidden">
+                    </div>
+                </div>
+            </div>
+        </div>
+        ';
+        $route = route("student.update", $student->id);
+        return json_encode(['data'=>$student,'status'=>200,'section'=>$section,'route'=>$route]);
+
     }
 
 
-    public function update(Request $request, Student $student)
+    public function update(StudentUpdateRequest $request, Student $student)
     {
-        //
+        $data = $request->validated();
+        try {
+            $student->update($data);
+            return json_encode(['status'=>200,'message'=>'Student Info Updated Successful!']);
+        } catch (\Exception $e) {
+            return json_encode(['status'=>500,'message'=>$e->getMessage()]);
+        }
+
     }
 
 
     public function destroy(Student $student)
     {
-        //
+        try {
+            $student->delete();
+            return json_encode(['status'=>200,'message'=>'Student Kicked Successful!']);
+        } catch (\Exception $e) {
+            return json_encode(['status'=>500,'message'=>$e->getMessage()]);
+        }
+
     }
 }
