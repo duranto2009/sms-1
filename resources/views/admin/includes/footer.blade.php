@@ -13,7 +13,8 @@
 <!-- End Page Vendor Js -->
 <!-- Begin Page Snippets -->
 <script src="{{asset('admin/js/dashboard/db-default-dark.js')}}"></script>
-{{-- <script src="{{asset('admin/vendors/js/datatables/datatables.min.js')}}"></script> --}}
+{{-- <script src="{{asset('admin/vendors/js/bootstrap-select/bootstrap-select.js')}}"></script>
+<script src="{{asset('admin/vendors/js/datatables/datatables.min.js')}}"></script> --}}
 <script src="{{asset('js/toast.js')}}"></script>
 <!-- End Page Snippets -->
 @include('sweetalert::alert')

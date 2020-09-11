@@ -21,4 +21,6 @@ Route::middleware(['role:admin','auth'])->prefix('dashboard')->namespace('Admin'
     Route::resource('session', 'SessionYearController');
     Route::get('read-data/session', 'SessionYearController@readData')->name('session.readData');
     Route::get('session-active', 'SessionYearController@active')->name('session.active');
+    Route::resource('department', 'DepartmentController');
+    Route::get('read-department', 'DepartmentController@readData')->name('department.readData');
 });
