@@ -8,7 +8,9 @@ use App\Models\Department;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
 use App\Http\Requests\TeacherCreateRequest;
+use App\Http\Requests\TeacherUpdateRequest;
 
 class TeacherController extends Controller
 {
@@ -195,12 +197,49 @@ class TeacherController extends Controller
         return json_encode(['data'=>$teacher,'status'=>200,'section'=>$form,'route'=>$route]);
 
     }
-    public function update(Request $request, Teacher $teacher)
+    public function update(TeacherUpdateRequest $request, Teacher $teacher)
     {
-        
+        $data = $request->validated();
+        $avater  = $request->file('image');
+        if ($request->hasFile('image')) {
+            $avaterNew  = "Teacher_" . Str::random(10) . '.' . $avater->getClientOriginalExtension();
+            if ($avater->isValid()) {
+                $path1 = public_path() . $teacher->image;
+                if ($teacher->image) {
+                    if (File::exists($path1)) {
+                        File::delete($path1);
+                    }
+                }
+                $avater->storeAs('images/teacher', $avaterNew);
+                $data['image']  = '/uploads/images/teacher' . $avaterNew;
+            }
+        } else {
+            $data['image'] = $teacher->image;
+        }
+
+        try {
+            $teacher->update($data);
+            return json_encode(['status'=>200,'message'=>'Teacher Updated Successful!']);
+        } catch (\Exception $e) {
+            return json_encode(['status'=>500,'message'=>$e->getMessage()]);
+        }
+
     }
     public function destroy(Teacher $teacher)
     {
-        //
+        try {
+            $path = public_path() . $teacher->image;
+            if ($teacher->image) {
+                if (File::exists($path)) {
+                    File::delete($path);
+                }
+            }
+            User::find($teacher->user_id)->delete();
+            $teacher->delete();
+            return json_encode(['status'=>200,'message'=>'Teacher Kicked Successful!']);
+        } catch (\Exception $e) {
+            return json_encode(['status'=>500,'message'=>$e->getMessage()]);
+        }
+
     }
 }
