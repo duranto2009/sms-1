@@ -199,6 +199,32 @@
             </form>
         </div>
     </div>
+    {{-- End Add Modal --}}
+
+
+    <!--Update  Modal -->
+    <div class="modal modal-top fade" id="permissionModal" tabindex="-1" role="dialog" aria-labelledby="permissionModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form action="" id="permissionModal-form" method="POST">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="permissionModal">Teacher Permission</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="permissionModalInput"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        {{-- <button type="submit" class="btn btn-primary">permissionModal</button> --}}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
 
 </div>
 <!-- End Container -->
@@ -254,6 +280,26 @@ function readData(){
                 $(".table-content").html(res.data);
             }else{
                 toast('error',res.error);
+            }
+        }
+    });
+}
+function permissionModal(url,header){
+$('#permissionModal').modal('show');
+    $.ajax({
+        url: url,
+        method: 'get',
+        success:res=>{
+            res = $.parseJSON(res);
+            $('#permissionModal #permissionModalInput').html(res.section);
+            $('#permissionModal .modal-title').html(header);
+        },
+        error: err=>{
+            const errors = err.responseJSON;
+            if($.isEmptyObject(errors) == false){
+                $.each(errors.errors,function(key,value){
+                    toast('error',value);
+                });
             }
         }
     });

@@ -69,10 +69,10 @@ class TeacherController extends Controller
             $html.='<td class="td-actions">';
             $editRoute = route("teacher.edit", $dept->id);
             $deleteRoute = route("teacher.destroy", $dept->id);
-            $html.='<a href="javascript:void(0);" onclick="editModal('. "'{$editRoute}'".','."'Update Teacher'" .')"><i data-id='.$dept->id.' id="edit" class="la la-edit edit" title="Edit Class"></i></a>';
-            if ($dept->status == 0) {
-                $html.='<a href="javascript:void(0);" onclick="deleteModal('. "'{$deleteRoute}'".','."'Delete Teacher'" .')"><i data-id='.$dept->id.' id="delete" class="la la-close delete" title="Delete Class"></i></a>';
-            }
+            $permissionRoute = route("teacher.permission", $dept->id);
+            $html.='<a href="javascript:void(0);" onclick="editModal('. "'{$editRoute}'".','."'Update Teacher'" .')"><i data-id='.$dept->id.' id="edit" class="la la-edit edit" title="Edit Teacher"></i></a>';
+            $html.='<a href="javascript:void(0);" onclick="deleteModal('. "'{$deleteRoute}'".','."'Delete Teacher'" .')"><i data-id='.$dept->id.' id="delete" class="la la-close delete" title="Delete Teacher"></i></a>';
+            $html.='<a href="javascript:void(0);" onclick="permissionModal('. "'{$permissionRoute}'".','."'Delete Teacher'" .')"><i data-id='.$dept->id.' id="permission" class="la la-key delete" title="Show Permission"></i></a>';
             $html.='</td>';
             $html.='</tr>';
         }
@@ -241,5 +241,8 @@ class TeacherController extends Controller
             return json_encode(['status'=>500,'message'=>$e->getMessage()]);
         }
 
+    }
+    public function permission(Teacher $teacher){
+        return $teacher;
     }
 }

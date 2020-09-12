@@ -26,4 +26,5 @@ Route::middleware(['role:admin','auth'])->prefix('dashboard')->namespace('Admin'
 
     Route::resource('teacher', 'TeacherController');
     Route::get('read-teacher', 'TeacherController@readData')->name('teacher.readData');
+    Route::get('teacher-permission/{teacher}', 'TeacherController@permission')->name('teacher.permission');
 });
