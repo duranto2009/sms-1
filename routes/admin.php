@@ -23,4 +23,7 @@ Route::middleware(['role:admin','auth'])->prefix('dashboard')->namespace('Admin'
     Route::get('session-active', 'SessionYearController@active')->name('session.active');
     Route::resource('department', 'DepartmentController');
     Route::get('read-department', 'DepartmentController@readData')->name('department.readData');
+
+    Route::resource('teacher', 'TeacherController');
+    Route::get('read-teacher', 'TeacherController@readData')->name('teacher.readData');
 });

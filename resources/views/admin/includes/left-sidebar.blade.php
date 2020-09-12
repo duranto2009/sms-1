@@ -15,7 +15,7 @@
                 <ul id="dropdown-app" class="collapse list-unstyled pt-0">
                     <li><a href="{{route('student.index')}}">Student</a></li>
                     <li><a href="{{route('student.create')}}">Admission</a></li>
-                    <li><a href="">Teacher</a></li>
+                    <li><a href="{{route('teacher.index')}}">Teacher</a></li>
                     <li><a href="">Teacher Permission</a></li>
                     <li><a href="{{route('guardian.index')}}">Parent</a></li>
                     <li><a href="">Accountant</a></li>
