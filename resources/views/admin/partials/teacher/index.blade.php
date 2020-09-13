@@ -10,7 +10,7 @@
             <!-- Sorting -->
             <div class="widget has-shadow">
                 <div class="widget-header bordered no-actions d-flex align-items-center">
-                    <h1> <i class="la la-user"></i> All Teacher List</h1>
+                    <h1> <i class="la la-user"></i> All Teacher List MANOAR</h1>
                     <span class="ml-auto">
                         <button class="btn btn-outline-info" data-toggle="modal" data-target="#addTeacher">
                             <i class="la la-plus"></i> Add New Teacher
