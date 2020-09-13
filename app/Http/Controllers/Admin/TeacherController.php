@@ -11,6 +11,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use App\Http\Requests\TeacherCreateRequest;
 use App\Http\Requests\TeacherUpdateRequest;
+use App\Models\ClassTable;
+use App\Models\TeacherPermission;
 
 class TeacherController extends Controller
 {
@@ -27,7 +29,7 @@ class TeacherController extends Controller
     public function store(TeacherCreateRequest $r)
     {
         $data = $r->validated();
-
+        $class = ClassTable::all();
         $avater  = $r->file('image');
         if ($r->hasFile('image')) {
             $avaterNew  = "Teacher_" . Str::random(10) . '.' . $avater->getClientOriginalExtension();
@@ -47,7 +49,20 @@ class TeacherController extends Controller
         try {
             $user = User::create($user);
             $data['user_id'] = $user->id;
-            Teacher::create($data);
+            $teacher = Teacher::create($data);
+            foreach($class as $cls){
+                foreach(json_decode($cls->section) as $section){
+                    $permission = [
+                        'teacher_id' => $teacher->id,
+                        'class_table_id' => $cls->id,
+                        'section' => $section,
+                        'marks'=>0,
+                        'attendance'=>0
+                    ];
+                    TeacherPermission::create($permission);
+                }
+            }
+
             return json_encode(['status'=>200,'message'=>'Admission Successful!']);
         } catch (\Exception $e) {
             return json_encode(['status'=>200,'message'=>$e->getMessage()]);
@@ -69,7 +84,7 @@ class TeacherController extends Controller
             $html.='<td class="td-actions">';
             $editRoute = route("teacher.edit", $dept->id);
             $deleteRoute = route("teacher.destroy", $dept->id);
-            $permissionRoute = route("teacher.permission", $dept->id);
+            $permissionRoute = route("teacher.getPermission", $dept->id);
             $html.='<a href="javascript:void(0);" onclick="editModal('. "'{$editRoute}'".','."'Update Teacher'" .')"><i data-id='.$dept->id.' id="edit" class="la la-edit edit" title="Edit Teacher"></i></a>';
             $html.='<a href="javascript:void(0);" onclick="deleteModal('. "'{$deleteRoute}'".','."'Delete Teacher'" .')"><i data-id='.$dept->id.' id="delete" class="la la-close delete" title="Delete Teacher"></i></a>';
             $html.='<a href="javascript:void(0);" onclick="permissionModal('. "'{$permissionRoute}'".','."'Delete Teacher'" .')"><i data-id='.$dept->id.' id="permission" class="la la-key delete" title="Show Permission"></i></a>';
@@ -242,7 +257,69 @@ class TeacherController extends Controller
         }
 
     }
-    public function permission(Teacher $teacher){
-        return $teacher;
+    public function getPermission(Teacher $teacher){
+        return json_encode(['data'=>$teacher,'status'=>200,'section'=>'$teacher']);
+    }
+    public function readPermission(){
+        $class = ClassTable::all();
+        return view('admin.partials.teacher.permission',compact('class'));
+    }
+    public function filter(Request $r){
+        $teachers = TeacherPermission::with('teacher','class')
+                    ->where('class_id', $r->className)
+                    ->where('section', $r->section)
+                    ->get();
+        $teacher = '';
+        $teacher .='<div class="table-responsive">';
+        $teacher .='    <table id="dbTable" class="table mb-0 table-hover">';
+        $teacher .='        <thead>';
+        $teacher .='            <tr>';
+        $teacher .='                <th>SL</th>';
+        $teacher .='                <th>Teacher</th>';
+        $teacher .='                <th>Marks</th>';
+        $teacher .='                <th>Attendance</th>';
+        $teacher .='            </tr>';
+        $teacher .='        </thead>';
+        $teacher .='        <tbody>';
+        foreach ($teachers as $i=>$ts) {
+            $teacher.='<tr>';
+            $teacher.='<td><span class="text-danger">'.($i+1).'</span></td>';
+            $teacher.='<td>'.($ts->teacher->name).'</td>';
+            $teacher.= '<td>
+                            <input type="checkbox" value="'.$ts->marks.'" id="marks'.$ts->id.'" data-switch="success"'.($ts->marks == "1"?"checked":"").'
+                                onchange="togglePermission(this.id,'. "'marks'".','. "'$ts->teacher_id'".')">
+                            <label for="marks'.$ts->id.'" data-on-label="Yes" data-off-label="No"></label>
+                        </td>';
+            $teacher.= '<td>
+                            <input type="checkbox" value="'.$ts->attendance.'" id="attendance'.$ts->id.'" data-switch="success" '.($ts->attendance == "1"?"checked":"").'
+                                onchange="togglePermission(this.id,'. "'attendance'".','. "'$ts->teacher_id'".')">
+                            <label for="attendance'.$ts->id.'" data-on-label="Yes" data-off-label="No"></label>
+                        </td>';
+            $teacher.='</tr>';
+        }
+
+        $teacher .='        </tbody>';
+        $teacher .='    </table>';
+        $teacher .='</div>';
+        return json_encode(['status'=>200,'student'=>$teacher]);
+    }
+    public function modifyPermision(Request $r){
+        $r->validate([
+            'class_id'    => 'required|numeric',
+            'column_name' => 'required|string',
+            'section'     => 'required|string',
+            'teacher_id'  => 'required|numeric',
+            'value'       => 'required|numeric',
+        ]);
+        $permission = TeacherPermission::where('class_id',$r->class_id)
+                    ->where('section',$r->section)
+                    ->where('teacher_id',$r->teacher_id)
+                    ->first();
+        try {
+            $permission->update([$r->column_name => $r->value]);
+            return json_encode(['status'=>200,'message'=>'Permission Updated Successful!']);
+        } catch (\Exception $e) {
+            return json_encode(['status'=>500,'message'=>$e->getMessage()]);
+        }
     }
 }
