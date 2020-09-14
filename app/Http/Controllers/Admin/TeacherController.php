@@ -258,7 +258,48 @@ class TeacherController extends Controller
 
     }
     public function getPermission(Teacher $teacher){
-        return json_encode(['data'=>$teacher,'status'=>200,'section'=>'$teacher']);
+        $permissions = TeacherPermission::with('teacher','class')->where('teacher_id', $teacher->id)->orderBy('class_id')->orderBy('section')->get();
+        $html = '';
+        $html .= '<h2 class="text-center text-info mb-3">'.$teacher->name.'</h2>';
+        foreach ($permissions as $permission) {
+            $html .='
+                <table class="table table-hover table-centered table-bordered mb-0" style="margin-bottom: 50px !important; background-color: #ececec;">
+                    <tbody>
+                        <tr>
+                            <td>Class</td>
+                            <td>
+                                '.$permission->class->name.'
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Section</td>
+                            <td>
+                                '.$permission->section.'
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Marks</td>
+                            <td>
+                            '.($permission->marks == 1?'<i class="la la-check-circle text-success" style="font-size: 20px;"></i>':'<i class="la la-times-circle text-danger" style="font-size: 20px;"></i>').'
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Attendance</td>
+                            <td>
+                            '.($permission->attendance == 1?'<i class="la la-check-circle text-success" style="font-size: 20px;"></i>':'<i class="la la-times-circle text-danger" style="font-size: 20px;"></i>').'
+                            </td>
+                        </tr>
+                        <!-- <tr>
+                            <td>Online Exam</td>
+                            <td>
+                                <i class="la la-circle-o text-danger"></i>
+                            </td>
+                        </tr> -->
+                    </tbody>
+                </table>
+            ';
+        }
+        return json_encode(['data'=>$teacher,'status'=>200,'section'=>$html]);
     }
     public function readPermission(){
         $class = ClassTable::all();

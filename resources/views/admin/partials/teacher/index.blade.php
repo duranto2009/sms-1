@@ -292,7 +292,7 @@ $('#permissionModal').modal('show');
         success:res=>{
             res = $.parseJSON(res);
             $('#permissionModal #permissionModalInput').html(res.section);
-            $('#permissionModal .modal-title').html(header);
+            // $('#permissionModal .modal-title').html(header);
         },
         error: err=>{
             const errors = err.responseJSON;
