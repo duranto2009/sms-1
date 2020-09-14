@@ -65,8 +65,12 @@ class StudentController extends Controller
             $student .='                <td class="td-actions">';
             $editRoute = route("student.edit", $st->id);
             $deleteRoute = route("student.destroy", $st->id);
+            $profileRoute = route("student.show", $st->id);
             $student.='<a href="javascript:void(0);" onclick="editModal('. "'{$editRoute}'".','."'Update Section'" .')"><i data-id='.$st->id.' id="edit" class="la la-edit edit" title="Edit Class"></i></a>';
             $student.='<a href="javascript:void(0);" onclick="deleteModal('. "'{$deleteRoute}'".','."'Delete Section'" .')"><i data-id='.$st->id.' id="delete" class="la la-close delete" title="Delete Class"></i></a>';
+
+            $student.='<a href="javascript:void(0);" onclick="studentProfile('. "'{$profileRoute}'".','."'Delete Teacher'" .')"><i data-id='.$st->id.' id="permission" class="la la-eye delete" title="Show Permission"></i></a>';
+
             $student .='                </td>';
             $student .='            </tr>';
         }
@@ -200,7 +204,88 @@ class StudentController extends Controller
     }
     public function show(Student $student)
     {
-        //
+        $html = '
+<div class="modal-body"><div class="h-100">
+    <div class="row align-items-center h-100">
+        <div class="col-md-4 pb-2">
+            <div class="text-center">
+                <img class="rounded-circle" width="150" height="150" src="'.asset($student->image).'">
+                <br>
+                <br>
+                <span style="font-weight: bold;">
+                    Name: '.$student->name.'
+                </span>
+                <br>
+                <span style="font-weight: bold;">
+                    Student Code: '.$student->student_id.'
+                </span>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="parent-tab" data-toggle="tab" href="#parent_info" role="tab" aria-controls="parent_info" aria-selected="false">Parent Info</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    <table class="table table-centered mb-0">
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: bold;">Name:</td>
+                                <td>'.$student->name.'</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">Class:</td>
+                                <td>
+                                    '.$student->class->name.'
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">Section:</td>
+                                <td>
+                                    '.$student->section.'
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade show" id="parent_info" role="tabpanel" aria-labelledby="parent-tab">
+                    <table class="table table-centered mb-0">
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: bold;">Parent Name:</td>
+                                <td>
+                                    '.$student->guardian->name.'
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">Parent Email:</td>
+                                <td>
+                                    '.$student->guardian->email.'
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">Parent Phone Number:</td>
+                                <td>
+                                    '.$student->guardian->phone.'
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+        ';
+
+        return json_encode(['data'=>$student,'status'=>200,'student'=>$html]);
+
     }
 
 

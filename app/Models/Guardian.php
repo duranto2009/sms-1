@@ -10,7 +10,7 @@ class Guardian extends Model
     protected $guarded = ['id'];
 
     public function students(){
-        return $this->belongsTo(Student::class);
+        return $this->hasMany(Student::class);
     }
     public function user(){
         return $this->belongsTo(User::class);

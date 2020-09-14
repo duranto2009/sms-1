@@ -202,7 +202,7 @@
     {{-- End Add Modal --}}
 
 
-    <!--Update  Modal -->
+    <!--Permission  Modal -->
     <div class="modal modal-top fade" id="permissionModal" tabindex="-1" role="dialog" aria-labelledby="permissionModal" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <form action="" id="permissionModal-form" method="POST">

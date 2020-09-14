@@ -8,6 +8,6 @@ class ClassTable extends Model
 {
     protected $guarded = ['id'];
     public function students(){
-        return $this->belongsTo(Student::class);
+        return $this->hasMany(Student::class);
     }
 }

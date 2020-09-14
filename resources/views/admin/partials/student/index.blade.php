@@ -27,10 +27,6 @@
                             </div>
                             <div class="col-lg-4">
                                     <div class="opt"></div>
-                                {{-- <select id="section" name="section" class="selectpicker show-menu-arrow form-control" data-live-search="true"
-                                    required>
-                                    <option disabled selected>Select Section</option>
-                                </select> --}}
                             </div>
                             <div class="col-lg-2">
                                 <button class="btn btn-outline-success" type="submit">Filter</button>
@@ -48,6 +44,29 @@
         </div>
     </div>
     <!-- End Row -->
+    <!--Profile  Modal -->
+        <div class="modal modal-top fade" id="studentProfile" tabindex="-1" role="dialog" aria-labelledby="studentProfile"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <form action="" id="studentProfile-form" method="POST">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="studentProfile">{{config('app.name','LARAVEL')}}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="studentProfileInput"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            {{-- <button type="submit" class="btn btn-primary">studentProfile</button> --}}
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
 </div>
 <!-- End Container -->
 @endsection
@@ -156,6 +175,17 @@ function readData(){
     });
     }
     }
+    });
+}
+function studentProfile(url,header){
+    $('#studentProfile').modal('show');
+    $.ajax({
+        url: url,
+        method: 'get',
+        success:res=>{
+            res = $.parseJSON(res);
+            $('#studentProfile #studentProfileInput').html(res.student);
+        }
     });
 }
 </script>

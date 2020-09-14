@@ -8,12 +8,13 @@ class Student extends Model
 {
     protected $guarded = ['id'];
     public function guardian(){
-        return $this->hasOne(Guardian::class);
+        return $this->belongsTo(Guardian::class);
     }
     public function class(){
-        return $this->hasOne(ClassTable::class);
+        return $this->belongsTo(ClassTable::class,'class_table_id');
     }
     protected $dates = [
         'dob'
     ];
+    protected $with = ['class','guardian'];
 }
