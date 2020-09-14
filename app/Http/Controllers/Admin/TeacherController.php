@@ -258,7 +258,7 @@ class TeacherController extends Controller
 
     }
     public function getPermission(Teacher $teacher){
-        $permissions = TeacherPermission::with('teacher','class')->where('teacher_id', $teacher->id)->orderBy('class_id')->orderBy('section')->get();
+        $permissions = TeacherPermission::with('teacher','class')->where('teacher_id', $teacher->id)->orderBy('class_table_id')->orderBy('section')->get();
         $html = '';
         $html .= '<h2 class="text-center text-info mb-3">'.$teacher->name.'</h2>';
         foreach ($permissions as $permission) {
@@ -307,7 +307,7 @@ class TeacherController extends Controller
     }
     public function filter(Request $r){
         $teachers = TeacherPermission::with('teacher','class')
-                    ->where('class_id', $r->className)
+                    ->where('class_table_id', $r->className)
                     ->where('section', $r->section)
                     ->get();
         $teacher = '';

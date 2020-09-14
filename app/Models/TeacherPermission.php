@@ -11,6 +11,6 @@ class TeacherPermission extends Model
         return $this->belongsTo(Teacher::class);
     }
     public function class(){
-        return $this->belongsTo(ClassTable::class,'class_id');
+        return $this->belongsTo(ClassTable::class,'class_table_id');
     }
 }
