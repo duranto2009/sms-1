@@ -299,7 +299,7 @@ class TeacherController extends Controller
                 </table>
             ';
         }
-        return json_encode(['data'=>$teacher,'status'=>200,'section'=>$html]);
+        return json_encode(['data'=>$teacher,'status'=>200,'permission'=>$html]);
     }
     public function readPermission(){
         $class = ClassTable::all();

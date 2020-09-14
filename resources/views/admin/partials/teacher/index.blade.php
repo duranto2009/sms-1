@@ -291,7 +291,7 @@ $('#permissionModal').modal('show');
         method: 'get',
         success:res=>{
             res = $.parseJSON(res);
-            $('#permissionModal #permissionModalInput').html(res.section);
+            $('#permissionModal #permissionModalInput').html(res.permission);
             // $('#permissionModal .modal-title').html(header);
         },
         error: err=>{
