@@ -39,7 +39,7 @@ class AccountantController extends Controller
             'name'=>$data['name'],
             'email'=>$data['email'],
             'password'=>bcrypt($request->password),
-            'role'=>'teacher',
+            'role'=>'accountant',
             'email_verified_at'=>now(),
             'remember_token'=>Str::random(64)
         ];

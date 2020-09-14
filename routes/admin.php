@@ -32,5 +32,7 @@ Route::middleware(['role:admin','auth'])->prefix('dashboard')->namespace('Admin'
     Route::get('/permission/modify/', 'TeacherController@modifyPermision')->name('teacher.modifyPermision');
     Route::resource('accountant', 'AccountantController');
     Route::get('read-accountant', 'AccountantController@readData')->name('accountant.readData');
+    Route::resource('librarian', 'LibrarianController');
+    Route::get('read-librarian', 'LibrarianController@readData')->name('librarian.readData');
 
 });
