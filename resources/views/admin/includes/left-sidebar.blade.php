@@ -18,7 +18,7 @@
                     <li><a href="{{route('teacher.index')}}">Teacher</a></li>
                     <li><a href="{{route('teacher.readPermission')}}">Teacher Permission</a></li>
                     <li><a href="{{route('guardian.index')}}">Parent</a></li>
-                    <li><a href="">Accountant</a></li>
+                    <li><a href="{{route('accountant.index')}}">Accountant</a></li>
                     <li><a href="">Librarian</a></li>
                 </ul>
             </li>

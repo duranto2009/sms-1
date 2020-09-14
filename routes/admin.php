@@ -30,4 +30,7 @@ Route::middleware(['role:admin','auth'])->prefix('dashboard')->namespace('Admin'
     Route::get('/permission/teacher', 'TeacherController@readPermission')->name('teacher.readPermission');
     Route::get('/permission/filter', 'TeacherController@filter')->name('teacher.filter');
     Route::get('/permission/modify/', 'TeacherController@modifyPermision')->name('teacher.modifyPermision');
+    Route::resource('accountant', 'AccountantController');
+    Route::get('read-accountant', 'AccountantController@readData')->name('accountant.readData');
+
 });

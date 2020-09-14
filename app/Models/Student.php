@@ -13,6 +13,10 @@ class Student extends Model
     public function class(){
         return $this->belongsTo(ClassTable::class,'class_table_id');
     }
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
     protected $dates = [
         'dob'
     ];
