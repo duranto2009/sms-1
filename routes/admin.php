@@ -34,5 +34,7 @@ Route::middleware(['role:admin','auth'])->prefix('dashboard')->namespace('Admin'
     Route::get('read-accountant', 'AccountantController@readData')->name('accountant.readData');
     Route::resource('librarian', 'LibrarianController');
     Route::get('read-librarian', 'LibrarianController@readData')->name('librarian.readData');
+    Route::resource('subject', 'SubjectController');
+    Route::get('read-subject', 'SubjectController@readData')->name('subject.readData');
 
 });

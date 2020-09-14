@@ -27,7 +27,7 @@
                 <ul id="dropdown-ui" class="collapse list-unstyled pt-0">
                     <li><a href="">Daily Attendance</a></li>
                     <li><a href="">Class Routine</a></li>
-                    <li><a href="">Subject</a></li>
+                    <li><a href="{{route('subject.index')}}">Subject</a></li>
                     <li><a href="">Syllabus</a></li>
                     <li><a href="{{route('class.index')}}">Class</a></li>
                     <li><a href="">Class Room</a></li>

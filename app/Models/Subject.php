@@ -10,4 +10,5 @@ class Subject extends Model
     public function class(){
         return $this->belongsTo(ClassTable::class,'class_table_id');
     }
+    protected $with =['class'];
 }
