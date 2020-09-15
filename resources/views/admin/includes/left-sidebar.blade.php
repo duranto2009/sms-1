@@ -28,7 +28,7 @@
                     <li><a href="">Daily Attendance</a></li>
                     <li><a href="">Class Routine</a></li>
                     <li><a href="{{route('subject.index')}}">Subject</a></li>
-                    <li><a href="">Syllabus</a></li>
+                    <li><a href="{{route('syllabus.index')}}">Syllabus</a></li>
                     <li><a href="{{route('class.index')}}">Class</a></li>
                     <li><a href="">Class Room</a></li>
                     <li><a href="{{route('department.index')}}">Department</a></li>
