@@ -19,6 +19,7 @@ class CreateSyllabiTable extends Migration
             $table->foreignId('class_table_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->string('section');
             $table->foreignId('subject_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('session_year_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->text('file');
             $table->timestamps();
         });

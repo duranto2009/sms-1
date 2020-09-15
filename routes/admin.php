@@ -37,6 +37,6 @@ Route::middleware(['role:admin','auth'])->prefix('dashboard')->namespace('Admin'
     Route::resource('subject', 'SubjectController');
     Route::get('read-subject', 'SubjectController@readData')->name('subject.readData');
     Route::resource('syllabus', 'SyllabusController');
-    Route::get('read-syllabus', 'SyllabusController@readData')->name('syllabus.readData');
+    Route::get('syllabus-filter', 'SyllabusController@filter')->name('syllabus.filter');
 
 });
