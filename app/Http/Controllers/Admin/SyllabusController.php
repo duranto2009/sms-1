@@ -96,9 +96,9 @@ class SyllabusController extends Controller
         //
     }
 
-    public function edit(Syllabus $syllabus)
+    public function edit($syllabus)
     {
-        //
+        return $syllabus;
     }
 
     public function update(Request $request, Syllabus $syllabus)
@@ -106,9 +106,9 @@ class SyllabusController extends Controller
         //
     }
 
-    public function destroy(Syllabus $syllabus)
+    public function destroy($syllabus)
     {
-        return $syllabus;
+        $syllabus = Syllabus::find($syllabus);
         try {
             $path = public_path() . $syllabus->file;
             if ($syllabus->file) {

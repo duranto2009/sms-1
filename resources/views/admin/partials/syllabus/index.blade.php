@@ -88,12 +88,13 @@
                             </div>
                             <div class="form-group col-md-12">
                                 <label for="syllabus_file">Upload Syllabus</label>
-                                <input type="file" name="file" id="file" class="form-control">
+                                <input type="file" name="file" id="file" class="form-control" accept="image/*,.pdf">
+                                <span class="text-danger">File must be Image or PDF</span>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Add</button>
                     </div>
                 </div>
