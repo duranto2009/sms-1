@@ -30,7 +30,7 @@
                     <li><a href="{{route('subject.index')}}">Subject</a></li>
                     <li><a href="{{route('syllabus.index')}}">Syllabus</a></li>
                     <li><a href="{{route('class.index')}}">Class</a></li>
-                    <li><a href="">Class Room</a></li>
+                    <li><a href="{{route('classroom.index')}}">Class Room</a></li>
                     <li><a href="{{route('department.index')}}">Department</a></li>
                     <li><a href="{{route('session.index')}}">Session</a></li>
                     <li><a href="">Event Calender</a></li>
