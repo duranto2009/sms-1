@@ -23,7 +23,6 @@ class SyllabusController extends Controller
         $session = SessionYear::where('status', 1)->first()->id;
         $syllabuss = Syllabus::where('class_table_id',$r->className)
                     ->where('section',$r->section)
-                    ->where('section',$r->section)
                     ->where('session_year_id',$session)
                     ->get();
         $syllabus = '';
