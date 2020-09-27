@@ -9,15 +9,39 @@
             <!-- Sorting -->
             <div class="widget has-shadow">
                 <div class="widget-header bordered no-actions d-flex align-items-center">
-                    <h1> <i class="la la-calendar text-info"></i>Routine List</h1>
+                    <h1> <i class="la la-calendar text-info"></i>Daily Attendance</h1>
                     <span class="ml-auto">
-                        <button data-toggle="modal" data-target="#addRoutine" class="btn btn-outline-info"><i class="la la-plus"></i>Add Routine</button>
+                        <button data-toggle="modal" data-target="#takeAttendance" class="btn btn-outline-info"><i class="la la-plus"></i>Take Attendance</button>
                     </span>
                 </div>
                 <div class="widget-body">
                     <form id="filterSyllabus" action="{{route('routine.filter')}}" method="get" autocomplete="off">
                         <div class="form-group row d-flex align-items-center mt-3 mb-5 justify-content-center">
-                            <div class="col-lg-4">
+                            <div class="col-lg-2">
+                                <select name="month" class="form-control selectpicker" data-live-search="true" required>
+                                    <option disabled selected>Select A Month</option>
+                                    <option value="Jan">January</option>
+                                    <option value="Feb">February</option>
+                                    <option value="Mar">March</option>
+                                    <option value="Apr">April</option>
+                                    <option value="May">May</option>
+                                    <option value="Jun">Jun</option>
+                                    <option value="Jul">July</option>
+                                    <option value="Aug">August</option>
+                                    <option value="Sep">September</option>
+                                    <option value="Oct">October</option>
+                                    <option value="Nov">November</option>
+                                    <option value="Dec">December</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-2">
+                                <select name="year" class="form-control selectpicker" data-live-search="true">
+                                    @for ($i = now()->format('Y'); $i >= 2000 ; $i--)
+                                     <option value="">{{$i}}</option>
+                                    @endfor
+                                </select>
+                            </div>
+                            <div class="col-lg-2">
                                 <select id="className" name="className"
                                     class="selectpicker show-menu-arrow form-control" data-live-search="true" required onchange="getSection(this.value)">
                                     <option disabled selected>Select Class</option>
@@ -26,8 +50,11 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-lg-4">
-                                <div class="opt"></div>
+                            <div class="col-lg-2">
+                                {{-- <div class="opt"></div> --}}
+                                <select name="section" id="section" class="form-control opt">
+                                    <option value> SECTION</option>
+                                </select>
                             </div>
                             <div class="col-lg-2">
                                 <button class="btn btn-outline-success" type="submit">Filter</button>
@@ -46,20 +73,25 @@
     </div>
     <!-- End Row -->
     <!--Profile  Modal -->
-    <div class="modal modal-top fade" id="addRoutine" tabindex="-1" role="dialog" aria-labelledby="addRoutine"
+    <div class="modal modal-top fade" id="takeAttendance" tabindex="-1" role="dialog" aria-labelledby="takeAttendance"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <form action="{{route('routine.store')}}" id="addRoutineForm" method="POST" enctype="multipart/form-data">
+            <form action="{{route('attendance.store')}}" id="takeAttendanceForm" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h2 class="modal-title" id="addRoutine">ADD ROUTINE</h2>
+                        <h2 class="modal-title" id="takeAttendance">Take Attendance</h2>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label>Class</label>
+                                <input type="hidden" value="{{now()->format('Y-m-d')}}" id="date" name="date">
+                                <input type="text" value="{{now()->format('d/m/Y')}}" disabled class="form-control">
+                            </div>
                             <div class="form-group col-md-12">
                                 <label for="class_table_id">Class</label>
                                 <select id="class_table_id" name="class_table_id" class="selectpicker show-menu-arrow form-control" data-live-search="true" required
@@ -73,149 +105,57 @@
 
                             <div class="form-group col-md-12">
                                 <label for="section_id">Section</label>
-                                <div class="opt"></div>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <label for="subject_id">Subject</label>
-                                <select id="subject_id" name="subject_id" class="selectpicker show-menu-arrow form-control" data-live-search="true" required>
-                                    <option disabled selected>Select Subject</option>
-                                    @foreach ($subjects as $subject)
-                                    <option value="{{$subject->id}}">{{$subject->name}}</option>
-                                    @endforeach
+                                {{-- <div class="opt"></div> --}}
+                                <select name="section" id="section" class="form-control opt section_class">
+                                    <option value> SECTION</option>
                                 </select>
                             </div>
-                            <div class="form-group col-md-12">
-                                <label for="teacher_id">Teacher</label>
-                                <select id="teacher_id" name="teacher_id" class="selectpicker show-menu-arrow form-control" data-live-search="true" required>
-                                    <option disabled selected>Select Teacher</option>
-                                    @foreach ($teachers as $teacher)
-                                    <option value="{{$teacher->id}}">{{$teacher->name}}</option>
-                                    @endforeach
-                                </select>
+                            <div class="row" id="student_content" style="margin-left: 2px;display: none;">
+                                <div class="row" style="margin-bottom: 10px; width: 100%;">
+                                    <div class="col-6"><a href="javascript:" class="btn btn-sm btn-secondary" onclick="present_all()">Present
+                                            All</a></div>
+                                    <div class="col-6"><a href="javascript:" class="btn btn-sm btn-secondary float-right"
+                                            onclick="absent_all()">Absent All</a></div>
+                                </div>
+
+                                <div class="table-responsive row col-md-12" style="padding-right: 0px;">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="student-info" >
+                                            <tr>
+                                                <td>
+                                                    Porter Gutmann </td>
+                                                <td>
+                                                    <input type="hidden" name="student_id[]" value="1">
+                                                    <div class="custom-control custom-radio">
+                                                        <label>
+                                                            <input type="radio" name="status" class="present"> Present
+                                                        </label> &nbsp;&nbsp;&nbsp;
+                                                        <label>
+                                                            <input type="radio" name="status" class="absent"> Absent
+                                                        </label>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                            <div class="form-group col-md-12">
-                                <label for="class_room_id">Class Room</label>
-                                <select id="class_room_id" name="class_room_id" class="selectpicker show-menu-arrow form-control" data-live-search="true" required>
-                                    <option disabled selected>Select Room</option>
-                                    @foreach ($rooms as $room)
-                                    <option value="{{$room->id}}">{{$room->name}}</option>
-                                    @endforeach
-                                </select>
+                            <div class="form-group col-md-12" id="showStudent" style="display: none;">
+                                <a class="btn btn-block btn-secondary" onclick="getStudentList()" style="color: #fff;" disabled="">Show Student
+                                    List</a>
                             </div>
-                            <div class="form-group col-md-12">
-                                <label for="start_day">Day</label>
-                                <select name="start_day"id="start_day" class="form-control" required>
-                                    <option value selected disabled>Select A Day</option>
-                                    <option value="saturday">Saturday</option>
-                                    <option value="sunday">Sunday</option>
-                                    <option value="monday">Monday</option>
-                                    <option value="tuesday">Tuesday</option>
-                                    <option value="wednesday">Wednesday</option>
-                                    <option value="thursday">Thursday</option>
-                                    <option value="friday">Friday</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <label for="start_hour">Starting Hour</label>
-                                <select name="start_hour"name="start_hour" class="selectpicker show-menu-arrow form-control" data-live-search="true" required>
-                                    <option value="">Starting Hour</option>
-                                    <option value="0">12 AM</option>
-                                    <option value="1">1 AM</option>
-                                    <option value="2">2 AM</option>
-                                    <option value="3">3 AM</option>
-                                    <option value="4">4 AM</option>
-                                    <option value="5">5 AM</option>
-                                    <option value="6">6 AM</option>
-                                    <option value="7">7 AM</option>
-                                    <option value="8">8 AM</option>
-                                    <option value="9">9 AM</option>
-                                    <option value="10">10 AM</option>
-                                    <option value="11">11 AM</option>
-                                    <option value="12">12 PM</option>
-                                    <option value="13">1 PM</option>
-                                    <option value="14">2 PM</option>
-                                    <option value="15">3 PM</option>
-                                    <option value="16">4 PM</option>
-                                    <option value="17">5 PM</option>
-                                    <option value="18">6 PM</option>
-                                    <option value="19">7 PM</option>
-                                    <option value="20">8 PM</option>
-                                    <option value="21">9 PM</option>
-                                    <option value="22">10 PM</option>
-                                    <option value="23">11 PM</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-lg-12">
-                                <label for="start_minute">Starting Minute</label>
-                                <select required name="start_minute" id="start_minute" class="form-control">
-                                    <option value="">Starting Minute</option>
-                                    <option value="0">0</option>
-                                    <option value="5">5</option>
-                                    <option value="10">10</option>
-                                    <option value="15">15</option>
-                                    <option value="20">20</option>
-                                    <option value="25">25</option>
-                                    <option value="30">30</option>
-                                    <option value="35">35</option>
-                                    <option value="40">40</option>
-                                    <option value="45">45</option>
-                                    <option value="50">50</option>
-                                    <option value="55">55</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <label for="end_hour">Ending Hour</label>
-                                <select name="end_hour" id="end_hour" class="selectpicker show-menu-arrow form-control" data-live-search="true" required>
-                                    <option value="">Starting Hour</option>
-                                    <option value="0">12 AM</option>
-                                    <option value="1">1 AM</option>
-                                    <option value="2">2 AM</option>
-                                    <option value="3">3 AM</option>
-                                    <option value="4">4 AM</option>
-                                    <option value="5">5 AM</option>
-                                    <option value="6">6 AM</option>
-                                    <option value="7">7 AM</option>
-                                    <option value="8">8 AM</option>
-                                    <option value="9">9 AM</option>
-                                    <option value="10">10 AM</option>
-                                    <option value="11">11 AM</option>
-                                    <option value="12">12 PM</option>
-                                    <option value="13">1 PM</option>
-                                    <option value="14">2 PM</option>
-                                    <option value="15">3 PM</option>
-                                    <option value="16">4 PM</option>
-                                    <option value="17">5 PM</option>
-                                    <option value="18">6 PM</option>
-                                    <option value="19">7 PM</option>
-                                    <option value="20">8 PM</option>
-                                    <option value="21">9 PM</option>
-                                    <option value="22">10 PM</option>
-                                    <option value="23">11 PM</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-lg-12">
-                                <label for="end_minute">Ending Minute</label>
-                                <select required name="end_minute" class="form-control">
-                                    <option value="">Starting Minute</option>
-                                    <option value="0">0</option>
-                                    <option value="5">5</option>
-                                    <option value="10">10</option>
-                                    <option value="15">15</option>
-                                    <option value="20">20</option>
-                                    <option value="25">25</option>
-                                    <option value="30">30</option>
-                                    <option value="35">35</option>
-                                    <option value="40">40</option>
-                                    <option value="45">45</option>
-                                    <option value="50">50</option>
-                                    <option value="55">55</option>
-                                </select>
+                            <div class="form-group col-md-12 mt-4" id="updateAttendance" style="display: none;">
+                                <button class="btn w-100 btn-primary" type="submit">Update Attendance</button>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-outline-primary">Add</button>
                     </div>
                 </div>
             </form>
@@ -227,6 +167,44 @@
 @section('js')
 <script src="{{asset('admin/vendors/js/bootstrap-select/bootstrap-select.js')}}"></script>
 <script>
+function present_all() {
+    $(".present").prop('checked', true);
+}
+function absent_all() {
+    $(".absent").prop('checked',true);
+}
+$('#class_table_id').change(function(){
+    $('#showStudent').show();
+    $('#updateAttendance').hide();
+    $('#student_content').hide();
+});
+$('.section_class').change(function(){
+    $('#showStudent').show();
+    $('#updateAttendance').hide();
+    $('#student_content').hide();
+});
+function getStudentList() {
+    var date = $('#date').val();
+    var class_id = $('#class_table_id').val();
+    var section_id = $('.section_class').val();
+    if(class_id != null && section_id != null){
+        $.ajax({
+            method : 'get',
+            url : '{{route("attendance.student")}}',
+            data: {date : date, class_id : class_id, section_id : section_id},
+            success : res=>{
+                res = $.parseJSON(res);
+                $('#student_content').show();
+                $('#student-info').html(res.student);
+                $('#showStudent').hide();
+                $('#updateAttendance').show();
+            }
+        });
+    }else{
+        toast('error','Please Select In All Fields !');
+    }
+}
+
 function getSection(data){
     const url = '{{route("student.section")}}';
     const method = 'get';
@@ -274,11 +252,11 @@ $("#filterSyllabus").on('submit',(e)=>{
     });
 });
 
-$("#addRoutineForm").on('submit',function(e){
+$("#takeAttendanceForm").on('submit',function(e){
     e.preventDefault();
     const data = new FormData(this);
-    const url = $("#addRoutineForm").attr('action');
-    const method = $("#addRoutineForm").attr('method');
+    const url = $("#takeAttendanceForm").attr('action');
+    const method = $("#takeAttendanceForm").attr('method');
     $.ajax({
         url:url,
         method:method,
@@ -290,11 +268,13 @@ $("#addRoutineForm").on('submit',function(e){
             res = $.parseJSON(res);
             if(res.status == 200){
                 $("form").trigger("reset");
-                toast('success','Routine Create Successful!');
-                $("#addRoutine .close").click();
-                readData();
+                toast('success',res.message);
+                $("#takeAttendance .close").click();
+                $('#showStudent').show();
+                $('#updateAttendance').hide();
+                $('#student_content').hide();
             }else{
-                toast('error',res.error);
+                toast('error',res.message);
             }
         },
         error: err=>{
@@ -307,25 +287,6 @@ $("#addRoutineForm").on('submit',function(e){
         }
     });
 });
-function readData(){
-    const data = $("#filterSyllabus").serialize();
-    const url = $("#filterSyllabus").attr('action');
-    const method = $("#filterSyllabus").attr('method');
-    $.ajax({
-        url:url,
-        method:method,
-        data:data,
-        success: res=>{
-            res = $.parseJSON(res);
-            if(res.status == 200){
-                $(".student-table").html(res.routine);
-                console.log(res.routine);
-
-            }else{
-                toast('error',res.error);
-            }
-        }
-    });
-}
 </script>
+
 @endsection

@@ -25,7 +25,7 @@
             <li><a href="#dropdown-ui" aria-expanded="false" data-toggle="collapse"><i
                         class="la la-graduation-cap"></i><span>Academic</span></a>
                 <ul id="dropdown-ui" class="collapse list-unstyled pt-0">
-                    <li><a href="">Daily Attendance</a></li>
+                    <li><a href="{{route('attendance.index')}}">Daily Attendance</a></li>
                     <li><a href="{{route('routine.index')}}">Class Routine</a></li>
                     <li><a href="{{route('subject.index')}}">Subject</a></li>
                     <li><a href="{{route('syllabus.index')}}">Syllabus</a></li>

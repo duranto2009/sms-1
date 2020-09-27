@@ -40,7 +40,12 @@ Route::middleware(['role:admin','auth'])->prefix('dashboard')->namespace('Admin'
     Route::get('syllabus-filter', 'SyllabusController@filter')->name('syllabus.filter');
     Route::resource('classroom', 'ClassRoomController');
     Route::get('classroom-filter', 'ClassRoomController@filter')->name('classroom.filter');
+
     Route::resource('routine', 'ClassRoutineController');
     Route::get('routine-filter', 'ClassRoutineController@filter')->name('routine.filter');
+
+    Route::resource('attendance', 'AttendanceController');
+    Route::get('attendance-filter', 'AttendanceController@filter')->name('attendance.filter');
+    Route::get('attendance-get/student', 'AttendanceController@getStudent')->name('attendance.student');
 
 });
