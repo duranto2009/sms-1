@@ -8,7 +8,7 @@ class Attendance extends Model
 {
     protected $guarded = ['id'];
     protected $with = ['class','session','student'];
-
+    protected $dates = ['date'];
     public function class(){
         return $this->belongsTo(ClassTable::class,'class_table_id');
     }

@@ -15,29 +15,29 @@
                     </span>
                 </div>
                 <div class="widget-body">
-                    <form id="filterSyllabus" action="{{route('routine.filter')}}" method="get" autocomplete="off">
+                    <form id="filterSyllabus" action="{{route('attendance.filter')}}" method="get" autocomplete="off">
                         <div class="form-group row d-flex align-items-center mt-3 mb-5 justify-content-center">
                             <div class="col-lg-2">
                                 <select name="month" class="form-control selectpicker" data-live-search="true" required>
                                     <option disabled selected>Select A Month</option>
-                                    <option value="Jan">January</option>
-                                    <option value="Feb">February</option>
-                                    <option value="Mar">March</option>
-                                    <option value="Apr">April</option>
-                                    <option value="May">May</option>
-                                    <option value="Jun">Jun</option>
-                                    <option value="Jul">July</option>
-                                    <option value="Aug">August</option>
-                                    <option value="Sep">September</option>
-                                    <option value="Oct">October</option>
-                                    <option value="Nov">November</option>
-                                    <option value="Dec">December</option>
+                                    <option value="01">January</option>
+                                    <option value="02">February</option>
+                                    <option value="03">March</option>
+                                    <option value="04">April</option>
+                                    <option value="05">May</option>
+                                    <option value="06">Jun</option>
+                                    <option value="07">July</option>
+                                    <option value="08">August</option>
+                                    <option value="09">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
                                 </select>
                             </div>
                             <div class="col-lg-2">
                                 <select name="year" class="form-control selectpicker" data-live-search="true">
                                     @for ($i = now()->format('Y'); $i >= 2000 ; $i--)
-                                     <option value="">{{$i}}</option>
+                                     <option value="{{$i}}">{{$i}}</option>
                                     @endfor
                                 </select>
                             </div>
@@ -61,7 +61,7 @@
                             </div>
                         </div>
                     </form>
-                    <div class="student-table text-center">
+                    <div class="student-table text-center table-responsive">
                         <img src="{{asset('admin/img/empty_box.png')}} " alt="...." class="img-fluid" width="250px">
                         <br>
                         <p>No Data Found</p>
@@ -235,10 +235,10 @@ $("#filterSyllabus").on('submit',(e)=>{
         success: res=>{
             res = $.parseJSON(res);
             if(res.status == 200){
-                toast('success','Successful!');
-                $(".student-table").html(res.routine);
+                toast('success',res.message);
+                $(".student-table").html(res.attandance);
             }else{
-                toast('error',res.error);
+                toast('error',res.message);
             }
         },
         error: err=>{

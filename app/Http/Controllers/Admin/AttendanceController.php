@@ -35,7 +35,7 @@ class AttendanceController extends Controller
                                     <input type="radio" name="status_'.$st->id.'" class="present" value="1" required checked> Present
                                 </label> &nbsp;&nbsp;&nbsp;
                                 <label>
-                                    <input type="radio" name="status_'.$st->id.'" class="absent" value="2" required> Absent
+                                    <input type="radio" name="status_'.$st->id.'" class="absent" value="0" required> Absent
                                 </label>
                         </td>
                     </tr>';
@@ -44,14 +44,95 @@ class AttendanceController extends Controller
         return json_encode(['status'=>200,'student'=>$student]);
 
     }
+    public function filter(Request $r)
+    {
+        $r->validate([
+            "month"     =>"required",
+            "year"      =>"required",
+            "className" =>"required",
+            "section"   =>"required"
+        ]);
+
+        $attandances = Attendance::where('month', $r->month)
+                    ->where('section', $r->section)
+                    ->where('year', $r->year)
+                    ->where('class_table_id', $r->className)
+                    ->get();
+                    // ->groupBy('student_id');
+        $attand =  $attandances->first();
+        if($attand != null){
+        $attandance = '';
+        $attandance .= '
+        <div class="row justify-content-center">
+            <div class="col-md-4 mb-4">
+                <div class="card bg-dark text-white">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <h4>Attendance Report Of '.$attand->date->format('F').'</h4>
+                            <h5>Class : '.$attand->class->name.'</h5>
+                            <h5>Section : '.$r->section.'</h5>
+                            <h5>
+                                Last Updated At : '.$attand->updated_at->format('d-M-Y').' <br>
+                                Time : '.$attand->updated_at->format('h:m:i A').'
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table class="table table-striped table-bordered table-centered mb-0">
+        <thead>
+            <tr style="font-size: 12px;">
+                <th width="40px">
+                    Student <i class="la la-arrow-down"></i>
+                    Date <i class="la la-arrow-right"></i>
+                </th>';
+                for ($md=1; $md <= date('t',strtotime($attand->date->format('m/d/Y'))) ; $md++) {
+                    $attandance .= "<th>{$md}</th>";
+                }
+
+
+            $attandance .= '</tr>
+        </thead>
+            <tbody>';
+            foreach ($attandances as $attn) {
+                $attandance .= '
+                <tr>
+                    <td style="font-weight: bold; width : 100px;text-transform: capitalize;">
+                        '.$attn->student->name.'
+                    </td>';
+                for ($md=1; $md <= date('t',strtotime($attand->date->format('m/d/Y'))) ; $md++) {
+                    $attandance .= '<td class="m-1 text-left">';
+                        if($md == $attn->date->format('d')){
+                            if($attn->status == 1){
+                                $attandance .= '<i class="la la-circle text-success"></i>';
+                            }else{
+                                $attandance .= '<i class="la la-circle text-danger"></i>';
+                            }
+                        }
+                    $attandance .='</td>';
+                }
+
+
+            $attandance .= '
+
+                </tr>';
+            }
+                $attandance.='
+            </tbody>
+        </table>';
+        return json_encode(['status'=>200,'attandance'=>$attandance]);
+
+        }else{
+            return json_encode(['status'=>500,'message'=>'No Data Found!!']);
+        }
+    }
     public function create()
     {
         //
     }
     public function store(Request $request)
     {
-    //     $a = 4;
-    //    return $request->status_.$a;
        $request->validate([
             'date'           => 'required',
             'class_table_id' => 'required',
