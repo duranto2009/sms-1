@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Attendance extends Model
 {
     protected $guarded = ['id'];
-    protected $with = ['class','session','subject'];
+    protected $with = ['class','session','student'];
 
     public function class(){
         return $this->belongsTo(ClassTable::class,'class_table_id');

@@ -58,8 +58,10 @@ class AttendanceController extends Controller
             'section'        => 'required',
             'student_id.*'   => 'required',
         ]);
+        $checkAttandance = Attendance::where('class_table_id',$request->class_table_id)->where('section',$request->section)->where('date',$request->date)->first();
         $date = $this->makeDate($request->date);
-        $data = [
+        if ($checkAttandance == null) {
+            $data = [
             'class_table_id'  => $request->class_table_id,
             'section'         => $request->section,
             'date'            => $date,
@@ -67,18 +69,19 @@ class AttendanceController extends Controller
             'year'            => $date->format('Y'),
             'session_year_id' => SessionYear::where('status', 1)->first()->id,
         ];
-        foreach($request->student_id as $student){
-            $data['student_id'] = $student;
-            $data['status'] = $request->get('status_'.$student);
-            Attendance::create($data);
+            foreach ($request->student_id as $student) {
+                $data['student_id'] = $student;
+                $data['status'] = $request->get('status_'.$student);
+                Attendance::create($data);
+            }
+            try {
+                return json_encode(['status'=>200,'message'=>'Attendance Take Successful!']);
+            } catch (\Exception $e) {
+                return json_encode(['status'=>500,'message'=>$e->getMessage()]);
+            }
+        }else{
+            return json_encode(['status'=>500,'message'=>'Allready Taken!']);
         }
-        try {
-            return json_encode(['status'=>200,'message'=>'Attendance Take Successful!']);
-        } catch (\Exception $e) {
-            return json_encode(['status'=>404,'message'=>$e->getMessage()]);
-        }
-
-        return $request;
     }
     public function show(Attendance $attendance)
     {
