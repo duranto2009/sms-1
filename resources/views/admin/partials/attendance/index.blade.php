@@ -63,7 +63,7 @@
                             </div>
                         </div>
                     </form>
-                    <div class="student-table text-center table-responsive">
+                    <div class="student-table text-center table-responsive" style="display: none">
                         <img src="{{asset('admin/img/empty_box.png')}} " alt="...." class="img-fluid" width="250px">
                         <br>
                         <p>No Data Found</p>
@@ -180,6 +180,9 @@
 function absent_all() {
     $(".absent").prop('checked',true);
 }
+$('#className').change(function(){
+    $('.student-table').hide();
+});
 $('#class_table_id').change(function(){
     $('#showStudent').show();
     $('#updateAttendance').hide();
@@ -244,8 +247,10 @@ $("#filterSyllabus").on('submit',(e)=>{
             if(res.status == 200){
                 toast('success',res.message);
                 $(".student-table").html(res.attandance);
+                $('.student-table').show();
             }else{
                 toast('error',res.message);
+                $('.student-table').hide();
             }
         },
         error: err=>{

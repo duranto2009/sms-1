@@ -50,9 +50,10 @@ class AttendanceController extends Controller
             "className" =>"required",
             "section"   =>"required"
         ]);
-
+        $session = SessionYear::where('status', 1)->first();
         $attandances = Attendance::where('month', $r->month)
                     ->where('section', $r->section)
+                    ->where('session_year_id', $session->id)
                     ->where('year', $r->year)
                     ->where('class_table_id', $r->className)
                     ->get();
