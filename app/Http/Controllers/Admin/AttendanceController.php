@@ -14,14 +14,14 @@ class AttendanceController extends Controller
     public function index()
     {
         $class = ClassTable::all();
-        return view('admin.partials.attendance.index',compact('class'));
+        return view('admin.partials.attendance.index', compact('class'));
     }
     public function getStudent(Request $r)
     {
         $session = SessionYear::where('status', 1)->first()->title;
-        $students = Student::where('class_table_id',$r->class_id)
-                    ->where('section',$r->section_id)
-                    ->where('session',$session)
+        $students = Student::where('class_table_id', $r->class_id)
+                    ->where('section', $r->section_id)
+                    ->where('session', $session)
                     ->get();
         $student = '';
         foreach ($students as $st) {
@@ -39,10 +39,8 @@ class AttendanceController extends Controller
                                 </label>
                         </td>
                     </tr>';
-
         }
         return json_encode(['status'=>200,'student'=>$student]);
-
     }
     public function filter(Request $r)
     {
@@ -58,11 +56,11 @@ class AttendanceController extends Controller
                     ->where('year', $r->year)
                     ->where('class_table_id', $r->className)
                     ->get();
-                    // ->groupBy('student_id');
+        $collection = $attandances->groupBy('student_id');
         $attand =  $attandances->first();
-        if($attand != null){
-        $attandance = '';
-        $attandance .= '
+        if ($attand != null) {
+            $attandance = '';
+            $attandance .= '
         <div class="row justify-content-center">
             <div class="col-md-4 mb-4">
                 <div class="card bg-dark text-white">
@@ -87,9 +85,9 @@ class AttendanceController extends Controller
                     Student <i class="la la-arrow-down"></i>
                     Date <i class="la la-arrow-right"></i>
                 </th>';
-                for ($md=1; $md <= date('t',strtotime($attand->date->format('m/d/Y'))) ; $md++) {
-                    $attandance .= "<th>{$md}</th>";
-                }
+            for ($md=1; $md <= date('t', strtotime($attand->date->format('m/d/Y'))) ; $md++) {
+                $attandance .= "<th>{$md}</th>";
+            }
 
 
             $attandance .= '</tr>
@@ -101,29 +99,28 @@ class AttendanceController extends Controller
                     <td style="font-weight: bold; width : 100px;text-transform: capitalize;">
                         '.$attn->student->name.'
                     </td>';
-                for ($md=1; $md <= date('t',strtotime($attand->date->format('m/d/Y'))) ; $md++) {
+                for ($md=1; $md <= date('t', strtotime($attand->date->format('m/d/Y'))) ; $md++) {
                     $attandance .= '<td class="m-1 text-left">';
-                        if($md == $attn->date->format('d')){
-                            if($attn->status == 1){
-                                $attandance .= '<i class="la la-circle text-success"></i>';
-                            }else{
-                                $attandance .= '<i class="la la-circle text-danger"></i>';
-                            }
+                    if ($md == $attn->date->format('d')) {
+                        if ($attn->status == 1) {
+                            $attandance .= '<i class="la la-circle text-success"></i>';
+                        } else {
+                            $attandance .= '<i class="la la-circle text-danger"></i>';
                         }
+                    }
                     $attandance .='</td>';
                 }
 
 
-            $attandance .= '
+                $attandance .= '
 
                 </tr>';
             }
-                $attandance.='
+            $attandance.='
             </tbody>
         </table>';
-        return json_encode(['status'=>200,'attandance'=>$attandance]);
-
-        }else{
+            return json_encode(['status'=>200,'attandance'=>$attandance]);
+        } else {
             return json_encode(['status'=>500,'message'=>'No Data Found!!']);
         }
     }
@@ -133,13 +130,13 @@ class AttendanceController extends Controller
     }
     public function store(Request $request)
     {
-       $request->validate([
+        $request->validate([
             'date'           => 'required',
             'class_table_id' => 'required',
             'section'        => 'required',
             'student_id.*'   => 'required',
         ]);
-        $checkAttandance = Attendance::where('class_table_id',$request->class_table_id)->where('section',$request->section)->where('date',$request->date)->first();
+        $checkAttandance = Attendance::where('class_table_id', $request->class_table_id)->where('section', $request->section)->where('date', $request->date)->first();
         $date = $this->makeDate($request->date);
         if ($checkAttandance == null) {
             $data = [
@@ -160,7 +157,7 @@ class AttendanceController extends Controller
             } catch (\Exception $e) {
                 return json_encode(['status'=>500,'message'=>$e->getMessage()]);
             }
-        }else{
+        } else {
             return json_encode(['status'=>500,'message'=>'Allready Taken!']);
         }
     }

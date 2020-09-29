@@ -11,7 +11,8 @@
                 <div class="widget-header bordered no-actions d-flex align-items-center">
                     <h1> <i class="la la-calendar text-info"></i>Daily Attendance</h1>
                     <span class="ml-auto">
-                        <button data-toggle="modal" data-target="#takeAttendance" class="btn btn-outline-info"><i class="la la-plus"></i>Take Attendance</button>
+                        <button data-toggle="modal" data-target="#takeAttendance" class="btn btn-outline-info"><i
+                                class="la la-plus"></i>Take Attendance</button>
                     </span>
                 </div>
                 <div class="widget-body">
@@ -20,30 +21,31 @@
                             <div class="col-lg-2">
                                 <select name="month" class="form-control selectpicker" data-live-search="true" required>
                                     <option disabled selected>Select A Month</option>
-                                    <option value="01">January</option>
-                                    <option value="02">February</option>
-                                    <option value="03">March</option>
-                                    <option value="04">April</option>
-                                    <option value="05">May</option>
-                                    <option value="06">Jun</option>
-                                    <option value="07">July</option>
-                                    <option value="08">August</option>
-                                    <option value="09">September</option>
-                                    <option value="10">October</option>
-                                    <option value="11">November</option>
-                                    <option value="12">December</option>
+                                    <option {{now()->format('m') == '01'?'selected':''}} value="01">January</option>
+                                    <option {{now()->format('m') == '02'?'selected':''}} value="02">February</option>
+                                    <option {{now()->format('m') == '03'?'selected':''}} value="03">March</option>
+                                    <option {{now()->format('m') == '04'?'selected':''}} value="04">April</option>
+                                    <option {{now()->format('m') == '05'?'selected':''}} value="05">May</option>
+                                    <option {{now()->format('m') == '06'?'selected':''}} value="06">Jun</option>
+                                    <option {{now()->format('m') == '07'?'selected':''}} value="07">July</option>
+                                    <option {{now()->format('m') == '08'?'selected':''}} value="08">August</option>
+                                    <option {{now()->format('m') == '09'?'selected':''}} value="09">September</option>
+                                    <option {{now()->format('m') == '10'?'selected':''}} value="10">October</option>
+                                    <option {{now()->format('m') == '11'?'selected':''}} value="11">November</option>
+                                    <option {{now()->format('m') == '12'?'selected':''}} value="12">December</option>
                                 </select>
                             </div>
                             <div class="col-lg-2">
                                 <select name="year" class="form-control selectpicker" data-live-search="true">
                                     @for ($i = now()->format('Y'); $i >= 2000 ; $i--)
-                                     <option value="{{$i}}">{{$i}}</option>
+                                    <option value="{{$i}}">{{$i}}</option>
                                     @endfor
                                 </select>
                             </div>
                             <div class="col-lg-2">
                                 <select id="className" name="className"
-                                    class="selectpicker show-menu-arrow form-control" data-live-search="true" required onchange="getSection(this.value)">
+                                    class="selectpicker show-menu-arrow form-control" data-live-search="true" required
+                                    onchange="getSection(this.value)">
                                     <option disabled selected>Select Class</option>
                                     @foreach ($class as $cls)
                                     <option value="{{$cls->id}}">{{$cls->name}}</option>
@@ -76,7 +78,8 @@
     <div class="modal modal-top fade" id="takeAttendance" tabindex="-1" role="dialog" aria-labelledby="takeAttendance"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <form action="{{route('attendance.store')}}" id="takeAttendanceForm" method="POST" enctype="multipart/form-data">
+            <form action="{{route('attendance.store')}}" id="takeAttendanceForm" method="POST"
+                enctype="multipart/form-data">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
@@ -94,8 +97,9 @@
                             </div>
                             <div class="form-group col-md-12">
                                 <label for="class_table_id">Class</label>
-                                <select id="class_table_id" name="class_table_id" class="selectpicker show-menu-arrow form-control" data-live-search="true" required
-                                onchange="getSection(this.value)">
+                                <select id="class_table_id" name="class_table_id"
+                                    class="selectpicker show-menu-arrow form-control" data-live-search="true" required
+                                    onchange="getSection(this.value)">
                                     <option disabled selected>Select Class</option>
                                     @foreach ($class as $cls)
                                     <option value="{{$cls->id}}">{{$cls->name}}</option>
@@ -112,10 +116,12 @@
                             </div>
                             <div class="row" id="student_content" style="margin-left: 2px;display: none;">
                                 <div class="row" style="margin-bottom: 10px; width: 100%;">
-                                    <div class="col-6"><a href="javascript:" class="btn btn-sm btn-secondary" onclick="present_all()">Present
+                                    <div class="col-6"><a href="javascript:" class="btn btn-sm btn-secondary"
+                                            onclick="present_all()">Present
                                             All</a></div>
-                                    <div class="col-6"><a href="javascript:" class="btn btn-sm btn-secondary float-right"
-                                            onclick="absent_all()">Absent All</a></div>
+                                    <div class="col-6"><a href="javascript:"
+                                            class="btn btn-sm btn-secondary float-right" onclick="absent_all()">Absent
+                                            All</a></div>
                                 </div>
 
                                 <div class="table-responsive row col-md-12" style="padding-right: 0px;">
@@ -126,7 +132,7 @@
                                                 <th>Status</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="student-info" >
+                                        <tbody id="student-info">
                                             <tr>
                                                 <td>
                                                     Porter Gutmann </td>
@@ -146,7 +152,8 @@
                                 </div>
                             </div>
                             <div class="form-group col-md-12" id="showStudent" style="display: none;">
-                                <a class="btn btn-block btn-secondary" onclick="getStudentList()" style="color: #fff;" disabled="">Show Student
+                                <a class="btn btn-block btn-secondary" onclick="getStudentList()" style="color: #fff;"
+                                    disabled="">Show Student
                                     List</a>
                             </div>
                             <div class="form-group col-md-12 mt-4" id="updateAttendance" style="display: none;">
@@ -167,7 +174,7 @@
 @section('js')
 <script src="{{asset('admin/vendors/js/bootstrap-select/bootstrap-select.js')}}"></script>
 <script>
-function present_all() {
+    function present_all() {
     $(".present").prop('checked', true);
 }
 function absent_all() {
