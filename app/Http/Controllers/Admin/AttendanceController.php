@@ -89,32 +89,29 @@ class AttendanceController extends Controller
             for ($md=1; $md <= date('t', strtotime($attand->date->format('m/d/Y'))) ; $md++) {
                 $attandance .= "<th>{$md}</th>";
             }
-
-
             $attandance .= '</tr>
         </thead>
             <tbody>';
-            foreach ($attandances as $attn) {
+            foreach ($collection as $attn) {
                 $attandance .= '
                 <tr>
                     <td style="font-weight: bold; width : 100px;text-transform: capitalize;">
-                        '.$attn->student->name.'
+                        '.$attn->first()->student->name.'
                     </td>';
                 for ($md=1; $md <= date('t', strtotime($attand->date->format('m/d/Y'))) ; $md++) {
                     $attandance .= '<td class="m-1 text-left">';
-                    if ($md == $attn->date->format('d')) {
-                        if ($attn->status == 1) {
-                            $attandance .= '<i class="la la-circle text-success"></i>';
-                        } else {
-                            $attandance .= '<i class="la la-circle text-danger"></i>';
+                    foreach ($attn as $row) {
+                        if ($md == date('d', strtotime($row->date))) {
+                            if ($row->status == 1) {
+                                $attandance .= '<i class="la la-circle text-success"></i>';
+                            } else {
+                                $attandance .= '<i class="la la-circle text-danger"></i>';
+                            }
                         }
                     }
                     $attandance .='</td>';
                 }
-
-
                 $attandance .= '
-
                 </tr>';
             }
             $attandance.='
