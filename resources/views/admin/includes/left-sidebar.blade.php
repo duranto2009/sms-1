@@ -33,38 +33,38 @@
                     <li><a href="{{route('classroom.index')}}">Class Room</a></li>
                     <li><a href="{{route('department.index')}}">Department</a></li>
                     <li><a href="{{route('session.index')}}">Session</a></li>
-                    <li><a href="">Event Calender</a></li>
+                    <li><a href="{{route('session.index')}}">Event Calender</a></li>
                 </ul>
             </li>
             <li><a href="#dropdown-icons" aria-expanded="false" data-toggle="collapse"><i
                         class="la la-book"></i><span>Exam</span></a>
                 <ul id="dropdown-icons" class="collapse list-unstyled pt-0">
-                    <li><a href="">Marks</a></li>
-                    <li><a href="">Exam</a></li>
-                    <li><a href="">Grade</a></li>
-                    <li><a href="">Promotion</a></li>
+                    <li><a href="{{route('session.index')}}">Marks</a></li>
+                    <li><a href="{{route('session.index')}}">Exam</a></li>
+                    <li><a href="{{route('session.index')}}">Grade</a></li>
+                    <li><a href="{{route('session.index')}}">Promotion</a></li>
                 </ul>
             </li>
             <li><a href="#dropdown-forms" aria-expanded="false" data-toggle="collapse"><i
                         class="la la-bank"></i><span>Accounting</span></a>
                 <ul id="dropdown-forms" class="collapse list-unstyled pt-0">
-                    <li><a href="">Student Fee Manager</a></li>
-                    <li><a href="">Expense Category</a></li>
-                    <li><a href="">Expense Manager</a></li>
+                    <li><a href="{{route('session.index')}}">Student Fee Manager</a></li>
+                    <li><a href="{{route('session.index')}}">Expense Category</a></li>
+                    <li><a href="{{route('session.index')}}">Expense Manager</a></li>
                 </ul>
             </li>
             <li><a href="#dropdown-tables" aria-expanded="false" data-toggle="collapse"><i
                         class="la la-th-large"></i><span>Back Office</span></a>
                 <ul id="dropdown-tables" class="collapse list-unstyled pt-0">
-                    <li><a href="">Book List Manager</a></li>
-                    <li><a href="">Book Issu Report</a></li>
-                    <li><a href="">Noticeboard</a></li>
+                    <li><a href="{{route('session.index')}}">Book List Manager</a></li>
+                    <li><a href="{{route('session.index')}}">Book Issu Report</a></li>
+                    <li><a href="{{route('session.index')}}">Noticeboard</a></li>
                 </ul>
             </li>
             <li><a href="#school-setting" aria-expanded="false" data-toggle="collapse"><i
                         class="la la-gear"></i><span>Setting</span></a>
                 <ul id="school-setting" class="collapse list-unstyled pt-0">
-                    <li><a href="">School Setting</a></li>
+                    <li><a href="{{route('session.index')}}">School Setting</a></li>
                 </ul>
             </li>
         </ul>
