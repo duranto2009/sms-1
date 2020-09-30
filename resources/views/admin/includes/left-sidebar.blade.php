@@ -33,7 +33,7 @@
                     <li><a href="{{route('classroom.index')}}">Class Room</a></li>
                     <li><a href="{{route('department.index')}}">Department</a></li>
                     <li><a href="{{route('session.index')}}">Session</a></li>
-                    <li><a href="{{route('session.index')}}">Event Calender</a></li>
+                    <li><a href="{{route('calendar.index')}}">Event Calender</a></li>
                 </ul>
             </li>
             <li><a href="#dropdown-icons" aria-expanded="false" data-toggle="collapse"><i

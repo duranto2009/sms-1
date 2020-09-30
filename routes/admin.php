@@ -47,6 +47,15 @@ Route::middleware(['role:admin','auth'])->prefix('dashboard')->namespace('Admin'
     Route::resource('attendance', 'AttendanceController');
     Route::get('attendance-filter', 'AttendanceController@filter')->name('attendance.filter');
     Route::get('attendance-get/student', 'AttendanceController@getStudent')->name('attendance.student');
-    Route::resource('events', 'EventController');
+
+    Route::resource('calendar', 'EventController');
+    Route::get('read-events', 'EventController@readData')->name('calendar.readData');
+
+    //fullcalender
+    // Route::get('events','EventController@index');
+    // Route::post('events/create','EventController@create');
+    // Route::post('events/update','EventController@update');
+    // Route::post('events/delete','EventController@destroy');
+
 
 });
