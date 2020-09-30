@@ -106,7 +106,7 @@
 //     displayEventTime: true
 // });
 $(document).ready(function() {
-refreshEventCalendar();
+// refreshEventCalendar();
 readData();
 });
 var refreshEventCalendar = function (){
@@ -146,7 +146,6 @@ $("#addEventForm").on('submit',(e)=>{
                 toast('success',res.message);
                 $("#addEvent .close").click();
                 readData();
-                refreshEventCalendar();
             }else{
                 toast('error',res.message);
             }
@@ -175,6 +174,37 @@ function readData(){
                 toast('error',res.error);
             }
         }
+    });
+}
+$(window).on('hashchange', function() {
+    if (window.location.hash) {
+        var page = window.location.hash.replace('#', '');
+        if (page == Number.NaN || page <= 0) {
+            return false;
+        }else{
+            getData(page);
+        }
+    }
+});
+$(document).on('click', '.pagination a',function(event){
+    event.preventDefault();
+    $('li').removeClass('active');
+    $(this).parent('li').addClass('active');
+    var myurl = $(this).attr('href');
+    var page=$(this).attr('href').split('page=')[1];
+    getData(page);
+});
+function getData(page){
+    $.ajax({
+        url: '{{route('calendar.readData')}}?page=' + page,
+        type: "get",
+        datatype: "html"
+    }).done(res=>{
+        res = $.parseJSON(res);
+        $(".event-content").empty().html(res.data);
+        location.hash = page;
+    }).fail(function(jqXHR, ajaxOptions, thrownError){
+        alert('No response from server');
     });
 }
 </script>

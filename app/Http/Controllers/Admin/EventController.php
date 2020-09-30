@@ -43,7 +43,7 @@ class EventController extends Controller
     }
     public function readData()
     {
-        $calendar = Event::orderBy('start','asc')->get();
+        $calendar = Event::orderBy('start','asc')->paginate(10);
         $event = '';
         $i = 1;
         foreach ($calendar as $evt) {
@@ -58,7 +58,7 @@ class EventController extends Controller
             $event.='</td>';
             $event.='</tr>';
         }
-
+        $event .= '<tr><td colspan="3">'.$calendar->links().'</td></tr>';
         return json_encode(['status'=>200,'data'=>$event]);
     }
     public function edit(Event $calendar)
