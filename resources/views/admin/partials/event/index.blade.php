@@ -100,17 +100,36 @@
 <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.9.0/dist/fullcalendar.min.js"></script>
 <script>
-var calendar = $('#calendar').fullCalendar({
-    editable: true,
-    events: '{{route("calendar.index")}}',
-    displayEventTime: true
+// var calendar = $('#calendar').fullCalendar({
+//     editable: true,
+//     events: '{{route("calendar.index")}}',
+//     displayEventTime: true
+// });
+$(document).ready(function() {
+refreshEventCalendar();
+readData();
 });
-function reloadCalendar(){
-    $('#calendar').fullCalendar({
-        events: '{{route("calendar.index")}}'
+var refreshEventCalendar = function (){
+    var url = '{{route("calendar.index")}}';
+    $.ajax({
+        type : 'GET',
+        url: url,
+        dataType: 'json',
+        success : function(response) {
+            var event_calendar = [];
+            for(let i = 0; i < response.length; i++) {
+                var obj;
+                obj={"title" : response[i].title, "start" : response[i].start, "end" : response[i].end};
+                event_calendar.push(obj);
+            }
+            $('#calendar').fullCalendar({
+                disableDragging: true,
+                events: event_calendar,
+                displayEventTime: false,
+            });
+        }
     });
 }
-readData();
 $("#addEventForm").on('submit',(e)=>{
     e.preventDefault();
     const data = $("#addEventForm").serialize();
@@ -127,7 +146,7 @@ $("#addEventForm").on('submit',(e)=>{
                 toast('success',res.message);
                 $("#addEvent .close").click();
                 readData();
-                reloadCalendar();
+                refreshEventCalendar();
             }else{
                 toast('error',res.message);
             }
@@ -151,7 +170,7 @@ function readData(){
             res = $.parseJSON(res);
             if(res.status == 200){
                 $(".event-content").html(res.data);
-                reloadCalendar();
+                refreshEventCalendar();
             }else{
                 toast('error',res.error);
             }
