@@ -3,6 +3,28 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@3.9.0/dist/fullcalendar.min.css" />
 @endsection
 @section('content')
+<style>
+    button.fc-today-button.fc-button.fc-state-default.fc-corner-left.fc-corner-right {
+        background: radial-gradient(#62ffff, #008fbf);
+    }
+
+    th.fc-day-header.fc-widget-header.fc-fri {
+        color: red;
+        font-weight: bold;
+    }
+    td.fc-day-top.fc-fri span {
+    color: #f00 !important;
+    }
+    span.fc-day-number {
+        background: #3e457d;
+        border-radius: 15px;
+        height: 24.5px;
+        width: 24.5px;
+        line-height: 24.5px;
+        text-align: center;
+        box-shadow: inset 0px 0px 4px 1px black;
+    }
+</style>
 <div class="container-fluid">
     <div class="row">
         <div class="col-xl-12">
@@ -61,26 +83,24 @@
                     <div class="modal-body">
                         <div id="msg"></div>
                         <div class="form-group row">
-                            <label for="title"
-                                class="col-md-3 col-form-label text-md-right">'Event Name</label>
+                            <label for="title" class="col-md-3 col-form-label text-md-right">'Event Name</label>
                             <div class="col-md-8">
                                 <input id="title" type="text" class="form-control" name="title" required
                                     autocomplete="off" autofocus>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="start"
-                                class="col-md-3 col-form-label text-md-right">'Start Date</label>
+                            <label for="start" class="col-md-3 col-form-label text-md-right">'Start Date</label>
                             <div class="col-md-8">
                                 <input id="start" type="datetime-local" class="form-control" name="start" required
                                     autocomplete="off">
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="end"
-                                class="col-md-3 col-form-label text-md-right">'End Date</label>
+                            <label for="end" class="col-md-3 col-form-label text-md-right">'End Date</label>
                             <div class="col-md-8">
-                                <input id="end" type="datetime-local" class="form-control" name="end" required autocomplete="off">
+                                <input id="end" type="datetime-local" class="form-control" name="end" required
+                                    autocomplete="off">
                             </div>
                         </div>
                     </div>
@@ -100,7 +120,7 @@
 <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.9.0/dist/fullcalendar.min.js"></script>
 <script>
-// var calendar = $('#calendar').fullCalendar({
+    // var calendar = $('#calendar').fullCalendar({
 //     editable: true,
 //     events: '{{route("calendar.index")}}',
 //     displayEventTime: true

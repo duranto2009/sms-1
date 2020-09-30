@@ -43,7 +43,7 @@ class EventController extends Controller
     }
     public function readData()
     {
-        $calendar = Event::orderBy('start','asc')->paginate(10);
+        $calendar = Event::orderBy('start','asc')->paginate(7);
         $event = '';
         $i = 1;
         foreach ($calendar as $evt) {
