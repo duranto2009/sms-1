@@ -5,80 +5,61 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Grade;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Student;
 
 class GradeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        // $grades = Grade::orderBy('point','desc')->get();
+        return view('admin.partials.grade.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function get()
+    {
+        $student =  Student::all();
+        $data = [];
+        foreach($student as $i=>$st){
+
+            $deleteRoute = route("student.destroy", $st->id);
+
+            $data[$i] = [
+                'id'=>$st->id,
+                'name'=>$st->name,
+                'email'=>$st->email,
+                'phone'=>$st->phone,
+                'gender'=>$st->gender,
+                'session'=>'<a href="javascript:void(0);" onclick="deleteModal('. "'{$deleteRoute}'".','."'Delete Section'" .')"><i data-id='.$st->id.' id="delete" class="la la-close delete" title="Delete Class"></i></a>',
+            ];
+        }
+        return $data;
+    }
+
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Grade  $grade
-     * @return \Illuminate\Http\Response
-     */
     public function show(Grade $grade)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Grade  $grade
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Grade $grade)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Grade  $grade
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Grade $grade)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Grade  $grade
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Grade $grade)
     {
         //

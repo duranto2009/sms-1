@@ -41,7 +41,7 @@
                 <ul id="dropdown-icons" class="collapse list-unstyled pt-0">
                     <li><a href="{{route('session.index')}}">Marks</a></li>
                     <li><a href="{{route('session.index')}}">Exam</a></li>
-                    <li><a href="{{route('session.index')}}">Grade</a></li>
+                    <li><a href="{{route('grade.index')}}">Grade</a></li>
                     <li><a href="{{route('session.index')}}">Promotion</a></li>
                 </ul>
             </li>

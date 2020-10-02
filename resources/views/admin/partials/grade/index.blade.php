@@ -25,25 +25,14 @@
                                     <thead>
                                         <tr>
                                             <th>SL</th>
-                                            <th>Department</th>
+                                            <th>Grade</th>
+                                            <th>Grade Pont</th>
+                                            <th>Mark From</th>
+                                            <th>Mark Upto</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody class="table-content">
-                                        @foreach ($depts as $i=>$dep)
-                                        <tr>
-                                            <td>{{$i+1}}</td>
-                                            <td>{{$dep->name}}</td>
-                                            <td class="td-actions">
-                                                <a href="javascript:void(0);" onclick="editModal('{{route('department.edit', $dep->id)}}','Update Section')">
-                                                    <i data-id='.$cls->id.' id="edit" class="la la-edit edit" title="Edit Class"></i>
-                                                </a>
-                                                <a href="javascript:void(0);" onclick="deleteModal('{{route('department.destroy', $dep->id)}}','Delete Section')">
-                                                    <i data-id='.$cls->id.' id="delete" class="la la-close delete" title="Delete Class"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -93,10 +82,9 @@
 @section('js')
 <script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
 <script>
-    $('#example').DataTable();
-    $('select').attr('name','example_length').addClass('form-control');
-    $('input').attr('aria-controls','example').addClass('form-control');
-    readData();
+readData();
+$('select').attr('name','example_length').addClass('form-control');
+$('input').attr('aria-controls','example').addClass('form-control');
 $("#addDepartmentForm").on('submit',(e)=>{
     e.preventDefault();
     const data = $("#addDepartmentForm").serialize();
@@ -128,18 +116,19 @@ $("#addDepartmentForm").on('submit',(e)=>{
     });
 });
 function readData(){
-    const url = '{{route("department.readData")}}';
-    $.ajax({
-        url:url,
-        method:'get',
-        success: res=>{
-            res = $.parseJSON(res);
-            if(res.status == 200){
-                $(".table-content").html(res.data);
-            }else{
-                toast('error',res.error);
-            }
-        }
+    $('#example').DataTable({
+        ajax: {
+            url: '{{route("grade.get")}}',
+            dataSrc: ''
+        },
+        columns: [
+            { data: 'id' },
+            { data: 'name' },
+            { data: 'email' },
+            { data: 'gender' },
+            { data: 'phone' },
+            { data: 'session' }
+        ]
     });
 }
 </script>
