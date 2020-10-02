@@ -4,36 +4,15 @@
 <link rel="stylesheet" href="{{asset('admin/css/datatables/datatables.min.css')}}">
 @endsection
 @section('content')
-<style>
-    .td-actions i {
-    background: transparent;
-    color: #aea9c3;
-    font-size: 1.6rem;
-    padding: .5rem;
-    border-radius: 50%;
-    transition: all 0.4s ease
-    }
-
-    .td-actions i.edit:hover,
-    .td-actions i.more:hover {
-    background: rgba(0, 165, 63, 0.8);
-    color: #fff
-    }
-
-    .td-actions i.delete:hover {
-    background: #e76c90;
-    color: #fff
-    }
-</style>
 <div class="container-fluid">
     <div class="row">
         <div class="col-xl-12">
             <!-- Sorting -->
             <div class="widget has-shadow">
                 <div class="widget-header bordered no-actions d-flex align-items-center">
-                    <h1> <i class="la la-paste"></i> Grade List</h1>
+                    <h1> <i class="la la-certificate"></i> Grade List</h1>
                     <span class="ml-auto">
-                        <button class="btn btn-outline-info" data-toggle="modal" data-target="#addDepartment">
+                        <button class="btn btn-outline-info" data-toggle="modal" data-target="#addGrade">
                             <i class="la la-plus"></i> Add Grade
                         </button>
                     </span>
@@ -67,26 +46,41 @@
     <!-- End Row -->
 
     <!--Add Class Modal -->
-    <div class="modal fade" id="addDepartment" tabindex="-1" role="dialog" aria-labelledby="addDepartmentLabel"
+    <div class="modal fade" id="addGrade" tabindex="-1" role="dialog" aria-labelledby="addGradeLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <form id='addDepartmentForm' action="{{route('department.store')}}" method="POST" autocomplete="off">
+            <form id='addGradeForm' action="{{route('grade.store')}}" method="POST" autocomplete="off" novalidate>
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3 class="modal-title" id="addDepartmentLabel">Add New Department</h3>
+                        <h3 class="modal-title" id="addGradeLabel">Add Grade</h3>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div id="msg"></div>
-                        <div class="form-group row">
-                            <label for="name" class="col-md-3 col-form-label text-md-right">{{ __('Department') }}</label>
-                            <div class="col-md-8">
-                                <input id="name" type="text" class="form-control" name="name"  required autocomplete="off" autofocus>
-                            </div>
-                        </div>
+<div class="form-row">
+    <div class="form-group col-md-12">
+        <label for="grade">Grade</label>
+        <input type="text" class="form-control" id="grade" name="grade" placeholder="Grade" required="">
+    </div>
+
+    <div class="form-group col-md-12">
+        <label for="point">Grade Point</label>
+        <input type="number" class="form-control" id="point" name="point" placeholder="Grade Point"
+            required="">
+    </div>
+
+    <div class="form-group col-md-12">
+        <label for="from">Mark From</label>
+        <input type="number" class="form-control" id="from" name="from" placeholder="Mark From" required="">
+    </div>
+
+    <div class="form-group col-md-12">
+        <label for="upto">Mark Upto</label>
+        <input type="number" class="form-control" id="upto" name="upto" placeholder="Mark Upto" required="">
+    </div>
+</div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
@@ -106,11 +100,18 @@
 readData();
 $('select').attr('name','example_length').addClass('form-control');
 $('input').attr('aria-controls','example').addClass('form-control');
-$("#addDepartmentForm").on('submit',(e)=>{
+$("#point").on('keyup',function(e){
+    const point = $(this).val()
+    if(point > 5){
+        alert('Grade point must be 1-5');
+        $(this).val('');
+    }
+});
+$("#addGradeForm").on('submit',(e)=>{
     e.preventDefault();
-    const data = $("#addDepartmentForm").serialize();
-    const url = $("#addDepartmentForm").attr('action');
-    const method = $("#addDepartmentForm").attr('method');
+    const data = $("#addGradeForm").serialize();
+    const url = $("#addGradeForm").attr('action');
+    const method = $("#addGradeForm").attr('method');
     $.ajax({
         url:url,
         method:method,
@@ -119,11 +120,11 @@ $("#addDepartmentForm").on('submit',(e)=>{
             res = $.parseJSON(res);
             if(res.status == 200){
                 $("form").trigger("reset");
-                toast('success','Department Create Successful!');
-                $("#addDepartment .close").click();
+                toast('success',res.message);
+                $("#addGrade .close").click();
                 readData();
             }else{
-                toast('error',res.error);
+                toast('error',res.message);
             }
         },
         error: err=>{

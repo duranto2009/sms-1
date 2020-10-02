@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Grade;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Student;
 
 class GradeController extends Controller
 {
@@ -17,22 +16,23 @@ class GradeController extends Controller
 
     public function get()
     {
-        $student =  Student::all();
+        $grade =  Grade::all();
         $data = [];
-        foreach($student as $i=>$st){
+        foreach($grade as $i=>$st){
 
-            $deleteRoute = route("student.destroy", $st->id);
+            $editRoute = route("grade.edit", $st->id);
+            $deleteRoute = route("grade.destroy", $st->id);
 
             $data[$i] = [
                 'id'=>$st->id,
-                'name'=>$st->name,
-                'email'=>$st->email,
-                'phone'=>$st->phone,
-                'gender'=>$st->gender,
+                'name'=>$st->grade,
+                'email'=>$st->point,
+                'phone'=>$st->from,
+                'gender'=>$st->upto,
                 'session'=>'
-                <a href="javascript:void(0);" onclick="deleteModal('. "'{$deleteRoute}'".','."'Delete Section'" .')" class="td-actions"><i data-id='.$st->id.' id="delete" class="la la-pencil edit" title="Delete Class"></i></a>
+                <a href="javascript:void(0);" onclick="editModal('. "'{$editRoute}'".','."'Edit Grade'" .')" class="td-actions"><i data-id='.$st->id.' id="delete" class="la la-pencil edit" title="Edit Grade"></i></a>
 
-                <a href="javascript:void(0);" onclick="deleteModal('. "'{$deleteRoute}'".','."'Delete Section'" .')" class="td-actions"><i data-id='.$st->id.' id="delete" class="la la-close delete" title="Delete Class"></i></a>',
+                <a href="javascript:void(0);" onclick="deleteModal('. "'{$deleteRoute}'".','."'Edit Grade'" .')" class="td-actions"><i data-id='.$st->id.' id="delete" class="la la-close delete" title="Delete Grade"></i></a>',
             ];
         }
         return $data;
@@ -45,7 +45,19 @@ class GradeController extends Controller
 
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'grade' => 'required',
+            'point' => 'required|numeric',
+            'from'  => 'required|numeric',
+            'upto'  => 'required|numeric',
+        ]);
+        try {
+            Grade::create($data);
+            return json_encode(['status'=>200,'data'=>$data,'message'=>'Grade Created Successful!']);
+        } catch (\Exception $e) {
+            return json_encode(['status'=>500,'message'=>$e->getMessage()]);
+        }
+
     }
 
     public function show(Grade $grade)
