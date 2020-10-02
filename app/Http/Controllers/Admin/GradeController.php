@@ -29,7 +29,10 @@ class GradeController extends Controller
                 'email'=>$st->email,
                 'phone'=>$st->phone,
                 'gender'=>$st->gender,
-                'session'=>'<a href="javascript:void(0);" onclick="deleteModal('. "'{$deleteRoute}'".','."'Delete Section'" .')"><i data-id='.$st->id.' id="delete" class="la la-close delete" title="Delete Class"></i></a>',
+                'session'=>'
+                <a href="javascript:void(0);" onclick="deleteModal('. "'{$deleteRoute}'".','."'Delete Section'" .')" class="td-actions"><i data-id='.$st->id.' id="delete" class="la la-pencil edit" title="Delete Class"></i></a>
+
+                <a href="javascript:void(0);" onclick="deleteModal('. "'{$deleteRoute}'".','."'Delete Section'" .')" class="td-actions"><i data-id='.$st->id.' id="delete" class="la la-close delete" title="Delete Class"></i></a>',
             ];
         }
         return $data;

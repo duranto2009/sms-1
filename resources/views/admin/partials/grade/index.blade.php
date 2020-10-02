@@ -4,6 +4,27 @@
 <link rel="stylesheet" href="{{asset('admin/css/datatables/datatables.min.css')}}">
 @endsection
 @section('content')
+<style>
+    .td-actions i {
+    background: transparent;
+    color: #aea9c3;
+    font-size: 1.6rem;
+    padding: .5rem;
+    border-radius: 50%;
+    transition: all 0.4s ease
+    }
+
+    .td-actions i.edit:hover,
+    .td-actions i.more:hover {
+    background: rgba(0, 165, 63, 0.8);
+    color: #fff
+    }
+
+    .td-actions i.delete:hover {
+    background: #e76c90;
+    color: #fff
+    }
+</style>
 <div class="container-fluid">
     <div class="row">
         <div class="col-xl-12">
