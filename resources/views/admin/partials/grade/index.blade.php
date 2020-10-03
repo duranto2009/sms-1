@@ -122,7 +122,9 @@ $("#addGradeForm").on('submit',(e)=>{
                 $("form").trigger("reset");
                 toast('success',res.message);
                 $("#addGrade .close").click();
-                readData();
+                // readData();
+                // var oTable = $('#example').dataTable();
+                // oTable.fnDraw(false);
             }else{
                 toast('error',res.message);
             }
@@ -141,7 +143,8 @@ function readData(){
     $('#example').DataTable({
         ajax: {
             url: '{{route("grade.get")}}',
-            dataSrc: ''
+            dataSrc: '',
+            type: 'GET',
         },
         columns: [
             { data: 'id' },
@@ -150,8 +153,34 @@ function readData(){
             { data: 'gender' },
             { data: 'phone' },
             { data: 'session' }
-        ]
+        ],
     });
+}
+
+if ($("#productForm").length > 0) {
+    $("#productForm").validate({
+        submitHandler: function(form) {
+            var actionType = $('#btn-save').val();
+            $('#btn-save').html('Sending..');
+            $.ajax({
+                data: $('#productForm').serialize(),
+                url: SITEURL + "product-list/store",
+                type: "POST",
+                dataType: 'json',
+                success: function (data) {
+                    $('#productForm').trigger("reset");
+                    $('#ajax-product-modal').modal('hide');
+                    $('#btn-save').html('Save Changes');
+                    var oTable = $('#laravel_datatable').dataTable();
+                    oTable.fnDraw(false);
+                },
+                    error: function (data) {
+                    console.log('Error:', data);
+                    $('#btn-save').html('Save Changes');
+                }
+            });
+        }
+    })
 }
 </script>
 @endsection

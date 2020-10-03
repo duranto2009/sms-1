@@ -16,7 +16,7 @@ class GradeController extends Controller
 
     public function get()
     {
-        $grade =  Grade::all();
+        $grade = Grade::orderBy('point','desc')->get();
         $data = [];
         foreach($grade as $i=>$st){
 
@@ -67,16 +67,41 @@ class GradeController extends Controller
 
     public function edit(Grade $grade)
     {
-        //
+        $section = '';
+        $section .= '<div class="form-group row" id="row"><label class="col-md-3 my-2 col-form-label text-md-right">Grade Name</label><div class="col-md-6 my-2"><input type="text" class="form-control" name="grade" value="'. $grade->grade .'" required autocomplete="off"></div><div class="col-md-2 my-2"></div></div>';
+        $section .= '<div class="form-group row" id="row"><label class="col-md-3 my-2 col-form-label text-md-right">Grade Point</label><div class="col-md-6 my-2"><input type="text" class="form-control" name="point" value="'. $grade->point .'" required autocomplete="off"></div><div class="col-md-2 my-2"></div></div>';
+        $section .= '<div class="form-group row" id="row"><label class="col-md-3 my-2 col-form-label text-md-right">Mark From</label><div class="col-md-6 my-2"><input type="text" class="form-control" name="from" value="'. $grade->from .'" required autocomplete="off"></div><div class="col-md-2 my-2"></div></div>';
+        $section .= '<div class="form-group row" id="row"><label class="col-md-3 my-2 col-form-label text-md-right">Mark Upto</label><div class="col-md-6 my-2"><input type="text" class="form-control" name="upto" value="'. $grade->upto .'" required autocomplete="off"></div><div class="col-md-2 my-2"></div></div>';
+        $route = route("grade.update", $grade->id);
+        return json_encode(['data'=>$grade,'status'=>200,'section'=>$section,'route'=>$route]);
+
     }
 
     public function update(Request $request, Grade $grade)
     {
-        //
+        $data = $request->validate([
+            'grade' => 'required',
+            'point' => 'required|numeric',
+            'from'  => 'required|numeric',
+            'upto'  => 'required|numeric',
+        ]);
+        try {
+            $grade->update($data);
+            return json_encode(['status'=>200,'data'=>$data,'message'=>'Grade Update Successful!']);
+        } catch (\Exception $e) {
+            return json_encode(['status'=>500,'message'=>$e->getMessage()]);
+        }
+
     }
 
     public function destroy(Grade $grade)
     {
-        //
+        try {
+            $grade->delete();
+            return json_encode(['status'=>200,'message'=>'Grade Deleted Successful!']);
+        } catch (\Exception $e) {
+            return json_encode(['status'=>500,'message'=>$e->getMessage()]);
+        }
+
     }
 }
