@@ -20,6 +20,7 @@ class CreateMarksTable extends Migration
             $table->foreignId('student_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('exam_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('subject_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('section');
             $table->string('mark');
             $table->string('grade');
             $table->string('comment');
