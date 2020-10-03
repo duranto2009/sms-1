@@ -53,6 +53,7 @@ Route::middleware(['role:admin','auth'])->prefix('dashboard')->namespace('Admin'
 
     Route::resource('grade', 'GradeController');
     Route::get('read-get', 'GradeController@get')->name('grade.get');
+    Route::resource('exam', 'ExamController');
 
     //fullcalender
     // Route::get('events','EventController@index');

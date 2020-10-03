@@ -3,84 +3,91 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Exam;
+use App\Models\SessionYear;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class ExamController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
-    }
+        $session = SessionYear::where('status', 1)->first()->id;
+        if (request()->ajax()) {
+            return datatables()->of(Exam::where('session_year_id',$session)->get())
+            ->addColumn('action', function ($data) {
+                $editRoute = route("exam.edit", $data->id);
+                $deleteRoute = route("exam.destroy", $data->id);
+                $button = '
+                <a href="javascript:void(0);" onclick="editModal('. "'{$editRoute}'".','."'Edit exam'" .')" class="td-actions"><i data-id='.$data->id.' id="delete" class="la la-pencil edit" title="Edit exam"></i></a>
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+                <a href="javascript:void(0);" onclick="deleteModal('. "'{$deleteRoute}'".','."'Edit exam'" .')" class="td-actions"><i data-id='.$data->id.' id="delete" class="la la-close delete" title="Delete exam"></i></a>';
+                return $button;
+            })
+            ->rawColumns(['action'])
+            ->addIndexColumn()
+            ->make(true);
+        }
+        return view('admin.partials.exam.index');
+
+    }
     public function create()
     {
         //
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
-    }
+        $data = $request->validate([
+            'exam_name' => 'required',
+            'starting_date' => 'required|date',
+            'ending_date'  => 'required|date',
+        ]);
+        $data['session_year_id'] = SessionYear::where('status', 1)->first()->id;
+        try {
+            Exam::create($data);
+            return json_encode(['status'=>200,'data'=>$data,'message'=>'Exam Created Successful!']);
+        } catch (\Exception $e) {
+            return json_encode(['status'=>500,'message'=>$e->getMessage()]);
+        }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Exam  $exam
-     * @return \Illuminate\Http\Response
-     */
+    }
     public function show(Exam $exam)
     {
         //
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Exam  $exam
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Exam $exam)
     {
-        //
-    }
+        $section = '';
+        $section .= '<div class="form-group row" id="row"><label class="col-md-3 my-2 col-form-label text-md-right">Exam Name</label><div class="col-md-6 my-2"><input type="text" class="form-control" name="exam_name" value="'. $exam->exam_name .'" required autocomplete="off"></div><div class="col-md-2 my-2"></div></div>';
+        $section .= '<div class="form-group row" id="row"><label class="col-md-3 my-2 col-form-label text-md-right">Starting Date</label><div class="col-md-6 my-2"><input type="text" class="form-control" name="starting_date" value="'. $exam->starting_date .'" required autocomplete="off"></div><div class="col-md-2 my-2"></div></div>';
+        $section .= '<div class="form-group row" id="row"><label class="col-md-3 my-2 col-form-label text-md-right">Ending Date</label><div class="col-md-6 my-2"><input type="text" class="form-control" name="ending_date" value="'. $exam->ending_date .'" required autocomplete="off"></div><div class="col-md-2 my-2"></div></div>';
+        $route = route("exam.update", $exam->id);
+        return json_encode(['data'=>$exam,'status'=>200,'section'=>$section,'route'=>$route]);
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Exam  $exam
-     * @return \Illuminate\Http\Response
-     */
+    }
     public function update(Request $request, Exam $exam)
     {
-        //
-    }
+        $data = $request->validate([
+            'exam_name' => 'required',
+            'starting_date' => 'required|date',
+            'ending_date'  => 'required|date',
+        ]);
+        $data['session_year_id'] = SessionYear::where('status', 1)->first()->id;
+        try {
+            $exam->update($data);
+            return json_encode(['status'=>200,'data'=>$data,'message'=>'Exam Update Successful!']);
+        } catch (\Exception $e) {
+            return json_encode(['status'=>500,'message'=>$e->getMessage()]);
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Exam  $exam
-     * @return \Illuminate\Http\Response
-     */
+    }
     public function destroy(Exam $exam)
     {
-        //
+        try {
+            $exam->delete();
+            return json_encode(['status'=>200,'message'=>'Exam Deleted Successful!']);
+        } catch (\Exception $e) {
+            return json_encode(['status'=>500,'message'=>$e->getMessage()]);
+        }
+
     }
 }

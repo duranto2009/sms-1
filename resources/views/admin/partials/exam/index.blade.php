@@ -12,7 +12,7 @@
                 <div class="widget-header bordered no-actions d-flex align-items-center">
                     <h1> <i class="la la-certificate"></i> Exam List</h1>
                     <span class="ml-auto">
-                        <button class="btn btn-outline-info" data-toggle="modal" data-target="#addGrade">
+                        <button class="btn btn-outline-info" data-toggle="modal" data-target="#addExam">
                             <i class="la la-plus"></i> Add Exam
                         </button>
                     </span>
@@ -25,10 +25,9 @@
                                     <thead>
                                         <tr>
                                             <th>SL</th>
-                                            <th>Grade</th>
-                                            <th>Grade Pont</th>
-                                            <th>Mark From</th>
-                                            <th>Mark Upto</th>
+                                            <th>Exam Name</th>
+                                            <th>Starting Date</th>
+                                            <th>Ending Date</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -46,14 +45,14 @@
     <!-- End Row -->
 
     <!--Add Class Modal -->
-    <div class="modal fade" id="addGrade" tabindex="-1" role="dialog" aria-labelledby="addGradeLabel"
+    <div class="modal fade" id="addExam" tabindex="-1" role="dialog" aria-labelledby="addExamLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <form id='addGradeForm' action="{{route('grade.store')}}" method="POST" autocomplete="off" novalidate>
+            <form id='addExamForm' action="{{route('exam.store')}}" method="POST" autocomplete="off" novalidate>
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3 class="modal-title" id="addGradeLabel">Add Grade</h3>
+                        <h3 class="modal-title" id="addExamLabel">Add Grade</h3>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -61,24 +60,21 @@
                     <div class="modal-body">
 <div class="form-row">
     <div class="form-group col-md-12">
-        <label for="grade">Grade</label>
-        <input type="text" class="form-control" id="grade" name="grade" placeholder="Grade" required="">
+        <label for="exam_name">Exam Name</label>
+        <input type="text" class="form-control" id="exam_name" name="exam_name" placeholder="name" required="">
+        <small id="name_help" class="form-text text-muted">Provide Exam Name</small>
     </div>
 
     <div class="form-group col-md-12">
-        <label for="point">Grade Point</label>
-        <input type="number" class="form-control" id="point" name="point" placeholder="Grade Point"
-            required="">
+        <label for="starting_date">Starting Date</label>
+        <input type="date" class="form-control date" id="starting_date" name="starting_date"required="">
+        <small id="name_help" class="form-text text-muted">Provide Starting Date</small>
     </div>
 
     <div class="form-group col-md-12">
-        <label for="from">Mark From</label>
-        <input type="number" class="form-control" id="from" name="from" placeholder="Mark From" required="">
-    </div>
-
-    <div class="form-group col-md-12">
-        <label for="upto">Mark Upto</label>
-        <input type="number" class="form-control" id="upto" name="upto" placeholder="Mark Upto" required="">
+        <label for="ending_date">Ending Date</label>
+        <input type="date" class="form-control date" id="ending_date" name="ending_date" required="">
+        <small id="name_help" class="form-text text-muted">Provide Ending Date</small>
     </div>
 </div>
                     </div>
@@ -97,21 +93,37 @@
 @section('js')
 <script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
 <script>
-readData();
+$('#example').DataTable({
+    processing: true,
+    serverSide: true,
+    ajax: {
+        url: '{{route("exam.index")}}',
+        type: 'GET',
+    },
+    columns: [
+        { data: 'id',name: 'id', 'visible': false },
+        { data: 'exam_name', name:'exam_name' },
+        { data: 'starting_date', name:'starting_date',
+            render(h) {
+                return moment(h).format("DD MMM YYYY")
+            },
+        },
+        { data: 'ending_date', name:'ending_date',
+            render(h) {
+                return moment(h).format("DD MMM YYYY")
+            },
+        },
+        { data: 'action', name:'action', orderable: false }
+    ],
+    order: [[ 1, 'desc' ]]
+});
 $('select').addClass('form-control');
 $('input').addClass('form-control');
-$("#point").on('keyup',function(e){
-    const point = $(this).val()
-    if(point > 5){
-        alert('Grade point must be 1-5');
-        $(this).val('');
-    }
-});
-$("#addGradeForm").on('submit',(e)=>{
+$("#addExamForm").on('submit',(e)=>{
     e.preventDefault();
-    const data = $("#addGradeForm").serialize();
-    const url = $("#addGradeForm").attr('action');
-    const method = $("#addGradeForm").attr('method');
+    const data = $("#addExamForm").serialize();
+    const url = $("#addExamForm").attr('action');
+    const method = $("#addExamForm").attr('method');
     $.ajax({
         url:url,
         method:method,
@@ -121,7 +133,7 @@ $("#addGradeForm").on('submit',(e)=>{
             if(res.status == 200){
                 $("form").trigger("reset");
                 toast('success',res.message);
-                $("#addGrade .close").click();
+                $("#addExam .close").click();
                 var oTable = $('#example').dataTable();
                 oTable.fnDraw(false);
             }else{
@@ -139,22 +151,7 @@ $("#addGradeForm").on('submit',(e)=>{
     });
 });
 function readData(){
-    $('#example').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: {
-            url: '{{route("grade.index")}}',
-            type: 'GET',
-        },
-        columns: [
-            { data: 'id',name: 'id', 'visible': false },
-            { data: 'grade', name:'grade' },
-            { data: 'point', name:'point' },
-            { data: 'from', name:'from' },
-            { data: 'upto', name:'upto' },
-            { data: 'action', name:'action', orderable: false }
-        ],
-    });
+
 }
 </script>
 @endsection
