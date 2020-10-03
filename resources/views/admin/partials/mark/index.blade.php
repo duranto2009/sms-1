@@ -1,6 +1,7 @@
 @extends('admin.layout.admin')
 @section('css')
 <link rel="stylesheet" href="{{asset('admin/css/bootstrap-select/bootstrap-select.min.css')}}">
+<link rel="stylesheet" href="{{asset('admin/css/datatables/datatables.min.css')}}">
 @endsection
 @section('content')
 <div class="container-fluid">
@@ -38,7 +39,7 @@
                                 </select>
                             </div>
                             <div class="col-lg-2">
-                                <select name="subject_id" id="subject" class="form-control subject">
+                                <select name="subject_id" id="subject_id" class="form-control subject">
                                     <option disabled selected>Select Subject</option>
                                 </select>
                             </div>
@@ -47,11 +48,26 @@
                             </div>
                         </div>
                     </form>
-                    <div class="student-table text-center">
+                    <div class="empty-table text-center">
                         <img src="{{asset('admin/img/empty_box.png')}} " alt="...." class="img-fluid" width="250px">
                         <br>
                         <p>No Data Found</p>
                     </div>
+                    <table id="db-table" class=" table table-striped" style="display:none;width: 100% !important;">
+                        <thead>
+                            <tr>
+                                <th>SL</th>
+                                <th>Student</th>
+                                <th>Mark</th>
+                                <th>Grade</th>
+                                <th>Comment</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <!-- End Sorting -->
@@ -119,6 +135,7 @@
 @endsection
 @section('js')
 <script src="{{asset('admin/vendors/js/bootstrap-select/bootstrap-select.js')}}"></script>
+<script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
 <script>
 function getSection(data){
     const url = '{{route("student.section")}}';
@@ -130,101 +147,66 @@ function getSection(data){
         success: res=>{
             res = $.parseJSON(res);
             if(res.status == 200){
-            $(".opt").html(res.opt);
-            $(".subject").html(res.subject);
+                $(".opt").html(res.opt);
+                $(".subject").html(res.subject);
             }else{
-            toast('error',res.error);
+                toast('error',res.error);
             }
         }
     });
 }
-$("#filterExam").on('submit',(e)=>{
+$("#filterExam").on('submit',function(e){
     e.preventDefault();
     const data = $("#filterExam").serialize();
     const url = $("#filterExam").attr('action');
     const method = $("#filterExam").attr('method');
-    $.ajax({
-        url:url,
-        method:method,
-        data:data,
-        success: res=>{
-            res = $.parseJSON(res);
-            if(res.status == 200){
-                toast('success','Successful!');
-                $(".student-table").html(res.syllabus);
-            }else{
-                toast('error',res.error);
-            }
+    $('#db-table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: url,
+            type: 'get',
+            data: {
+                'exam_id'       : $('#exam_id').val(),
+                'class_table_id': $('#class_table_id').val(),
+                'section'       : $('#section').val(),
+                'subject_id'    : $('#subject_id').val(),
+            },
         },
-        error: err=>{
-            const errors = err.responseJSON;
-            if($.isEmptyObject(errors) == false){
-                $.each(errors.errors,function(key,value){
-                    toast('error',value);
-                });
-            }
-        }
+        columns: [
+            { data: 'id',name: 'id', 'visible': false },
+            { data: 'student.name', name:'student.name' },
+            { data: 'mark', name:'mark',
+                render(h,) {
+                    return '<input class="form-control" type="number" id="mark-1" name="mark" placeholder="mark" min="0" value="'+h+'" required="" onchange="get_grade(this.value, this.id)">'
+                },
+            },
+            { data: 'grade', name:'grade' },
+            { data: 'comment', name:'comment' },
+            { data: 'action', name:'action', orderable: false }
+        ],
     });
+    $(".empty-table").hide();
+    $("#db-table").show();
+    $('select').addClass('form-control');
+    $('input').addClass('form-control');
+});
+$('#exam_id').on('change',()=>{
+    $(".empty-table").show();
+    $("#db-table_wrapper").hide();
+});
+$('#class_table_id').on('change',()=>{
+    $(".empty-table").show();
+    $("#db-table_wrapper").hide();
+});
+$('#section').on('change',()=>{
+    $(".empty-table").show();
+    $("#db-table_wrapper").hide();
+});
+$('#subject_id').on('change',()=>{
+    $(".empty-table").show();
+    $("#db-table_wrapper").hide();
 });
 
-$("#addSyllabusForm").on('submit',function(e){
-    e.preventDefault();
-    const data = new FormData(this);
-    const url = $("#addSyllabusForm").attr('action');
-    const method = $("#addSyllabusForm").attr('method');
-    $.ajax({
-        url:url,
-        method:method,
-        data:data,
-        cache:false,
-        contentType: false,
-        processData: false,
-        success: res=>{
-            res = $.parseJSON(res);
-            if(res.status == 200){
-                $("form").trigger("reset");
-                toast('success','Syllabus Create Successful!');
-                $("#addSyllabus .close").click();
-                readData();
-            }else{
-                toast('error',res.error);
-            }
-        },
-        error: err=>{
-            const errors = err.responseJSON;
-            if($.isEmptyObject(errors) == false){
-                $.each(errors.errors,function(key,value){
-                    toast('error',value);
-                });
-            }
-        }
-    });
-});
-function readData(){
-    const data = $("#filterExam").serialize();
-    const url = $("#filterExam").attr('action');
-    const method = $("#filterExam").attr('method');
-    $.ajax({
-    url:url,
-    method:method,
-    data:data,
-    success: res=>{
-    res = $.parseJSON(res);
-    if(res.status == 200){
-    $(".student-table").html(res.syllabus);
-    }else{
-    toast('error',res.error);
-    }
-    },
-    error: err=>{
-    const errors = err.responseJSON;
-    if($.isEmptyObject(errors) == false){
-    $.each(errors.errors,function(key,value){
-    toast('error',value);
-    });
-    }
-    }
-    });
-}
 </script>
 @endsection

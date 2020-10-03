@@ -59,28 +59,28 @@
                         </button>
                     </div>
                     <div class="modal-body">
-<div class="form-row">
-    <div class="form-group col-md-12">
-        <label for="grade">Grade</label>
-        <input type="text" class="form-control" id="grade" name="grade" placeholder="Grade" required="">
-    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label for="grade">Grade</label>
+                            <input type="text" class="form-control" id="grade" name="grade" placeholder="Grade" required="">
+                        </div>
 
-    <div class="form-group col-md-12">
-        <label for="point">Grade Point</label>
-        <input type="number" class="form-control" id="point" name="point" placeholder="Grade Point"
-            required="">
-    </div>
+                        <div class="form-group col-md-12">
+                            <label for="point">Grade Point</label>
+                            <input type="number" class="form-control" id="point" name="point" placeholder="Grade Point"
+                                required="">
+                        </div>
 
-    <div class="form-group col-md-12">
-        <label for="from">Mark From</label>
-        <input type="number" class="form-control" id="from" name="from" placeholder="Mark From" required="">
-    </div>
+                        <div class="form-group col-md-12">
+                            <label for="from">Mark From</label>
+                            <input type="number" class="form-control" id="from" name="from" placeholder="Mark From" required="">
+                        </div>
 
-    <div class="form-group col-md-12">
-        <label for="upto">Mark Upto</label>
-        <input type="number" class="form-control" id="upto" name="upto" placeholder="Mark Upto" required="">
-    </div>
-</div>
+                        <div class="form-group col-md-12">
+                            <label for="upto">Mark Upto</label>
+                            <input type="number" class="form-control" id="upto" name="upto" placeholder="Mark Upto" required="">
+                        </div>
+                    </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>

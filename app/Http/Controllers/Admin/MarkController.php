@@ -20,8 +20,8 @@ class MarkController extends Controller
                 "class_table_id" => 'required',
                 "section"        => 'required',
                 "subject_id"     => 'required'
-                ]);
-            return datatables()->of(Mark::where('session_year_id', $session->id)->where('exam_id', $session->exam_id)->where('class_table_id', $session->class_table_id)->where('subject_id', $session->subject_id)->where('section', $session->section)->get())
+            ]);
+            return datatables()->of(Mark::where('session_year_id', $session->id)->where('exam_id', $r->exam_id)->where('class_table_id', $r->class_table_id)->where('subject_id', $r->subject_id)->where('section', $r->section)->get())
             ->addColumn('action', function ($data) {
                 $editRoute = route("mark.edit", $data->id);
                 $deleteRoute = route("mark.destroy", $data->id);

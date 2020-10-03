@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Mark extends Model
 {
     protected $guarded = ['id'];
-    protected $with = ['student','class','exam','session','subjec'];
+    protected $with = ['student','class','exam','session','subject'];
     public function student()
     {
         return $this->belongsTo(Student::class);
