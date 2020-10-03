@@ -10,6 +10,22 @@ class GradeController extends Controller
 {
     public function index()
     {
+        if (request()->ajax()) {
+            return datatables()->of(Grade::select('*'))
+            ->addColumn('action',function($data){
+                $editRoute = route("grade.edit", $data->id);
+                $deleteRoute = route("grade.destroy", $data->id);
+                $button = '
+                <a href="javascript:void(0);" onclick="editModal('. "'{$editRoute}'".','."'Edit Grade'" .')" class="td-actions"><i data-id='.$data->id.' id="delete" class="la la-pencil edit" title="Edit Grade"></i></a>
+
+                <a href="javascript:void(0);" onclick="deleteModal('. "'{$deleteRoute}'".','."'Edit Grade'" .')" class="td-actions"><i data-id='.$data->id.' id="delete" class="la la-close delete" title="Delete Grade"></i></a>';
+                return $button;
+            })
+            ->rawColumns(['action'])
+            ->addIndexColumn()
+            ->make(true);
+        }
+
         // $grades = Grade::orderBy('point','desc')->get();
         return view('admin.partials.grade.index');
     }

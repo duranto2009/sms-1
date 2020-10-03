@@ -98,8 +98,8 @@
 <script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
 <script>
 readData();
-$('select').attr('name','example_length').addClass('form-control');
-$('input').attr('aria-controls','example').addClass('form-control');
+$('select').addClass('form-control');
+$('input').addClass('form-control');
 $("#point").on('keyup',function(e){
     const point = $(this).val()
     if(point > 5){
@@ -122,9 +122,8 @@ $("#addGradeForm").on('submit',(e)=>{
                 $("form").trigger("reset");
                 toast('success',res.message);
                 $("#addGrade .close").click();
-                // readData();
-                // var oTable = $('#example').dataTable();
-                // oTable.fnDraw(false);
+                var oTable = $('#example').dataTable();
+                oTable.fnDraw(false);
             }else{
                 toast('error',res.message);
             }
@@ -141,46 +140,21 @@ $("#addGradeForm").on('submit',(e)=>{
 });
 function readData(){
     $('#example').DataTable({
+        processing: true,
+        serverSide: true,
         ajax: {
-            url: '{{route("grade.get")}}',
-            dataSrc: '',
+            url: '{{route("grade.index")}}',
             type: 'GET',
         },
         columns: [
-            { data: 'id' },
-            { data: 'name' },
-            { data: 'email' },
-            { data: 'gender' },
-            { data: 'phone' },
-            { data: 'session' }
+            { data: 'id',name: 'id', 'visible': false },
+            { data: 'grade', name:'grade' },
+            { data: 'point', name:'point' },
+            { data: 'from', name:'from' },
+            { data: 'upto', name:'upto' },
+            { data: 'action', name:'action', orderable: false }
         ],
     });
-}
-
-if ($("#productForm").length > 0) {
-    $("#productForm").validate({
-        submitHandler: function(form) {
-            var actionType = $('#btn-save').val();
-            $('#btn-save').html('Sending..');
-            $.ajax({
-                data: $('#productForm').serialize(),
-                url: SITEURL + "product-list/store",
-                type: "POST",
-                dataType: 'json',
-                success: function (data) {
-                    $('#productForm').trigger("reset");
-                    $('#ajax-product-modal').modal('hide');
-                    $('#btn-save').html('Save Changes');
-                    var oTable = $('#laravel_datatable').dataTable();
-                    oTable.fnDraw(false);
-                },
-                    error: function (data) {
-                    console.log('Error:', data);
-                    $('#btn-save').html('Save Changes');
-                }
-            });
-        }
-    })
 }
 </script>
 @endsection
