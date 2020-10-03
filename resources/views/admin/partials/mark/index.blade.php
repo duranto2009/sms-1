@@ -1,7 +1,6 @@
 @extends('admin.layout.admin')
 @section('css')
 <link rel="stylesheet" href="{{asset('admin/css/bootstrap-select/bootstrap-select.min.css')}}">
-<link rel="stylesheet" href="{{asset('admin/css/datatables/datatables.min.css')}}">
 @endsection
 @section('content')
 <div class="container-fluid">
@@ -11,6 +10,11 @@
             <div class="widget has-shadow">
                 <div class="widget-header bordered no-actions d-flex align-items-center">
                     <h1> <i class="la la-bullseye text-info"></i> Mark List</h1>
+                    <span class="ml-auto">
+                        <button class="btn btn-outline-info" data-toggle="modal" data-target="#addExam">
+                            <i class="la la-plus"></i> Add Maek
+                        </button>
+                    </span>
                 </div>
                 <div class="widget-body">
                     <form id="filterExam" action="{{route('mark.index')}}" method="get" autocomplete="off">
@@ -64,7 +68,7 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="mark-content">
 
                         </tbody>
                     </table>
@@ -135,7 +139,6 @@
 @endsection
 @section('js')
 <script src="{{asset('admin/vendors/js/bootstrap-select/bootstrap-select.js')}}"></script>
-<script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
 <script>
 function getSection(data){
     const url = '{{route("student.section")}}';
@@ -155,41 +158,46 @@ function getSection(data){
         }
     });
 }
-$("#filterExam").on('submit',function(e){
+$("#filterExam").on('submit',function(e)
+{
     e.preventDefault();
     const data = $("#filterExam").serialize();
     const url = $("#filterExam").attr('action');
     const method = $("#filterExam").attr('method');
-    $('#db-table').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: {
-            url: url,
-            type: 'get',
-            data: {
-                'exam_id'       : $('#exam_id').val(),
-                'class_table_id': $('#class_table_id').val(),
-                'section'       : $('#section').val(),
-                'subject_id'    : $('#subject_id').val(),
-            },
+    $.ajax({
+        url:url,
+        method:method,
+        data:data,
+        success: res=>{
+            if(res.status == 200){
+                toast('success',res.message);
+                $(".empty-table").hide();
+                var html = '';
+                $.each(res.data,function(i,v){
+                    html += '<tr>';
+                    html += '<td>'+(i+1)+'</td>';
+                    html += '<td>'+v.student.name+'</td>';
+                    html += '<td><input class="form-control" type="number" id="mark-'+v.student_id+'" name="mark" placeholder="mark" min="0" max="0" value="'+v.mark+'" required="" onchange="get_grade(this.value, this.id)"></td>';
+                    html += '<td><span id="grade-for-mark-'+v.student_id+'" grade="'+v.grade+'">'+v.grade+'</span></td>';
+                    html += '<td><input class="form-control" type="text" id="comment-'+v.student_id+'" name="comment" placeholder="comment" value="'+v.comment+'"></td>';
+                    html += '<td><button class="btn btn-outline-success" onclick="mark_update('+v.student_id+')"><i class="la la-check-circle"></i></button></td>';
+                    html += '</tr>';
+                });
+                $(".mark-content").html(html);
+                $("#db-table").show();
+            }else{
+                toast('error',res.message);
+            }
         },
-        columns: [
-            { data: 'id',name: 'id', 'visible': false },
-            { data: 'student.name', name:'student.name' },
-            { data: 'mark', name:'mark',
-                render(h,) {
-                    return '<input class="form-control" type="number" id="mark-1" name="mark" placeholder="mark" min="0" value="'+h+'" required="" onchange="get_grade(this.value, this.id)">'
-                },
-            },
-            { data: 'grade', name:'grade' },
-            { data: 'comment', name:'comment' },
-            { data: 'action', name:'action', orderable: false }
-        ],
+        error: err=>{
+            const errors = err.responseJSON;
+            if($.isEmptyObject(errors) == false){
+                $.each(errors.errors,function(key,value){
+                    toast('error',value);
+                });
+            }
+        }
     });
-    $(".empty-table").hide();
-    $("#db-table").show();
-    $('select').addClass('form-control');
-    $('input').addClass('form-control');
 });
 $('#exam_id').on('change',()=>{
     $(".empty-table").show();
@@ -208,5 +216,46 @@ $('#subject_id').on('change',()=>{
     $("#db-table_wrapper").hide();
 });
 
+function mark_update(student_id){
+    var class_id   = $("#class_table_id").val();
+    var section_id = $("#section").val();
+    var subject_id = $("#subject_id").val();
+    var exam_id    = $("#exam_id").val();
+    var mark = $('#mark-' + student_id).val();
+    var comment = $('#comment-' + student_id).val();
+    var grade = $('#grade-for-mark-'+student_id).attr('grade');
+    if(subject_id != ""){
+        $.ajax({
+            type : 'get',
+            url : '{{route("mark_update")}}',
+            data : {student_id : student_id, class_table_id : class_id, section : section_id, subject_id : subject_id, exam_id : exam_id, mark : mark, comment : comment, grade : grade},
+            success :(response)=>{
+                toast('success','Mark Has Been Updated Successfully');
+            },
+            error: err=>{
+            const errors = err.responseJSON;
+            if($.isEmptyObject(errors) == false){
+                $.each(errors.errors,function(key,value){
+                    toast('error',value);
+                });
+            }
+        }
+        });
+    }else{
+        toast('error','Required Mark Field');
+    }
+}
+
+function get_grade(exam_mark, id){
+    $.ajax({
+        url : '{{route("get_grade")}}',
+        data:{mark:exam_mark},
+        method:'get',
+        success :(res)=>{
+            $('#grade-for-'+id).text(res);
+            $('#grade-for-'+id).attr('grade',res);
+        }
+    });
+}
 </script>
 @endsection

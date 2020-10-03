@@ -57,6 +57,8 @@ Route::middleware(['role:admin','auth'])->prefix('dashboard')->namespace('Admin'
     Route::resource('exam', 'ExamController');
 
     Route::resource('mark', 'MarkController');
+    Route::get('mark_update', 'MarkController@mark_update')->name('mark_update');
+    Route::get('get_grade', 'MarkController@get_grade')->name('get_grade');
 
     //fullcalender
     // Route::get('events','EventController@index');
