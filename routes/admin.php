@@ -12,6 +12,8 @@ Route::middleware(['role:admin','auth'])->prefix('dashboard')->namespace('Admin'
     Route::resource('guardian', 'GuardianController');
     Route::get('read-guardian', 'GuardianController@readData')->name('guardian.readData');
     Route::resource('student', 'StudentController');
+    Route::get('student-promotion', 'StudentController@promotion')->name('student.promotion');
+    Route::get('student-promotion/update', 'StudentController@promotionUpdate')->name('promotion.update');
     Route::get('student-section', 'StudentController@section')->name('student.section');
     Route::get('student-filer', 'StudentController@filter')->name('student.filter');
     Route::get('bulk/student-admission', 'StudentController@bulk')->name('student.bulk');

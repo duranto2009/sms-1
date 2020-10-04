@@ -422,4 +422,45 @@ class StudentController extends Controller
         }
 
     }
+
+
+    public function promotion(Request $request)
+    {
+        if (request()->ajax()) {
+            $request->validate([
+                'class_id_from' => 'required',
+                'class_id_to'   => 'required',
+                'session_from'  => 'required',
+                'session_to'    => 'required',
+            ]);
+            $student = Student::where('class_table_id', $request->class_id_from)
+                    ->where('session',$request->session_from)
+                    ->get();
+            return response()->json(['status'=>200,'data'=>$student,'message'=>'success!']);
+        }
+
+        $sessions = SessionYear::all();
+        $class = ClassTable::all();
+        return view('admin.partials.student.promotion',compact('class','sessions'));
+    }
+    public function promotionUpdate(Request $request)
+    {
+        $request->validate([
+            'class_id'   => 'required',
+            'student_id' => 'required',
+            'session'    => 'required',
+        ]);
+        $student = Student::findOrFail($request->student_id);
+        $data = [
+            'class_table_id' => $request->class_id,
+            'session' => $request->session,
+        ];
+        try {
+            $student->update($data);
+            return response()->json(['status'=>200,'data'=>$student,'message'=>'Student Promoted!']);
+        } catch (\Exception $e) {
+            return response()->json(['status'=>200 ,'message'=> $e->getMessage()]);
+        }
+    }
+
 }

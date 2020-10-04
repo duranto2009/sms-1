@@ -42,7 +42,7 @@
                     <li><a href="{{route('mark.index')}}">Marks</a></li>
                     <li><a href="{{route('exam.index')}}">Exam</a></li>
                     <li><a href="{{route('grade.index')}}">Grade</a></li>
-                    <li><a href="{{route('session.index')}}">Promotion</a></li>
+                    <li><a href="{{route('student.promotion')}}">Promotion</a></li>
                 </ul>
             </li>
             <li><a href="#dropdown-forms" aria-expanded="false" data-toggle="collapse"><i
