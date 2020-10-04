@@ -16,6 +16,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\StudentCreateRequest;
 use App\Http\Requests\StudentUpdateRequest;
 use App\Models\Subject;
+use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
@@ -461,6 +462,26 @@ class StudentController extends Controller
         } catch (\Exception $e) {
             return response()->json(['status'=>200 ,'message'=> $e->getMessage()]);
         }
+    }
+    public function bulkPromotion(Request $request)
+    {
+        DB::beginTransaction();
+        foreach($request->student_id as $student){
+            $student = Student::findOrFail($student);
+            $data = [
+                'session' => $request->session,
+                'class_table_id' => $request->class_id,
+            ];
+            $student->update($data);
+        }
+        try {
+            DB::commit();
+            return response()->json(['status'=>200,'message'=>'Student Promoted!']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status'=>500,'message'=>$e->getMessage()]);
+        }
+
     }
 
 }
