@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Exam;
 use App\Models\Mark;
+use App\Models\Student;
+use App\Models\ClassTable;
 use App\Models\SessionYear;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\ClassTable;
-use App\Models\Exam;
 
 class MarkController extends Controller
 {
@@ -74,9 +75,65 @@ class MarkController extends Controller
         }
 
     }
+    public function getStudent(Request $r)
+    {
+        $session = SessionYear::where('status', 1)->first()->title;
+        $students = Student::where('class_table_id', $r->class_table_id)
+                    ->where('section', $r->section)
+                    ->where('session', $session)
+                    ->get();
+        $student = '';
+        foreach ($students as $st) {
+            $student .='
+                    <tr>
+                        <td>'.$st->name.'</td>
+                        <td>
+                            <input type="hidden" name="student_id[]" value="'.$st->id.'">
+                            <input onchange="get_grade(this.value, this.id)" type="number" class="form-mark form-inline" name="mark_'.$st->id.'" id="mark-'.$st->id.'" value="33" required>
+                            <input type="text" class="form-mark form-inline grade-for-mark-'.$st->id.'"  name="grade_'.$st->id.'" required value="D" readonly>
+                        </td>
+                    </tr>';
+        }
+        return response()->json(['status'=>200,'student'=>$student,'message'=>'success']);
+
+    }
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'class_table_id' => 'required',
+            'exam_id'        => 'required',
+            'section'        => 'required',
+            'student_id.*'   => 'required',
+            'subject_id'     => 'required',
+        ]);
+        $data['comment'] = 'COMMENT';
+        $session = SessionYear::where('status', 1)->first()->id;
+        $data['session_year_id'] = $session;
+        $checkExam = Mark::where('session_year_id', $session)
+                ->where('exam_id', $request->exam_id)
+                ->where('class_table_id', $request->class_table_id)
+                ->where('subject_id', $request->subject_id)
+                ->where('section', $request->section)
+                ->get();
+        if ($checkExam->count() == 0) {
+            foreach ($request->student_id as $student) {
+                $data['student_id'] = $student;
+                $data['mark'] =$request->get('mark_'.$student);
+                $data['grade'] =$request->get('grade_'.$student);
+                Mark::create($data);
+            }
+            try {
+                return response()->json(['status'=>200,'message'=>'Mark Store Successful!']);
+            } catch (\Exception $e) {
+                return response()->json(['status'=>500,'message'=>$e->getMessage()]);
+            }
+
+        }else{
+            return response()->json(['status'=>500,'message'=>'Allready Taken!']);
+
+        }
+        return $data;
+
     }
     public function show(Mark $mark)
     {

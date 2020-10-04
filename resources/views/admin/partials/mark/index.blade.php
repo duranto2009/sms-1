@@ -3,6 +3,26 @@
 <link rel="stylesheet" href="{{asset('admin/css/bootstrap-select/bootstrap-select.min.css')}}">
 @endsection
 @section('content')
+<style>
+.form-mark {
+width: 75px;
+height: 40px;
+background: #2c304d;
+border: none;
+float: left;
+margin-right: 10px;
+border-radius: .5rem;
+color: #fff;
+font-size: 17px;
+font-weight: bold;
+text-align: center;
+}
+.form-mark:focus {
+border:1px solid #5d5386;
+background:#fff;
+color: #2c304d;
+}
+</style>
 <div class="container-fluid">
     <div class="row">
         <div class="col-xl-12">
@@ -11,7 +31,7 @@
                 <div class="widget-header bordered no-actions d-flex align-items-center">
                     <h1> <i class="la la-bullseye text-info"></i> Mark List</h1>
                     <span class="ml-auto">
-                        <button class="btn btn-outline-info" data-toggle="modal" data-target="#addExam">
+                        <button class="btn btn-outline-info" data-toggle="modal" data-target="#addMark">
                             <i class="la la-plus"></i> Add Maek
                         </button>
                     </span>
@@ -79,14 +99,14 @@
     </div>
     <!-- End Row -->
     <!--Profile  Modal -->
-    <div class="modal modal-top fade" id="addSyllabus" tabindex="-1" role="dialog" aria-labelledby="addSyllabus"
+    <div class="modal modal-top fade" id="addMark" tabindex="-1" role="dialog" aria-labelledby="addMark"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <form action="{{route('syllabus.store')}}" id="addSyllabusForm" method="POST" enctype="multipart/form-data">
+            <form action="{{route('mark.store')}}" id="addMarkForm" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h2 class="modal-title" id="addSyllabus">ADD SYLLABUS</h2>
+                        <h2 class="modal-title" id="addMark">ADD MARK</h2>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -94,8 +114,13 @@
                     <div class="modal-body">
                         <div class="form-row">
                             <div class="form-group col-md-12">
-                                <label for="name">Tittle</label>
-                                <input type="text" class="form-control" id="name" name="name" >
+                                <label for="exams_id">Exam Name</label>
+                                <select name="exam_id" id="exams_id" class="selectpicker show-menu-arrow form-control" data-live-search="true" required>
+                                    <option disabled selected>Select Exam</option>
+                                    @foreach ($exams as $exam)
+                                    <option value="{{$exam->id}}">{{$exam->exam_name}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="form-group col-md-12">
                                 <label for="className">Class</label>
@@ -110,25 +135,43 @@
 
                             <div class="form-group col-md-12">
                                 <label for="section_id">Section</label>
-                                <div class="opt"></div>
+                                <select name="section" class="form-control opt section" required>
+                                    <option value selected disabled>SELECT SECTION</option>
+                                </select>
                             </div>
 
                             <div class="form-group col-md-12">
-                                <label for="subject_id">Subject</label>
-                                <select class="form-control" id="subject_id" name="subject_id" requied >
+                                <label>Subject</label>
+                                <select class="form-control subject"  name="subject_id" requied >
                                     <option >Select A Subject</option>
                                 </select>
                             </div>
-                            <div class="form-group col-md-12">
-                                <label for="syllabus_file">Upload Syllabus</label>
-                                <input type="file" name="file" id="file" class="form-control" accept="image/*,.pdf">
-                                <span class="text-danger">File must be Image or PDF</span>
+
+                            <div class="form-group col-md-12" id="student_content" style="margin-left: 2px;display: none;">
+                                <div class="table-responsive" style="padding-right: 0px;">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Mark</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="student-info">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12" id="showStudent" style="display: none;">
+                                <a class="btn btn-block btn-secondary" onclick="getStudentList()" style="color: #fff;" disabled="">Show Student
+                                    List</a>
+                            </div>
+                            <div class="form-group col-md-12 mt-4" id="updateMark" style="display: none;">
+                                <button class="btn w-100 btn-primary" type="submit">Update Mark</button>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Add</button>
                     </div>
                 </div>
             </form>
@@ -140,6 +183,19 @@
 @section('js')
 <script src="{{asset('admin/vendors/js/bootstrap-select/bootstrap-select.js')}}"></script>
 <script>
+$('#className').change(function(){
+$('.student-table').hide();
+});
+$('#className').change(function(){
+$('#showStudent').show();
+$('#updateMark').hide();
+$('#student_content').hide();
+});
+$('#exams_id').change(function(){
+$('#showStudent').show();
+$('#updateMark').hide();
+$('#student_content').hide();
+});
 function getSection(data){
     const url = '{{route("student.section")}}';
     const method = 'get';
@@ -185,6 +241,38 @@ $("#filterExam").on('submit',function(e)
                 });
                 $(".mark-content").html(html);
                 $("#db-table").show();
+            }else{
+                toast('error',res.message);
+            }
+        },
+        error: err=>{
+            const errors = err.responseJSON;
+            if($.isEmptyObject(errors) == false){
+                $.each(errors.errors,function(key,value){
+                    toast('error',value);
+                });
+            }
+        }
+    });
+});
+$("#addMarkForm").on('submit',function(e)
+{
+    e.preventDefault();
+    const data = $("#addMarkForm").serialize();
+    const url = $("#addMarkForm").attr('action');
+    const method = $("#addMarkForm").attr('method');
+    $.ajax({
+        url:url,
+        method:method,
+        data:data,
+        success: res=>{
+            if(res.status == 200){
+                toast('success',res.message);
+                $("form").trigger("reset");
+                $("#addMark .close").click();
+                $('#showStudent').show();
+                $('#updateExam').hide();
+                $('#student_content').hide();
             }else{
                 toast('error',res.message);
             }
@@ -247,15 +335,36 @@ function mark_update(student_id){
 }
 
 function get_grade(exam_mark, id){
+    console.log($('#grade-for-'+id));
     $.ajax({
         url : '{{route("get_grade")}}',
         data:{mark:exam_mark},
         method:'get',
         success :(res)=>{
             $('#grade-for-'+id).text(res);
+            $('.grade-for-'+id).attr('value',res);
             $('#grade-for-'+id).attr('grade',res);
         }
     });
+}
+function getStudentList() {
+    var class_table_id = $('#className').val();
+    var section = $('.section').val();
+    if(class_table_id != null && section != null){
+        $.ajax({
+            method : 'get',
+            url : '{{route("mark.student")}}',
+            data: {class_table_id : class_table_id, section : section},
+            success : res=>{
+                $('#student_content').show();
+                $('#student-info').html(res.student);
+                $('#showStudent').hide();
+                $('#updateMark').show();
+            }
+        });
+    }else{
+        toast('error','Please Select In All Fields !');
+    }
 }
 </script>
 @endsection
