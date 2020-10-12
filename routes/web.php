@@ -12,7 +12,7 @@ foreach ($routes as $route) {
 }
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
 });
 
 Auth::routes(['register' => false]);
