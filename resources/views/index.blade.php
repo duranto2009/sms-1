@@ -243,7 +243,7 @@
                                 <span class="icon-bg"><i class="fa fa-user"></i></span>
                                 <span class="button-icon icon-users"></span>
                             </a>
-                            <a href="" target="_blank" class="rcw-button-6 rcw-medium rcw-grow android">Admin Login
+                            <a href="{{ route('login') }}" target="_blank" class="rcw-button-6 rcw-medium rcw-grow android">Admin Login
                                 <span class="icon-bg"><i class="fa fa-user"></i></span>
                                 <span class="button-icon icon-calendar2"></span>
                             </a>
