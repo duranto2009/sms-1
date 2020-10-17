@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\SessionYear;
 use App\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -41,5 +42,13 @@ class DatabaseSeeder extends Seeder
         DB::table('model_has_roles')->insert(['role_id'=>1, 'model_type'=>'App\User', 'model_id'=>'1']);
         // DB::table('model_has_roles')->insert(['role_id'=>2, 'model_type'=>'App\User', 'model_id'=>'2']);
 
+        // Session Year Seed
+        for ($i=2010; $i <= now()->format('Y'); $i++) {
+            $data = [
+                'title'=>$i,
+                'status'=>$i==now()->format('Y')?1:0,
+            ];
+            SessionYear::create($data);
+        }
     }
 }
