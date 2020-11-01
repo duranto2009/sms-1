@@ -65,6 +65,7 @@ Route::middleware(['role:admin','auth'])->prefix('dashboard')->namespace('Admin'
     Route::get('get_student', 'MarkController@getStudent')->name('mark.student');
 
     Route::resource('expense', 'ExpenseController');
+    Route::resource('expense_category', 'ExpenseCategoryController');
 
     //fullcalender
     // Route::get('events','EventController@index');
