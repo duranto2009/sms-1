@@ -66,6 +66,8 @@ Route::middleware(['role:admin','auth'])->prefix('dashboard')->namespace('Admin'
 
     Route::resource('expense', 'ExpenseController');
     Route::resource('expense_category', 'ExpenseCategoryController');
+    Route::get('read-expense-category', 'ExpenseCategoryController@readData')->name('expense_category.readData');
+
 
     //fullcalender
     // Route::get('events','EventController@index');
