@@ -38,9 +38,41 @@
                         </div>
                     </form>
                     <div class="student-table text-center">
+                        @if ($expenses->count())
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>SL</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Expense Category</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="expense-data">
+                                @foreach ($expenses as $i=>$exp)
+                                <tr>
+                                    <td>{{$i+1}}</td>
+                                    <td>{{$exp->date->format('D, M d, Y')}}</td>
+                                    <td>{{number_format($exp->amount,2)}}</td>
+                                    <td>{{$exp->category->name}}</td>
+                                    <td class=" td-actions">
+                                        <a href="javascript:void(0);" onclick="editModal('{{route('expense.edit',$exp->id)}}','Update Expense')">
+                                            <i data-id="" id="edit" class="la la-edit edit" title="Edit Expense"></i>
+                                        </a>
+                                        <a href="javascript:void(0);" onclick="deleteModal('{{route('expense.destroy',$exp->id)}}','Delete Expense')">
+                                            <i data-id="" id="delete" class="la la-close delete" title="delete Expense"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        @else
                         <img src="{{asset('admin/img/empty_box.png')}} " alt="...." class="img-fluid" width="250px">
                         <br>
                         <p>No Data Found</p>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -142,10 +174,10 @@ $("#getExpense").on('submit',(e)=>{
                 expense +='<table id="dbTable" class="table mb-0 table-hover">';
                 expense +='<thead>';
                 expense +='<tr>';
-                expense +='<th>student Id</th>';
-                expense +='<th>Photo</th>';
-                expense +='<th>Name</th>';
-                expense +='<th>Email</th>';
+                expense +='<th>SL</th>';
+                expense +='<th>Date</th>';
+                expense +='<th>Amount</th>';
+                expense +='<th>Expense Category</th>';
                 expense +='<th>Actions</th>';
                 expense +='</tr>';
                 expense +='</thead>';
@@ -154,7 +186,7 @@ $("#getExpense").on('submit',(e)=>{
                     expense +='<tr>';
                     expense +='<td>'+ (i+1) +'</td>';
                     expense +='<td>'+ moment(v.date).format('ddd, MMM D, YYYY') +'</td>';
-                    expense +='<td>'+ v.amount +'</td>';
+                    expense +='<td>'+ v.amount.toFixed(2) +'</td>';
                     expense +='<td>'+ v.category.name +'</td>';
                     expense +='<td class="td-actions">';
                     expense+='<a href="javascript:void(0);" onclick="editModal('+"'"+document.URL+'/'+v.id+'/edit'+"','Update Expense'"+')"><i data-id='+ v.id +' id="edit" class="la la-edit edit" title="Edit Expense"></i></a>';

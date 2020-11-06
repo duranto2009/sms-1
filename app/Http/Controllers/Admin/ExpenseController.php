@@ -13,7 +13,8 @@ class ExpenseController extends Controller
     public function index()
     {
         $expenseCats = ExpenseCategory::latest()->get();
-        return view('admin.partials.expense.index', compact('expenseCats'));
+        $expenses = Expense::with('category')->latest()->get();
+        return view('admin.partials.expense.index', compact('expenseCats','expenses'));
 
     }
 
