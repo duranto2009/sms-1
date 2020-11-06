@@ -11,7 +11,7 @@ class ExpenseCategoryController extends Controller
     public function index()
     {
         $expenseCats = ExpenseCategory::latest()->get();
-        return view('admin.partials.expense.index',compact('expenseCats'));
+        return view('admin.partials.expense_category.index',compact('expenseCats'));
     }
 
     public function create()
