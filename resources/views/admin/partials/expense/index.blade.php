@@ -68,7 +68,7 @@
                                 <input id="date" type="date" class="form-control" name="date">
                             </div>
                         </div>
-                        <div class="form-group row">
+                        <div class="form-group row ca">
                             <label for="amt" class="col-md-3 col-form-label text-md-right">Amount</label>
                             <div class="col-md-8">
                                 <input id="amt" type="number" class="form-control" name="amount">
@@ -104,7 +104,7 @@
 var start = moment().subtract(29, 'days');
 var end = moment();
 function cb(start, end) {
-    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+    $('#reportrange span').html(start.format('MMMM D YYYY') + ' - ' + end.format('MMMM D YYYY'));
 }
 
 $('#reportrange').daterangepicker({
@@ -137,7 +137,36 @@ $("#getExpense").on('submit',(e)=>{
             res = $.parseJSON(res);
             if(res.status == 200){
                 toast('success','Successful!');
-                $(".student-table").html(res.student);
+                let expense = '';
+                expense +='<div class="table-responsive">';
+                expense +='<table id="dbTable" class="table mb-0 table-hover">';
+                expense +='<thead>';
+                expense +='<tr>';
+                expense +='<th>student Id</th>';
+                expense +='<th>Photo</th>';
+                expense +='<th>Name</th>';
+                expense +='<th>Email</th>';
+                expense +='<th>Actions</th>';
+                expense +='</tr>';
+                expense +='</thead>';
+                expense +='<tbody>';
+                $.each(res.expenses,function(i,v){
+                    expense +='<tr>';
+                    expense +='<td>'+ (i+1) +'</td>';
+                    expense +='<td>'+ moment(v.date).format('ddd, MMM D, YYYY') +'</td>';
+                    expense +='<td>'+ v.amount +'</td>';
+                    expense +='<td>'+ v.category.name +'</td>';
+                    expense +='<td class="td-actions">';
+                    expense+='<a href="javascript:void(0);" onclick="editModal('+"'"+document.URL+'/'+v.id+'/edit'+"','Update Expense'"+')"><i data-id='+ v.id +' id="edit" class="la la-edit edit" title="Edit Expense"></i></a>';
+                    expense+='<a href="javascript:void(0);" onclick="deleteModal('+"'"+document.URL+'/'+v.id+"','Delete Expense'"+')"><i data-id='+ v.id +' id="delete" class="la la-close delete" title="Delete Class"></i></a>';
+                    expense +='</td>';
+                    expense +='</tr>';
+                });
+                expense +='</tbody>';
+                expense +='</table>';
+                expense +='</div>';
+
+                $(".student-table").html(expense);
             }else{
                 toast('error',res.error);
             }

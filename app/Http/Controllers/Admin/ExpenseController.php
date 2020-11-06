@@ -6,6 +6,7 @@ use App\Models\Expense;
 use Illuminate\Http\Request;
 use App\Models\ExpenseCategory;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 
 class ExpenseController extends Controller
 {
@@ -18,7 +19,22 @@ class ExpenseController extends Controller
 
     public function filter(Request $r)
     {
-        return $r;
+        $r->validate([
+            'date'=>'required',
+            'id'=>'required',
+        ],[
+            'id.required'=>'Please Select a Category',
+        ]);
+        $date      = explode(' - ',$r->date);
+        $startDate = Carbon::parse($date[0])->format('Y-m-d');
+        $endDate   = Carbon::parse($date[1])->format('Y-m-d');
+        $expenses = Expense::with('category')
+                    ->where('date','>=',$startDate)
+                    ->where('date','<=',$endDate)
+                    ->where('expense_categorie_id',$r->id)
+                    ->orderBy('date')
+                    ->get();
+        return json_encode(['status'=>200,'expenses'=>$expenses]);
     }
 
     public function create()
