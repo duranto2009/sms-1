@@ -16,6 +16,11 @@ class ExpenseController extends Controller
 
     }
 
+    public function filter(Request $r)
+    {
+        return $r;
+    }
+
     public function create()
     {
         //
@@ -23,7 +28,21 @@ class ExpenseController extends Controller
 
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'date'                 => 'required|date',
+            'amount'               => 'required|numeric',
+            'expense_categorie_id' => 'required|string',
+        ]);
+        $data['date']                 = $this->makeDate($request->date);
+        $data['amount']               = $request->amount;
+        $data['expense_categorie_id'] = $request->expense_categorie_id;
+        try {
+            Expense::create($data);
+            return json_encode(['status'=>200,'data'=>$data]);
+        } catch (\Exception $e) {
+            return json_encode(['status'=>500,'error'=>$e->getMessage()]);
+        }
+
     }
 
     public function show(Expense $expense)

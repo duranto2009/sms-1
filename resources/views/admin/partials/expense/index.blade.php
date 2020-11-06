@@ -1,6 +1,6 @@
 @extends('admin.layout.admin')
 @section('css')
-<link rel="stylesheet" href="{{asset('admin/css/bootstrap-select/bootstrap-select.min.css')}}">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 @endsection
 @section('content')
 <div class="container-fluid">
@@ -11,19 +11,26 @@
                 <div class="widget-header bordered no-actions d-flex align-items-center">
                     <h1> <i class="la la-user-secret"></i> All Student List</h1>
                     <span class="ml-auto">
-                        <a href="{{route('student.create')}}" class="btn btn-outline-info"><i class="la la-plus"></i> Add New Student</a>
+                        <button class="btn btn-outline-info" data-toggle="modal" data-target="#expense">
+                            <i class="la la-plus"></i> Add Expense
+                        </button>
                     </span>
                 </div>
                 <div class="widget-body">
-                    <form id="getStudentlist" action="{{route('student.filter')}}" method="get" autocomplete="off">
+                    <form id="getExpense" action="{{route('expense.filter')}}" method="get" autocomplete="off">
                         <div class="form-group row d-flex align-items-center mt-3 mb-5 justify-content-center">
                             <div class="col-lg-4">
-                                <select id="className" name="className" class="selectpicker show-menu-arrow form-control" data-live-search="true" required>
-                                    <option disabled selected>Select Class</option>
-                                </select>
+                                <div id="reportrange" style="cursor: pointer;" class="form-control">
+                                    <i class="la la-calendar"></i>&nbsp;<span id="selectedValue"></span>
+                                </div>
                             </div>
                             <div class="col-lg-4">
-                                    <div class="opt"></div>
+                                <select name="expense_category" id="expense_category" class=" form-control">
+                                    <option value="0" disabled selected>SELECT A CATEGORY</option>
+                                    @foreach ($expenseCats as $cat)
+                                    <option value="{{$cat->id}}">{{$cat->name}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="col-lg-2">
                                 <button class="btn btn-outline-success" type="submit">Filter</button>
@@ -41,63 +48,91 @@
         </div>
     </div>
     <!-- End Row -->
-    <!--Profile  Modal -->
-        <div class="modal modal-top fade" id="studentProfile" tabindex="-1" role="dialog" aria-labelledby="studentProfile"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <form action="" id="studentProfile-form" method="POST">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="studentProfile">{{config('app.name','LARAVEL')}}</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+    <!--Add Expense Modal -->
+    <div class="modal fade" id="expense" tabindex="-1" role="dialog" aria-labelledby="expenseLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form id='expenseForm' action="{{route('expense.store')}}" method="POST" autocomplete="off" novalidate>
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="expenseLabel">Add Expense</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="msg"></div>
+                        <div class="form-group row">
+                            <label for="date" class="col-md-3 col-form-label text-md-right">Date</label>
+                            <div class="col-md-8">
+                                <input id="date" type="date" class="form-control" name="date">
+                            </div>
                         </div>
-                        <div class="modal-body">
-                            <div id="studentProfileInput"></div>
+                        <div class="form-group row">
+                            <label for="amt" class="col-md-3 col-form-label text-md-right">Amount</label>
+                            <div class="col-md-8">
+                                <input id="amt" type="number" class="form-control" name="amount">
+                            </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            {{-- <button type="submit" class="btn btn-primary">studentProfile</button> --}}
+                        <div class="form-group row">
+                            <label for="cat" class="col-md-3 col-form-label text-md-right">Amount</label>
+                            <div class="col-md-8">
+                                <select name="expense_categorie_id" class=" form-control">
+                                    <option value="0" disabled selected>SELECT A CATEGORY</option>
+                                    @foreach ($expenseCats as $cat)
+                                    <option value="{{$cat->id}}">{{$cat->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                     </div>
-                </form>
-            </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-outline-success">Save</button>
+                    </div>
+                </div>
+            </form>
         </div>
+    </div>
 </div>
 <!-- End Container -->
 @endsection
 @section('js')
-<script src="{{asset('admin/vendors/js/bootstrap-select/bootstrap-select.js')}}"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script>
-// $('#dbTable').DataTable();
-$("#className").on('change',(e)=>{
-    const data = $("#className").serialize();
-    const url = '{{route("student.section")}}';
-    const method = 'get';
-    $.ajax({
-        url:url,
-        method:method,
-        data:data,
-        success: res=>{
-            res = $.parseJSON(res);
-            if(res.status == 200){
-                $(".opt").html(res.opt);
-            }else{
-                toast('error',res.error);
-            }
-        }
-    });
-});
-$("#getStudentlist").on('submit',(e)=>{
+// Date Picker Start
+var start = moment().subtract(29, 'days');
+var end = moment();
+function cb(start, end) {
+    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+}
+
+$('#reportrange').daterangepicker({
+    startDate: start,
+    endDate: end,
+    ranges: {
+        'Today'       : [moment(), moment()],
+        'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+        'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
+        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+        'This Month'  : [moment().startOf('month'), moment().endOf('month')],
+        'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+    }
+}, cb);
+
+cb(start, end);
+// Date Picker End
+
+$("#getExpense").on('submit',(e)=>{
     e.preventDefault();
-    const data = $("#getStudentlist").serialize();
-    const url = $("#getStudentlist").attr('action');
-    const method = $("#getStudentlist").attr('method');
+    const date = $('#selectedValue').text();
+    const exp_id = $('#expense_category').val();
+    const url = $("#getExpense").attr('action');
+    const method = $("#getExpense").attr('method');
     $.ajax({
         url:url,
         method:method,
-        data:data,
+        data:{date:date,id:exp_id},
         success: res=>{
             res = $.parseJSON(res);
             if(res.status == 200){
@@ -118,11 +153,11 @@ $("#getStudentlist").on('submit',(e)=>{
     });
 });
 
-$("#addClassForm").on('submit',(e)=>{
+$("#expenseForm").on('submit',(e)=>{
     e.preventDefault();
-    const data = $("#addClassForm").serialize();
-    const url = $("#addClassForm").attr('action');
-    const method = $("#addClassForm").attr('method');
+    const data = $("#expenseForm").serialize();
+    const url = $("#expenseForm").attr('action');
+    const method = $("#expenseForm").attr('method');
     $.ajax({
         url:url,
         method:method,
@@ -131,8 +166,8 @@ $("#addClassForm").on('submit',(e)=>{
             res = $.parseJSON(res);
             if(res.status == 200){
                 $("form").trigger("reset");
-                toast('success','Class Create Successful!');
-                $("#addClass .close").click();
+                toast('success','Expense Create Successful!');
+                $("#expense .close").click();
                 readData();
             }else{
                 toast('error',res.error);
@@ -149,9 +184,9 @@ $("#addClassForm").on('submit',(e)=>{
     });
 });
 function readData(){
-    const data = $("#getStudentlist").serialize();
-    const url = $("#getStudentlist").attr('action');
-    const method = $("#getStudentlist").attr('method');
+    const data = $("#getExpense").serialize();
+    const url = $("#getExpense").attr('action');
+    const method = $("#getExpense").attr('method');
     $.ajax({
     url:url,
     method:method,
@@ -172,17 +207,6 @@ function readData(){
     });
     }
     }
-    });
-}
-function studentProfile(url,header){
-    $('#studentProfile').modal('show');
-    $.ajax({
-        url: url,
-        method: 'get',
-        success:res=>{
-            res = $.parseJSON(res);
-            $('#studentProfile #studentProfileInput').html(res.student);
-        }
     });
 }
 </script>
