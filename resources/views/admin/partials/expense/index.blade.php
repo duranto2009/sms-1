@@ -252,7 +252,7 @@ function readData(){
         success: res=>{
             res = $.parseJSON(res);
             if(res.status == 200){
-                toast('success','Successful!');
+                // toast('success','Successful!');
                 let expense = '';
                 expense +='<div class="table-responsive">';
                 expense +='<table id="dbTable" class="table mb-0 table-hover">';
