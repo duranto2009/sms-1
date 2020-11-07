@@ -86,7 +86,7 @@ class ExpenseController extends Controller
                     <div class="form-group row ca">
                         <label for="amt" class="col-md-3 col-form-label text-md-right">Amount</label>
                         <div class="col-md-8">
-                            <input id="amt" type="number" class="form-control" name="amount" value="'.number_format($expense->amount,2).'">
+                            <input id="amt" type="number" class="form-control" name="amount" value="'.number_format($expense->amount,2,'.','').'">
                         </div>
                     </div>
                     <div class="form-group row">
@@ -117,7 +117,7 @@ class ExpenseController extends Controller
         $data['expense_categorie_id'] = $request->expense_categorie_id;
         try {
             $expense->update($data);
-            return json_encode(['status'=>200,'data'=>$data]);
+            return json_encode(['status'=>200,'data'=>$data,'message'=>'Expense Updated!']);
         } catch (\Exception $e) {
             return json_encode(['status'=>500,'error'=>$e->getMessage()]);
         }
@@ -125,6 +125,12 @@ class ExpenseController extends Controller
 
     public function destroy(Expense $expense)
     {
-        return $expense;
+        try {
+            $expense->delete();
+            return json_encode(['status'=>200,'message'=>'Expense Deleted Successful!']);
+        } catch (\Exception $e) {
+            return json_encode(['status'=>500,'message'=>$e->getMessage()]);
+        }
+
     }
 }
