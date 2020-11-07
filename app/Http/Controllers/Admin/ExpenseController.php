@@ -38,6 +38,12 @@ class ExpenseController extends Controller
         return json_encode(['status'=>200,'expenses'=>$expenses]);
     }
 
+    public function getData()
+    {
+        $expenses = Expense::with('category')->get();
+        return json_encode(['status'=>200,'expenses'=>$expenses]);
+    }
+
     public function create()
     {
         //

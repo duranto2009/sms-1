@@ -213,7 +213,7 @@ $("#getExpense").on('submit',(e)=>{
         }
     });
 });
-
+// Create Expense
 $("#expenseForm").on('submit',(e)=>{
     e.preventDefault();
     const data = $("#expenseForm").serialize();
@@ -244,30 +244,57 @@ $("#expenseForm").on('submit',(e)=>{
         }
     });
 });
+readData();
 function readData(){
-    const data = $("#getExpense").serialize();
-    const url = $("#getExpense").attr('action');
-    const method = $("#getExpense").attr('method');
     $.ajax({
-    url:url,
-    method:method,
-    data:data,
-    success: res=>{
-    res = $.parseJSON(res);
-    if(res.status == 200){
-    $(".student-table").html(res.student);
-    }else{
-    toast('error',res.error);
-    }
-    },
-    error: err=>{
-    const errors = err.responseJSON;
-    if($.isEmptyObject(errors) == false){
-    $.each(errors.errors,function(key,value){
-    toast('error',value);
-    });
-    }
-    }
+        url:'{{route("expense.getData")}}',
+        method:'get',
+        success: res=>{
+            res = $.parseJSON(res);
+            if(res.status == 200){
+                toast('success','Successful!');
+                let expense = '';
+                expense +='<div class="table-responsive">';
+                expense +='<table id="dbTable" class="table mb-0 table-hover">';
+                expense +='<thead>';
+                expense +='<tr>';
+                expense +='<th>SL</th>';
+                expense +='<th>Date</th>';
+                expense +='<th>Amount</th>';
+                expense +='<th>Expense Category</th>';
+                expense +='<th>Actions</th>';
+                expense +='</tr>';
+                expense +='</thead>';
+                expense +='<tbody>';
+                $.each(res.expenses,function(i,v){
+                    expense +='<tr>';
+                    expense +='<td>'+ (i+1) +'</td>';
+                    expense +='<td>'+ moment(v.date).format('ddd, MMM D, YYYY') +'</td>';
+                    expense +='<td>'+ v.amount.toFixed(2) +'</td>';
+                    expense +='<td>'+ v.category.name +'</td>';
+                    expense +='<td class="td-actions">';
+                    expense+='<a href="javascript:void(0);" onclick="editModal('+"'"+document.URL+'/'+v.id+'/edit'+"','Update Expense'"+')"><i data-id='+ v.id +' id="edit" class="la la-edit edit" title="Edit Expense"></i></a>';
+                    expense+='<a href="javascript:void(0);" onclick="deleteModal('+"'"+document.URL+'/'+v.id+"','Delete Expense'"+')"><i data-id='+ v.id +' id="delete" class="la la-close delete" title="Delete Class"></i></a>';
+                    expense +='</td>';
+                    expense +='</tr>';
+                });
+                expense +='</tbody>';
+                expense +='</table>';
+                expense +='</div>';
+
+                $(".student-table").html(expense);
+            }else{
+                toast('error',res.error);
+            }
+        },
+        error: err=>{
+            const errors = err.responseJSON;
+            if($.isEmptyObject(errors) == false){
+                $.each(errors.errors,function(key,value){
+                    toast('error',value);
+                });
+            }
+        }
     });
 }
 </script>

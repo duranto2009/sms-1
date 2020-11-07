@@ -66,6 +66,7 @@ Route::middleware(['role:admin','auth'])->prefix('dashboard')->namespace('Admin'
 
     Route::resource('expense', 'ExpenseController');
     Route::get('expense_filter','ExpenseController@filter')->name('expense.filter');
+    Route::get('read-expense', 'ExpenseController@getData')->name('expense.getData');
     Route::resource('expense_category', 'ExpenseCategoryController');
     Route::get('read-expense-category', 'ExpenseCategoryController@readData')->name('expense_category.readData');
 
