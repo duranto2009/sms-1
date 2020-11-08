@@ -48,7 +48,7 @@
             <li><a href="#dropdown-forms" aria-expanded="false" data-toggle="collapse"><i
                         class="la la-bank"></i><span>Accounting</span></a>
                 <ul id="dropdown-forms" class="collapse list-unstyled pt-0">
-                    <li><a href="{{route('session.index')}}">Student Fee Manager</a></li>
+                    <li><a href="{{route('invoice.index')}}">Student Fee Manager</a></li>
                     <li><a href="{{route('expense_category.index')}}">Expense Category</a></li>
                     <li><a href="{{route('expense.index')}}">Expense Manager</a></li>
                 </ul>

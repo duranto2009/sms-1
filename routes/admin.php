@@ -70,6 +70,9 @@ Route::middleware(['role:admin','auth'])->prefix('dashboard')->namespace('Admin'
     Route::resource('expense_category', 'ExpenseCategoryController');
     Route::get('read-expense-category', 'ExpenseCategoryController@readData')->name('expense_category.readData');
 
+    Route::resource('invoice', 'InvoiceController');
+    Route::get('inv/student_list','InvoiceController@getStudent')->name('invoice.getStudent');
+
 
     //fullcalender
     // Route::get('events','EventController@index');
