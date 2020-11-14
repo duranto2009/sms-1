@@ -40,9 +40,7 @@
                             </div>
                         </div>
                     </form>
-                    <div class="student-table text-center">
-
-                    </div>
+                    <div class="invoice-table text-center"></div>
                 </div>
             </div>
             <!-- End Sorting -->
@@ -159,6 +157,7 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script>
 readData();
+// Static Inv Suggestion
 $(".invSuggest").hide();
 $(".invTitle").on('click',(e)=>{
     $(".invSuggest").toggle();
@@ -168,13 +167,14 @@ $(".invSuggest").on('click',e=>{
     $(".invTitle").val(result);
     $(".invSuggest").hide();
 });
+// End Suggestion
+
 // Date Picker Start
 var start = moment().subtract(29, 'days');
 var end = moment();
 function cb(start, end) {
     $('#reportrange span').html(start.format('MMMM D YYYY') + ' - ' + end.format('MMMM D YYYY'));
 }
-
 $('#reportrange').daterangepicker({
     startDate: start,
     endDate: end,
@@ -187,7 +187,6 @@ $('#reportrange').daterangepicker({
         'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
     }
 }, cb);
-
 cb(start, end);
 // Date Picker End
 function classWiseStudent(class_id){
@@ -249,7 +248,7 @@ $("#getExpense").on('submit',(e)=>{
                 expense +='</table>';
                 expense +='</div>';
 
-                $(".student-table").html(expense);
+                $(".invoice-table").html(expense);
             }else{
                 toast('error',res.error);
             }
@@ -302,42 +301,45 @@ $("#singleInvForm").on('submit',(e)=>{
 });
 function readData(){
     $.ajax({
-        url:'{{route("expense.getData")}}',
+        url:'{{route("invoice.getInv")}}',
         method:'get',
         success: res=>{
             res = $.parseJSON(res);
             if(res.status == 200){
-                // toast('success','Successful!');
-                let expense = '';
-                expense +='<div class="table-responsive">';
-                expense +='<table id="dbTable" class="table mb-0 table-hover">';
-                expense +='<thead>';
-                expense +='<tr>';
-                expense +='<th>SL</th>';
-                expense +='<th>Date</th>';
-                expense +='<th>Amount</th>';
-                expense +='<th>Expense Category</th>';
-                expense +='<th>Actions</th>';
-                expense +='</tr>';
-                expense +='</thead>';
-                expense +='<tbody>';
-                $.each(res.expenses,function(i,v){
-                    expense +='<tr>';
-                    expense +='<td>'+ (i+1) +'</td>';
-                    expense +='<td>'+ moment(v.date).format('ddd, MMM D, YYYY') +'</td>';
-                    expense +='<td>'+ v.amount.toFixed(2) +'</td>';
-                    expense +='<td>'+ v.category.name +'</td>';
-                    expense +='<td class="td-actions">';
-                    expense+='<a href="javascript:void(0);" onclick="editModal('+"'"+document.URL+'/'+v.id+'/edit'+"','Update Expense'"+')"><i data-id='+ v.id +' id="edit" class="la la-edit edit" title="Edit Expense"></i></a>';
-                    expense+='<a href="javascript:void(0);" onclick="deleteModal('+"'"+document.URL+'/'+v.id+"','Delete Expense'"+')"><i data-id='+ v.id +' id="delete" class="la la-close delete" title="Delete Class"></i></a>';
-                    expense +='</td>';
-                    expense +='</tr>';
+                let invoice = '';
+                invoice +='<div class="table-responsive">';
+                invoice +='<table id="dbTable" class="table mb-0 table-hover">';
+                invoice +='<thead>';
+                invoice +='<tr>';
+                invoice +='<th>Invoice No</th>';
+                invoice +='<th>Student</th>';
+                invoice +='<th>Invoice Title</th>';
+                invoice +='<th>Total Amount</th>';
+                invoice +='<th>Paid Amount</th>';
+                invoice +='<th>Status</th>';
+                invoice +='<th>Action</th>';
+                invoice +='</tr>';
+                invoice +='</thead>';
+                invoice +='<tbody>';
+                $.each(res.invoices,function(i,v){
+                    invoice +='<tr>';
+                    invoice +='<td>'+ (v.id).toString().padStart(8, '0') +'</td>';
+                    invoice +='<td>'+ v.student.name +'<br><span style="font-size:11px;">Class: '+v.class.name  +'</span></td>';
+                    invoice +='<td>'+ v.title +'</td>';
+                    invoice +='<td>'+ v.amount.toFixed(2) +'<br><span style="font-size:11px;">Created At: '+moment(v.created_at).format('ddd, MMM D, YYYY') +'</span></td>';
+                    invoice +='<td>'+ v.paidAmount.toFixed(2) +'<br><span style="font-size:11px;">Payment Date: '+ moment(v.created_at).format('ddd, MMM D, YYYY') +'</span></td>';
+                    invoice +='<td>'+(v.status==0?"<span class='alert alert-danger'>Unpaid</span> ":"<span class='alert alert-success'>Paid</span>")+'</td>';
+                    invoice +='<td class="td-actions">';
+                    invoice+='<a href="javascript:void(0);" onclick="editModal('+"'"+document.URL+'/'+v.id+'/edit'+"','Update Expense'"+')"><i data-id='+ v.id +' id="edit" class="la la-edit edit" title="Edit Expense"></i></a>';
+                    invoice+='<a href="javascript:void(0);" onclick="deleteModal('+"'"+document.URL+'/'+v.id+"','Delete Expense'"+')"><i data-id='+ v.id +' id="delete" class="la la-close delete" title="Delete Class"></i></a>';
+                    invoice +='</td>';
+                    invoice +='</tr>';
                 });
-                expense +='</tbody>';
-                expense +='</table>';
-                expense +='</div>';
+                invoice +='</tbody>';
+                invoice +='</table>';
+                invoice +='</div>';
 
-                $(".student-table").html(expense);
+                $(".invoice-table").html(invoice);
             }else{
                 toast('error',res.error);
             }

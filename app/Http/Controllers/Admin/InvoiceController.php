@@ -13,15 +13,21 @@ class InvoiceController extends Controller
 {
     public function index()
     {
-        $invoices = Invoice::all();
+        // $invoices = Invoice::all();
         $classes = ClassTable::all();
-        return view('admin.partials.invoice.index',compact('invoices','classes'));
+        return view('admin.partials.invoice.index',compact('classes'));
     }
 
     public function getStudent(Request $request)
     {
         $student = Student::where('class_table_id',$request->id)->get();
         return response()->json(['status'=>200,'students'=>$student]);
+    }
+
+    public function getInv()
+    {
+        $invoices = Invoice::all();
+        return json_encode(['status'=>200,'invoices'=>$invoices]);
     }
 
     public function create()
