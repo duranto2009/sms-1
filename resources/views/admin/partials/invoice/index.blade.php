@@ -306,53 +306,48 @@ function readData(){
         success: res=>{
             res = $.parseJSON(res);
             if(res.status == 200){
-                let invoice = '';
-                invoice +='<div class="table-responsive">';
-                invoice +='<table id="dbTable" class="table mb-0 table-hover">';
-                invoice +='<thead>';
-                invoice +='<tr>';
-                invoice +='<th>Invoice No</th>';
-                invoice +='<th>Student</th>';
-                invoice +='<th>Invoice Title</th>';
-                invoice +='<th>Total Amount</th>';
-                invoice +='<th>Paid Amount</th>';
-                invoice +='<th>Status</th>';
-                invoice +='<th>Action</th>';
-                invoice +='</tr>';
-                invoice +='</thead>';
-                invoice +='<tbody>';
-                $.each(res.invoices,function(i,v){
-                    invoice +='<tr>';
-                    invoice +='<td>'+ (v.id).toString().padStart(8, '0') +'</td>';
-                    invoice +='<td>'+ v.student.name +'<br><span style="font-size:11px;">Class: '+v.class.name  +'</span></td>';
-                    invoice +='<td>'+ v.title +'</td>';
-                    invoice +='<td>'+ v.amount.toFixed(2) +'<br><span style="font-size:11px;">Created At: '+moment(v.created_at).format('ddd, MMM D, YYYY') +'</span></td>';
-                    invoice +='<td>'+ v.paidAmount.toFixed(2) +'<br><span style="font-size:11px;">Payment Date: '+ moment(v.created_at).format('ddd, MMM D, YYYY') +'</span></td>';
-                    invoice +='<td>'+(v.status==0?"<span class='alert alert-danger'>Unpaid</span> ":"<span class='alert alert-success'>Paid</span>")+'</td>';
-                    invoice +='<td class="td-actions">';
-                    invoice+='<a href="javascript:void(0);" onclick="editModal('+"'"+document.URL+'/'+v.id+'/edit'+"','Update Expense'"+')"><i data-id='+ v.id +' id="edit" class="la la-edit edit" title="Edit Expense"></i></a>';
-                    invoice+='<a href="javascript:void(0);" onclick="deleteModal('+"'"+document.URL+'/'+v.id+"','Delete Expense'"+')"><i data-id='+ v.id +' id="delete" class="la la-close delete" title="Delete Class"></i></a>';
-                    invoice +='</td>';
-                    invoice +='</tr>';
-                });
-                invoice +='</tbody>';
-                invoice +='</table>';
-                invoice +='</div>';
-
-                $(".invoice-table").html(invoice);
+                invTable(res.invoices);
             }else{
                 toast('error',res.error);
             }
-        },
-        error: err=>{
-            const errors = err.responseJSON;
-            if($.isEmptyObject(errors) == false){
-                $.each(errors.errors,function(key,value){
-                    toast('error',value);
-                });
-            }
         }
     });
+}
+function invTable(invoices){
+    let invoice = '';
+    invoice +='<div class="table-responsive">';
+    invoice +='<table id="dbTable" class="table mb-0 table-hover">';
+    invoice +='<thead>';
+    invoice +='<tr>';
+    invoice +='<th>Invoice No</th>';
+    invoice +='<th>Student</th>';
+    invoice +='<th>Invoice Title</th>';
+    invoice +='<th>Total Amount</th>';
+    invoice +='<th>Paid Amount</th>';
+    invoice +='<th>Status</th>';
+    invoice +='<th>Action</th>';
+    invoice +='</tr>';
+    invoice +='</thead>';
+    invoice +='<tbody>';
+    $.each(invoices,function(i,v){
+        invoice +='<tr>';
+        invoice +='<td>'+ (v.id).toString().padStart(8, '0') +'</td>';
+        invoice +='<td>'+ v.student.name +'<br><span style="font-size:11px;">Class: '+v.class.name  +'</span></td>';
+        invoice +='<td>'+ v.title +'</td>';
+        invoice +='<td>'+ v.amount.toFixed(2) +'<br><span style="font-size:11px;">Created At: '+moment(v.created_at).format('ddd, MMM D, YYYY') +'</span></td>';
+        invoice +='<td>'+ v.paidAmount.toFixed(2) +'<br><span style="font-size:11px;">Payment Date: '+ moment(v.created_at).format('ddd, MMM D, YYYY') +'</span></td>';
+        invoice +='<td>'+(v.status==0?"<span class='alert alert-danger'>Unpaid</span> ":"<span class='alert alert-success'>Paid</span>")+'</td>';
+        invoice +='<td class="td-actions">';
+        invoice+='<a href="javascript:void(0);" onclick="editModal('+"'"+document.URL+'/'+v.id+'/edit'+"','Update Invoice'"+')"><i data-id='+ v.id +' id="edit" class="la la-edit edit" title="Edit Invoice"></i></a>';
+        invoice+='<a href="javascript:void(0);" onclick="deleteModal('+"'"+document.URL+'/'+v.id+"','Delete Invoice'"+')"><i data-id='+ v.id +' id="delete" class="la la-close delete" title="Delete Class"></i></a>';
+        invoice +='</td>';
+        invoice +='</tr>';
+    });
+    invoice +='</tbody>';
+    invoice +='</table>';
+    invoice +='</div>';
+
+    $(".invoice-table").html(invoice);
 }
 </script>
 @endsection
