@@ -20,7 +20,7 @@
                     </span>
                 </div>
                 <div class="widget-body">
-                    <form id="getExpense" action="{{route('expense.filter')}}" method="get" autocomplete="off">
+                    <form id="getInv" action="{{route('invoice.filter')}}" method="get" autocomplete="off">
                         <div class="form-group row d-flex align-items-center mt-3 mb-5 justify-content-center">
                             <div class="col-lg-4">
                                 <div id="reportrange" style="cursor: pointer;" class="form-control">
@@ -28,7 +28,7 @@
                                 </div>
                             </div>
                             <div class="col-lg-4">
-                                <select name="expense_category" id="expense_category" class=" form-control">
+                                <select name="class_id" id="class_id" class=" form-control">
                                     <option value="0" disabled selected>SELECT A CLASS</option>
                                     @foreach ($classes as $class)
                                     <option value="{{$class->id}}">{{$class->name}}</option>
@@ -205,50 +205,21 @@ function classWiseStudent(class_id){
         }
     });
 }
-$("#getExpense").on('submit',(e)=>{
+$("#getInv").on('submit',(e)=>{
     e.preventDefault();
     const date = $('#selectedValue').text();
-    const exp_id = $('#expense_category').val();
-    const url = $("#getExpense").attr('action');
-    const method = $("#getExpense").attr('method');
+    const class_id = $('#class_id').val();
+    const url = $("#getInv").attr('action');
+    const method = $("#getInv").attr('method');
     $.ajax({
         url:url,
         method:method,
-        data:{date:date,id:exp_id},
+        data:{date:date,id:class_id},
         success: res=>{
             res = $.parseJSON(res);
             if(res.status == 200){
                 toast('success','Successful!');
-                let expense = '';
-                expense +='<div class="table-responsive">';
-                expense +='<table id="dbTable" class="table mb-0 table-hover">';
-                expense +='<thead>';
-                expense +='<tr>';
-                expense +='<th>SL</th>';
-                expense +='<th>Date</th>';
-                expense +='<th>Amount</th>';
-                expense +='<th>Expense Category</th>';
-                expense +='<th>Actions</th>';
-                expense +='</tr>';
-                expense +='</thead>';
-                expense +='<tbody>';
-                $.each(res.expenses,function(i,v){
-                    expense +='<tr>';
-                    expense +='<td>'+ (i+1) +'</td>';
-                    expense +='<td>'+ moment(v.date).format('ddd, MMM D, YYYY') +'</td>';
-                    expense +='<td>'+ v.amount.toFixed(2) +'</td>';
-                    expense +='<td>'+ v.category.name +'</td>';
-                    expense +='<td class="td-actions">';
-                    expense+='<a href="javascript:void(0);" onclick="editModal('+"'"+document.URL+'/'+v.id+'/edit'+"','Update Expense'"+')"><i data-id='+ v.id +' id="edit" class="la la-edit edit" title="Edit Expense"></i></a>';
-                    expense+='<a href="javascript:void(0);" onclick="deleteModal('+"'"+document.URL+'/'+v.id+"','Delete Expense'"+')"><i data-id='+ v.id +' id="delete" class="la la-close delete" title="Delete Class"></i></a>';
-                    expense +='</td>';
-                    expense +='</tr>';
-                });
-                expense +='</tbody>';
-                expense +='</table>';
-                expense +='</div>';
-
-                $(".invoice-table").html(expense);
+                invTable(res.invoices);
             }else{
                 toast('error',res.error);
             }

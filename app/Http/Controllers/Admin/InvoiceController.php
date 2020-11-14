@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Carbon\Carbon;
 use App\Models\Invoice;
 use App\Models\Student;
 use App\Models\ClassTable;
@@ -28,6 +29,26 @@ class InvoiceController extends Controller
     {
         $invoices = Invoice::all();
         return json_encode(['status'=>200,'invoices'=>$invoices]);
+    }
+
+    public function filter(Request $r)
+    {
+        $r->validate([
+            'date'=>'required',
+            'id'=>'required',
+        ], [
+            'id.required'=>'Please Select a Category',
+        ]);
+        $date      = explode(' - ', $r->date);
+        $startDate = Carbon::parse($date[0])->format('Y-m-d');
+        $endDate   = Carbon::parse($date[1])->format('Y-m-d');
+        $invoices = Invoice::where('created_at', '>=', $startDate)
+                    ->where('created_at', '<=', $endDate)
+                    ->where('class_table_id',$r->id)
+                    ->orderBy('created_at')
+                    ->get();
+        return json_encode(['status'=>200,'invoices'=>$invoices]);
+
     }
 
     public function create()
