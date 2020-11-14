@@ -94,6 +94,11 @@ class InvoiceController extends Controller
 
     public function destroy(Invoice $invoice)
     {
-
+        try {
+            $invoice->delete();
+            return json_encode(['status'=>200,'message'=>'Invoice Deleted Successful!']);
+        } catch (\Exception $e) {
+            return json_encode(['status'=>500,'message'=>$e->getMessage()]);
+        }
     }
 }
