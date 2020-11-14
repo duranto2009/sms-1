@@ -84,11 +84,52 @@ class InvoiceController extends Controller
 
     public function edit(Invoice $invoice)
     {
+        $section = '';
+        $section .= '<div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="title">Invoice Title</label>
+                                <input type="text" class="form-control" id="title" name="title" value="'.$invoice->title.'">
+                            </div>
 
+                            <div class="form-group col-md-12">
+                                <label for="amount">Total Amount (USD)</label>
+                                <input type="number" class="form-control" id="amount" name="amount" value="'.number_format($invoice->amount,2,'.','0').'">
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label for="paid_amount">Paid Amount (USD)</label>
+                                <input type="number" class="form-control" id="paidAmount" name="paidAmount" value="'.number_format($invoice->paidAmount,2,'.','').'">
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label for="status">Status</label>
+                                <select name="status" id="status" class="form-control" >
+                                    <option value="1"'.($invoice->status==0?"selected":"").'>Paid</option>
+                                    <option value="0"'.($invoice->status==0?"selected":"").'>Unpaid</option>
+                                </select>
+                            </div>
+                        </div>';
+        $route = route("invoice.update", $invoice->id);
+        return json_encode(['data'=>$invoice,'status'=>200,'section'=>$section,'route'=>$route]);
     }
 
     public function update(Request $request, Invoice $invoice)
     {
+        $data = $request->validate([
+            "title"      =>'required|string',
+            "amount"     =>'required|numeric',
+            "paidAmount" =>'required|numeric',
+            "status"     =>'required|integer'
+        ]);
+        if($request->status == 1 & ($request->amount != $request->paidAmount)){
+            return json_encode(['status'=>500,'error'=>'Please Check Status!']);
+        }
+        try {
+            $invoice->update($data);
+            return json_encode(['status'=>200,'data'=>$data]);
+        } catch (\Exception $e) {
+            return json_encode(['status'=>500,'error'=>$e->getMessage()]);
+        }
 
     }
 
