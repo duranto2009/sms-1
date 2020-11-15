@@ -24,6 +24,12 @@ class InvoiceController extends Controller
         $student = Student::where('class_table_id',$request->id)->get();
         return response()->json(['status'=>200,'students'=>$student]);
     }
+    public function getSection(Request $request)
+    {
+        $class = ClassTable::findOrFail($request->id);
+        return response()->json(['status'=>200,'sections'=>$class]);
+
+    }
 
     public function getInv()
     {

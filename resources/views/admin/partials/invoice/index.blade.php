@@ -134,13 +134,68 @@
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3 class="modal-title">Add Expense</h3>
+                        <h3 class="modal-title">Add Mass Invoice</h3>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div id="msg"></div>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="class_id_on_create">Class</label>
+                                <select name="class_id" id="class_id_on_create" class="form-control" onchange="classWiseSection(this.value)">
+                                    <option value="" selected disabled>Select A Class</option>
+                                    @foreach ($classes as $class)
+                                    <option value="{{$class->id}}">{{$class->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label for="section_id">Select Section</label>
+                                <div id="section_content">
+                                    <select name="section" id="section_id" class="form-control">
+                                        <option value="" selected disabled>Select A Section</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label for="title">Invoice Title</label>
+                                <input type="text" class="form-control invTitle" id="title" name="title">
+                                <div class="invSuggest">
+                                    <div class="invSuggest-inner">
+                                        <div id="da">
+                                            <ul>
+                                                <li data-da='Registration Fee'>Registration Fee</li>
+                                                <li data-da='Session Fee'>Session Fee</li>
+                                                <li data-da='Exam Fee'>Exam Fee</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label for="amount">Total Amount (USD)</label>
+                                <input type="number" class="form-control" id="amount" name="amount">
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label for="paid_amount">Paid Amount (USD)</label>
+                                <input type="number" class="form-control" id="paidAmount" name="paidAmount">
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label for="status">Status</label>
+                                <select name="status" id="status" class="form-control">
+                                    <option value="" selected disabled>Select A Status</option>
+                                    <option value="1">Paid</option>
+                                    <option value="0">Unpaid</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
@@ -202,6 +257,23 @@ function classWiseStudent(class_id){
             });
             studentList += '</select>';
             $('#student_content').html(studentList);
+        }
+    });
+}
+function classWiseSection(class_id){
+    $.ajax({
+        url:'{{route('invoice.getSection')}}',
+        method:'get',
+        data:{id:class_id},
+        success:res=>{
+            let sectionList = '<select name="section_id" id="section_id" class="form-control">';
+            sectionList += '<option value="" selected disabled>Select A Section</option>';
+            let deSection = JSON.parse(res.sections.section);
+            $.each(deSection,function(i,val){
+                sectionList += '<option value="'+val+'">'+val+'</option>';
+            });
+            sectionList += '</select>';
+            $('#section_content').html(sectionList);
         }
     });
 }
@@ -307,7 +379,7 @@ function invTable(invoices){
         invoice +='<td>'+ v.title +'</td>';
         invoice +='<td>'+ v.amount.toFixed(2) +'<br><span style="font-size:11px;">Created At: '+moment(v.created_at).format('ddd, MMM D, YYYY') +'</span></td>';
         invoice +='<td>'+ v.paidAmount.toFixed(2) +'<br><span style="font-size:11px;">Payment Date: '+ moment(v.created_at).format('ddd, MMM D, YYYY') +'</span></td>';
-        invoice +='<td>'+(v.status==0?"<span class='alert alert-danger'>Unpaid</span> ":"<span class='alert alert-success'>Paid</span>")+'</td>';
+        invoice +='<td>'+(v.status==0?"<span class='text-danger'>Unpaid</span> ":"<span class='text-success'>Paid</span>")+'</td>';
         invoice +='<td class="td-actions">';
         invoice+='<a href="javascript:void(0);" onclick="editModal('+"'"+document.URL+'/'+v.id+'/edit'+"','Update Invoice'"+')"><i data-id='+ v.id +' id="edit" class="la la-edit edit" title="Edit Invoice"></i></a>';
         invoice+='<a href="javascript:void(0);" onclick="deleteModal('+"'"+document.URL+'/'+v.id+"','Delete Invoice'"+')"><i data-id='+ v.id +' id="delete" class="la la-close delete" title="Delete Class"></i></a>';
