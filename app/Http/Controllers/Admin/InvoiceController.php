@@ -33,7 +33,7 @@ class InvoiceController extends Controller
 
     public function getInv()
     {
-        $invoices = Invoice::all();
+        $invoices = Invoice::where('session_year_id',SessionYear::where('status', 1)->first()->id)->get();
         return json_encode(['status'=>200,'invoices'=>$invoices]);
     }
 
@@ -51,6 +51,7 @@ class InvoiceController extends Controller
         $invoices = Invoice::where('created_at', '>=', $startDate)
                     ->where('created_at', '<=', $endDate)
                     ->where('class_table_id',$r->id)
+                    ->where('session_year_id',SessionYear::where('status', 1)->first()->id)
                     ->orderBy('created_at')
                     ->get();
         return json_encode(['status'=>200,'invoices'=>$invoices]);
