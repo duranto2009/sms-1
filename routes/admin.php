@@ -71,6 +71,7 @@ Route::middleware(['role:admin','auth'])->prefix('dashboard')->namespace('Admin'
     Route::get('read-expense-category', 'ExpenseCategoryController@readData')->name('expense_category.readData');
 
     Route::resource('invoice', 'InvoiceController');
+    Route::post('inv/massStore','InvoiceController@massStore')->name('invoice.massStore');
     Route::get('inv/student_list','InvoiceController@getStudent')->name('invoice.getStudent');
     Route::get('inv/section_list','InvoiceController@getSection')->name('invoice.getSection');
     Route::get('inv/all','InvoiceController@getInv')->name('invoice.getInv');

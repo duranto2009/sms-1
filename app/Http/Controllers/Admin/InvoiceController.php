@@ -80,7 +80,33 @@ class InvoiceController extends Controller
         } catch (\Exception $e) {
             return json_encode(['status'=>500,'error'=>$e->getMessage()]);
         }
-
+    }
+    public function massStore(Request $request)
+    {
+        $data = $request->validate([
+            "class_id"   =>'required|integer',
+            "section_id" =>'required|string',
+            "title"      =>'required|string',
+            "amount"     =>'required|numeric',
+            "paidAmount" =>'required|numeric',
+            "status"     =>'required|integer'
+        ]);
+        $data['class_table_id'] = $request->class_id;
+        $session = SessionYear::where('status', 1)->first();
+        $data['session_year_id'] = $session->id;
+        $students = Student::where('class_table_id',$request->class_id)
+                    ->where('section',$request->section_id)
+                    ->where('session',$session->title)
+                    ->get();
+        try {
+            foreach ($students as $student) {
+                $data['student_id'] = $student->id;
+                Invoice::create($data);
+            }
+            return json_encode(['status'=>200,'data'=>$data]);
+        } catch (\Exception $e) {
+            return json_encode(['status'=>500,'error'=>$e->getMessage()]);
+        }
     }
 
     public function show(Invoice $invoice)

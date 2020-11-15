@@ -130,7 +130,7 @@
     <!--Add Mass Invoice Modal -->
     <div class="modal fade" id="massInv" tabindex="-1" role="dialog" aria-labelledby="massInvLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <form id='massInvForm' action="{{route('invoice.store')}}" method="POST" autocomplete="off" novalidate>
+            <form id='massInvForm' action="{{route('invoice.massStore')}}" method="POST" autocomplete="off" novalidate>
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
@@ -178,18 +178,18 @@
                             </div>
 
                             <div class="form-group col-md-12">
-                                <label for="amount">Total Amount (USD)</label>
-                                <input type="number" class="form-control" id="amount" name="amount">
+                                <label for="massamount">Total Amount (USD)</label>
+                                <input type="number" class="form-control" id="massamount" name="amount">
                             </div>
 
                             <div class="form-group col-md-12">
-                                <label for="paid_amount">Paid Amount (USD)</label>
-                                <input type="number" class="form-control" id="paidAmount" name="paidAmount">
+                                <label for="masspaidAmount">Paid Amount (USD)</label>
+                                <input type="number" class="form-control" id="masspaidAmount" name="paidAmount">
                             </div>
 
                             <div class="form-group col-md-12">
                                 <label for="status">Status</label>
-                                <select name="status" id="status" class="form-control">
+                                <select name="status" id="massstatus" class="form-control">
                                     <option value="" selected disabled>Select A Status</option>
                                     <option value="1">Paid</option>
                                     <option value="0">Unpaid</option>
@@ -307,7 +307,7 @@ $("#getInv").on('submit',(e)=>{
     });
 });
 
-// Create Single Expense
+// Create Single Invoice
 $("#singleInvForm").on('submit',(e)=>{
     e.preventDefault();
     if($("#status").val() =='1' & $("#amount").val() != $("#paidAmount").val()){
@@ -327,6 +327,41 @@ $("#singleInvForm").on('submit',(e)=>{
                 $("form").trigger("reset");
                 toast('success','Envoice Create Successful!');
                 $("#singleInv .close").click();
+                readData();
+            }else{
+                toast('error',res.error);
+            }
+        },
+        error: err=>{
+            const errors = err.responseJSON;
+            if($.isEmptyObject(errors) == false){
+                $.each(errors.errors,function(key,value){
+                    toast('error',value);
+                });
+            }
+        }
+    });
+});
+// Create Mass Invoice
+$("#massInvForm").on('submit',(e)=>{
+    e.preventDefault();
+    if($("#massstatus").val() =='1' & $("#massamount").val() != $("#masspaidAmount").val()){
+        toast('error','Please Check Status');
+        return false;
+    }
+    const data   = $("#massInvForm").serialize();
+    const url    = $("#massInvForm").attr('action');
+    const method = $("#massInvForm").attr('method');
+    $.ajax({
+        url:url,
+        method:method,
+        data:data,
+        success: res=>{
+            res = $.parseJSON(res);
+            if(res.status == 200){
+                $("form").trigger("reset");
+                toast('success','Envoice Create Successful!');
+                $("#massInv .close").click();
                 readData();
             }else{
                 toast('error',res.error);
