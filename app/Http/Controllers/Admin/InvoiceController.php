@@ -48,8 +48,8 @@ class InvoiceController extends Controller
         $date      = explode(' - ', $r->date);
         $startDate = Carbon::parse($date[0])->format('Y-m-d');
         $endDate   = Carbon::parse($date[1])->format('Y-m-d');
-        $invoices = Invoice::where('created_at', '>=', $startDate)
-                    ->where('created_at', '<=', $endDate)
+        $invoices = Invoice::where('payment_date', '>=', $startDate)
+                    ->where('payment_date', '<=', $endDate)
                     ->where('class_table_id',$r->id)
                     ->where('session_year_id',SessionYear::where('status', 1)->first()->id)
                     ->orderBy('created_at')

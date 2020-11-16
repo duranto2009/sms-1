@@ -22,6 +22,7 @@ class CreateInvoicesTable extends Migration
             $table->double('amount',14,2);
             $table->double('paidAmount',14,2);
             $table->tinyInteger('status');
+            $table->date('payment_date')->default(now());
             $table->timestamps();
         });
     }
