@@ -40,10 +40,12 @@ class InvoiceController extends Controller
     public function filter(Request $r)
     {
         $r->validate([
-            'date'=>'required',
-            'id'=>'required',
+            'date'   => 'required',
+            'id'     => 'required',
+            'status' => 'required',
         ], [
-            'id.required'=>'Please Select a Category',
+            'id.required'     => 'Please Select a Class',
+            'status.required' => 'Please Select Status',
         ]);
         $date      = explode(' - ', $r->date);
         $startDate = Carbon::parse($date[0])->format('Y-m-d');
@@ -51,6 +53,7 @@ class InvoiceController extends Controller
         $invoices = Invoice::where('payment_date', '>=', $startDate)
                     ->where('payment_date', '<=', $endDate)
                     ->where('class_table_id',$r->id)
+                    ->where('status',$r->status)
                     ->where('session_year_id',SessionYear::where('status', 1)->first()->id)
                     ->orderBy('created_at')
                     ->get();

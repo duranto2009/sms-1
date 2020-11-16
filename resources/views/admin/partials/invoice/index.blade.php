@@ -27,12 +27,19 @@
                                     <i class="la la-calendar"></i>&nbsp;<span id="selectedValue"></span>
                                 </div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-2">
                                 <select name="class_id" id="class_id" class=" form-control">
                                     <option value="0" disabled selected>SELECT A CLASS</option>
                                     @foreach ($classes as $class)
                                     <option value="{{$class->id}}">{{$class->name}}</option>
                                     @endforeach
+                                </select>
+                            </div>
+                            <div class="col-lg-2">
+                                <select name="status_id" id="status_id" class=" form-control">
+                                    <option value="" disabled selected>STATUS</option>
+                                    <option value="1">Paid</option>
+                                    <option value="0">Unpaid</option>
                                 </select>
                             </div>
                             <div class="col-lg-2">
@@ -281,12 +288,13 @@ $("#getInv").on('submit',(e)=>{
     e.preventDefault();
     const date = $('#selectedValue').text();
     const class_id = $('#class_id').val();
+    const status = $('#status_id').val();
     const url = $("#getInv").attr('action');
     const method = $("#getInv").attr('method');
     $.ajax({
         url:url,
         method:method,
-        data:{date:date,id:class_id},
+        data:{date:date,id:class_id,status:status},
         success: res=>{
             res = $.parseJSON(res);
             if(res.status == 200){
