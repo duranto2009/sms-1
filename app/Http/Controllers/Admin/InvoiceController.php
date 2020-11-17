@@ -72,25 +72,25 @@ class InvoiceController extends Controller
                     ->where('session_year_id', SessionYear::where('status', 1)->first()->id)
                     ->orderBy('created_at')
                     ->get();
-        if ($request->class_id != null && $request->status == null) {
-            $invoices = $invoices->where('class_table_id', $request->class_id);
-            $class = ClassTable::findOrFail($request->class_id);
-        } elseif ($request->class_id == null  && $request->status != null) {
+        if ($request->class != null && $request->status == null) {
+            $invoices = $invoices->where('class_table_id', $request->class);
+            $class = ClassTable::findOrFail($request->class);
+        } elseif ($request->class == null  && $request->status != null) {
             $invoices = $invoices->where('status', $request->status);
             $status = $request->status;
-        } elseif ($request->class_id != null && $request->status != null) {
-            $invoices = $invoices->where('class_table_id', $request->class_id)->where('status', $request->status);
+        } elseif ($request->class != null && $request->status != null) {
+            $invoices = $invoices->where('class_table_id', $request->class)->where('status', $request->status);
             $status = $request->status;
-            $class = ClassTable::findOrFail($request->class_id);
+            $class = ClassTable::findOrFail($request->class);
         }
         if ($request->type == 'csv') {
             return Excel::download(new InvoiceCsv($invoices, $date, $class, $status), 'invoice.csv');
         } elseif ($request->type == 'pdf') {
             $pdf = PDF::loadView('admin.partials.invoice.layout.csv', compact(['invoices','date','class','status']));
-            return $pdf->download('customers.pdf');
+            return $pdf->download('student_fee_'.$request->date.'.pdf');
         } else {
             $pdf = PDF::loadView('admin.partials.invoice.layout.csv', compact(['invoices','date','class','status']));
-            return $pdf->stream('customers.pdf');
+            return $pdf->stream('student_fee_'.$request->date.'.pdf');
         }
     }
 

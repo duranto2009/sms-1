@@ -47,21 +47,23 @@
                             </div>
                         </div>
                     </form>
-                    <div class="row justify-content-md-center" style="margin-bottom: 10px;">
-                        <div class="col-xl-3 col-lg-4 col-md-12 col-sm-12 mb-3 mb-lg-0">
-                            <button type="button" class="btn btn-icon btn-primary form-control dropdown-toggle"
-                                data-toggle="dropdown" aria-expanded="false">Export Report</button>
-                            <div class="dropdown-menu" x-placement="top-start"
-                                style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(15px, -2px, 0px);">
-                                <a class="dropdown-item" id="export-csv" href="javascript:0"
-                                    onclick="getExportUrl('csv')">CSV</a>
-                                <a class="dropdown-item" id="export-pdf" href="javascript:0"
-                                    onclick="getExportUrl('pdf')">PDF</a>
-                                <a class="dropdown-item" id="export-print" href="javascript:0"
-                                    onclick="getExportUrl('print')">Print</a>
+                    <form id="exportInv" action="{{route("invoice.export")}}" method="get" autocomplete="off">
+                        <input type="hidden" id="exDate" name="date">
+                        <input type="hidden" id="exClass" name="class">
+                        <input type="hidden" id="exStatus" name="status">
+                        <div class="form-group row d-flex align-items-center mb-3 justify-content-center">
+                            <div class="col-lg-2">
+                                <select name="type" id="expOpt" class=" form-control">
+                                    <option value="print">Print</option>
+                                    <option value="pdf">PDF</option>
+                                    <option value="csv">CSV</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-2">
+                                <button class="btn btn-outline-primary" type="submit">Export Report</button>
                             </div>
                         </div>
-                    </div>
+                    </form>
                     <div class="invoice-table text-center"></div>
                 </div>
             </div>
@@ -332,24 +334,11 @@ $("#getInv").on('submit',(e)=>{
 });
 
 // Export Data
-function getExportUrl(type) {
-    const url = '{{route("invoice.export")}}';
-    const date = $('#selectedValue').text();
-    const class_id = $('#class_id').val();
-    const status = $('#status_id').val();
-    $.ajax({
-        type   : 'get',
-        url    : url,
-        data   : {type : type, date : date, class_id : class_id, status : status},
-        success: function(response) {
-            if (type == 'csv') {
-                window.open(response, '_self');
-            }else{
-                window.open(response, '_blank');
-            }
-        }
-    });
-}
+$("#exportInv").on('submit',e=>{
+    $("#exDate").val($('#selectedValue').text());
+    $("#exClass").val($('#class_id').val());
+    $("#exStatus").val($('#status_id').val());
+});
 
 // Create Single Invoice
 $("#singleInvForm").on('submit',(e)=>{
