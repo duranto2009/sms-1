@@ -39,8 +39,8 @@
             <div class="col-lg-4 text-capitalize text-center" style="text-align: center">
                 <h3>Student Fee Report</h3>
                 <p>From: {{\Carbon\Carbon::parse($date[0])->format('d-M-Y')}} to {{\Carbon\Carbon::parse($date[1])->format('d-M-Y')}} </p>
-                <p>Class: {{$class!=0?$class->name:'All Class'}}</p>
-                <p>Status: {{$status != 0?$status==1?'Paid':'Unpaid':'All'}}</p>
+                <p>Class: {{$class!=null?$class->name:'All Class'}}</p>
+                <p>Status: {{$status != null?$status==1?'Paid':'Unpaid':'All'}}</p>
             </div>
         </div>
         <div class="row">

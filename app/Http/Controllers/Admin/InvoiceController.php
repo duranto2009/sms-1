@@ -19,23 +19,22 @@ class InvoiceController extends Controller
     {
         // $invoices = Invoice::all();
         $classes = ClassTable::all();
-        return view('admin.partials.invoice.index',compact('classes'));
+        return view('admin.partials.invoice.index', compact('classes'));
     }
     public function getStudent(Request $request)
     {
-        $student = Student::where('class_table_id',$request->id)->get();
+        $student = Student::where('class_table_id', $request->id)->get();
         return response()->json(['status'=>200,'students'=>$student]);
     }
     public function getSection(Request $request)
     {
         $class = ClassTable::findOrFail($request->id);
         return response()->json(['status'=>200,'sections'=>$class]);
-
     }
 
     public function getInv()
     {
-        $invoices = Invoice::where('session_year_id',SessionYear::where('status', 1)->first()->id)->get();
+        $invoices = Invoice::where('session_year_id', SessionYear::where('status', 1)->first()->id)->get();
         return json_encode(['status'=>200,'invoices'=>$invoices]);
     }
 
@@ -54,18 +53,17 @@ class InvoiceController extends Controller
         $endDate   = Carbon::parse($date[1])->format('Y-m-d');
         $invoices = Invoice::where('payment_date', '>=', $startDate)
                     ->where('payment_date', '<=', $endDate)
-                    ->where('class_table_id',$r->id)
-                    ->where('status',$r->status)
-                    ->where('session_year_id',SessionYear::where('status', 1)->first()->id)
+                    ->where('class_table_id', $r->id)
+                    ->where('status', $r->status)
+                    ->where('session_year_id', SessionYear::where('status', 1)->first()->id)
                     ->orderBy('created_at')
                     ->get();
         return json_encode(['status'=>200,'invoices'=>$invoices]);
-
     }
 
     public function export(Request $request)
     {
-        $class = $status = 0;
+        $class = $status = null;
         $date      = explode(' - ', $request->date);
         $startDate = Carbon::parse($date[0])->format('Y-m-d');
         $endDate   = Carbon::parse($date[1])->format('Y-m-d');
@@ -74,31 +72,26 @@ class InvoiceController extends Controller
                     ->where('session_year_id', SessionYear::where('status', 1)->first()->id)
                     ->orderBy('created_at')
                     ->get();
-        if($request->has('class_id') && $request->class_id != null){
+        if ($request->class_id != null && $request->status == null) {
             $invoices = $invoices->where('class_table_id', $request->class_id);
             $class = ClassTable::findOrFail($request->class_id);
-        }elseif($request->has('status') && $request->status != null){
+        } elseif ($request->class_id == null  && $request->status != null) {
             $invoices = $invoices->where('status', $request->status);
             $status = $request->status;
-        }elseif($request->class_id != null && $request->status != null){
+        } elseif ($request->class_id != null && $request->status != null) {
             $invoices = $invoices->where('class_table_id', $request->class_id)->where('status', $request->status);
             $status = $request->status;
             $class = ClassTable::findOrFail($request->class_id);
         }
-        // $pdf = PDF::loadView('admin.partials.invoice.layout.csv', compact(['invoices','date','class','status']));
-        // return $pdf->stream('customers.pdf');
-        // return $pdf->download('customers.pdf');
-
-        return Excel::download(new InvoiceCsv($invoices,$date,$class,$status),'invoice.pdf');
-        // if($request->type == 'csv'){
-
-        // }elseif($request->type == 'pdf'){
-
-        // }else{
-
-        // }
-        return $invoices;
-
+        if ($request->type == 'csv') {
+            return Excel::download(new InvoiceCsv($invoices, $date, $class, $status), 'invoice.csv');
+        } elseif ($request->type == 'pdf') {
+            $pdf = PDF::loadView('admin.partials.invoice.layout.csv', compact(['invoices','date','class','status']));
+            return $pdf->download('customers.pdf');
+        } else {
+            $pdf = PDF::loadView('admin.partials.invoice.layout.csv', compact(['invoices','date','class','status']));
+            return $pdf->stream('customers.pdf');
+        }
     }
 
     public function store(Request $request)
@@ -133,9 +126,9 @@ class InvoiceController extends Controller
         $data['class_table_id'] = $request->class_id;
         $session = SessionYear::where('status', 1)->first();
         $data['session_year_id'] = $session->id;
-        $students = Student::where('class_table_id',$request->class_id)
-                    ->where('section',$request->section_id)
-                    ->where('session',$session->title)
+        $students = Student::where('class_table_id', $request->class_id)
+                    ->where('section', $request->section_id)
+                    ->where('session', $session->title)
                     ->get();
         try {
             foreach ($students as $student) {
@@ -150,7 +143,6 @@ class InvoiceController extends Controller
 
     public function show(Invoice $invoice)
     {
-
     }
 
     public function edit(Invoice $invoice)
@@ -164,12 +156,12 @@ class InvoiceController extends Controller
 
                             <div class="form-group col-md-12">
                                 <label for="amount">Total Amount (USD)</label>
-                                <input type="number" class="form-control" id="amount" name="amount" value="'.number_format($invoice->amount,2,'.','0').'">
+                                <input type="number" class="form-control" id="amount" name="amount" value="'.number_format($invoice->amount, 2, '.', '0').'">
                             </div>
 
                             <div class="form-group col-md-12">
                                 <label for="paid_amount">Paid Amount (USD)</label>
-                                <input type="number" class="form-control" id="paidAmount" name="paidAmount" value="'.number_format($invoice->paidAmount,2,'.','').'">
+                                <input type="number" class="form-control" id="paidAmount" name="paidAmount" value="'.number_format($invoice->paidAmount, 2, '.', '').'">
                             </div>
 
                             <div class="form-group col-md-12">
@@ -192,7 +184,7 @@ class InvoiceController extends Controller
             "paidAmount" =>'required|numeric',
             "status"     =>'required|integer'
         ]);
-        if($request->status == 1 & ($request->amount != $request->paidAmount)){
+        if ($request->status == 1 & ($request->amount != $request->paidAmount)) {
             return json_encode(['status'=>500,'error'=>'Please Check Status!']);
         }
         try {
@@ -201,7 +193,6 @@ class InvoiceController extends Controller
         } catch (\Exception $e) {
             return json_encode(['status'=>500,'error'=>$e->getMessage()]);
         }
-
     }
 
     public function destroy(Invoice $invoice)
