@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Admin;
 use Carbon\Carbon;
 use App\Models\Invoice;
 use App\Models\Student;
+use PDF;
 use App\Models\ClassTable;
+use App\Exports\InvoiceCsv;
 use App\Models\SessionYear;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 
 class InvoiceController extends Controller
 {
@@ -18,7 +21,6 @@ class InvoiceController extends Controller
         $classes = ClassTable::all();
         return view('admin.partials.invoice.index',compact('classes'));
     }
-
     public function getStudent(Request $request)
     {
         $student = Student::where('class_table_id',$request->id)->get();
@@ -61,8 +63,41 @@ class InvoiceController extends Controller
 
     }
 
-    public function create()
+    public function export(Request $request)
     {
+        $class = $status = 0;
+        $date      = explode(' - ', $request->date);
+        $startDate = Carbon::parse($date[0])->format('Y-m-d');
+        $endDate   = Carbon::parse($date[1])->format('Y-m-d');
+        $invoices = Invoice::where('payment_date', '>=', $startDate)
+                    ->where('payment_date', '<=', $endDate)
+                    ->where('session_year_id', SessionYear::where('status', 1)->first()->id)
+                    ->orderBy('created_at')
+                    ->get();
+        if($request->has('class_id') && $request->class_id != null){
+            $invoices = $invoices->where('class_table_id', $request->class_id);
+            $class = ClassTable::findOrFail($request->class_id);
+        }elseif($request->has('status') && $request->status != null){
+            $invoices = $invoices->where('status', $request->status);
+            $status = $request->status;
+        }elseif($request->class_id != null && $request->status != null){
+            $invoices = $invoices->where('class_table_id', $request->class_id)->where('status', $request->status);
+            $status = $request->status;
+            $class = ClassTable::findOrFail($request->class_id);
+        }
+        // $pdf = PDF::loadView('admin.partials.invoice.layout.csv', compact(['invoices','date','class','status']));
+        // return $pdf->stream('customers.pdf');
+        // return $pdf->download('customers.pdf');
+
+        return Excel::download(new InvoiceCsv($invoices,$date,$class,$status),'invoice.pdf');
+        // if($request->type == 'csv'){
+
+        // }elseif($request->type == 'pdf'){
+
+        // }else{
+
+        // }
+        return $invoices;
 
     }
 

@@ -47,6 +47,21 @@
                             </div>
                         </div>
                     </form>
+                    <div class="row justify-content-md-center" style="margin-bottom: 10px;">
+                        <div class="col-xl-3 col-lg-4 col-md-12 col-sm-12 mb-3 mb-lg-0">
+                            <button type="button" class="btn btn-icon btn-primary form-control dropdown-toggle"
+                                data-toggle="dropdown" aria-expanded="false">Export Report</button>
+                            <div class="dropdown-menu" x-placement="top-start"
+                                style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(15px, -2px, 0px);">
+                                <a class="dropdown-item" id="export-csv" href="javascript:0"
+                                    onclick="getExportUrl('csv')">CSV</a>
+                                <a class="dropdown-item" id="export-pdf" href="javascript:0"
+                                    onclick="getExportUrl('pdf')">PDF</a>
+                                <a class="dropdown-item" id="export-print" href="javascript:0"
+                                    onclick="getExportUrl('print')">Print</a>
+                            </div>
+                        </div>
+                    </div>
                     <div class="invoice-table text-center"></div>
                 </div>
             </div>
@@ -92,7 +107,7 @@
 
                             <div class="form-group col-md-12">
                                 <label for="title">Invoice Title</label>
-                                <input type="text" class="form-control invTitle" id="title" name="title" >
+                                <input type="text" class="form-control invTitle" id="title" name="title">
                                 <div class="invSuggest">
                                     <div class="invSuggest-inner">
                                         <div id="da">
@@ -118,7 +133,7 @@
 
                             <div class="form-group col-md-12">
                                 <label for="status">Status</label>
-                                <select name="status" id="status" class="form-control" >
+                                <select name="status" id="status" class="form-control">
                                     <option value="" selected disabled>Select A Status</option>
                                     <option value="1">Paid</option>
                                     <option value="0">Unpaid</option>
@@ -151,7 +166,8 @@
                         <div class="form-row">
                             <div class="form-group col-md-12">
                                 <label for="class_id_on_create">Class</label>
-                                <select name="class_id" id="class_id_on_create" class="form-control" onchange="classWiseSection(this.value)">
+                                <select name="class_id" id="class_id_on_create" class="form-control"
+                                    onchange="classWiseSection(this.value)">
                                     <option value="" selected disabled>Select A Class</option>
                                     @foreach ($classes as $class)
                                     <option value="{{$class->id}}">{{$class->name}}</option>
@@ -218,7 +234,7 @@
 @section('js')
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script>
-readData();
+    readData();
 // Static Inv Suggestion
 $(".invSuggest").hide();
 $(".invTitle").on('click',(e)=>{
@@ -314,6 +330,26 @@ $("#getInv").on('submit',(e)=>{
         }
     });
 });
+
+// Export Data
+function getExportUrl(type) {
+    const url = '{{route("invoice.export")}}';
+    const date = $('#selectedValue').text();
+    const class_id = $('#class_id').val();
+    const status = $('#status_id').val();
+    $.ajax({
+        type   : 'get',
+        url    : url,
+        data   : {type : type, date : date, class_id : class_id, status : status},
+        success: function(response) {
+            if (type == 'csv') {
+                window.open(response, '_self');
+            }else{
+                window.open(response, '_blank');
+            }
+        }
+    });
+}
 
 // Create Single Invoice
 $("#singleInvForm").on('submit',(e)=>{
