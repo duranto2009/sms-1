@@ -120,6 +120,7 @@
                     </div>
                 </div>
             </form>
+            
         </div>
     </div>
 
@@ -189,7 +190,7 @@ $("#addNoticeForm").submit(function(e){
     });
 });
 function readData(){
-    const url = '{{route("calendar.readData")}}';
+    const url = '{{route("notice.readData")}}';
     $.ajax({
         url:url,
         method:'get',
