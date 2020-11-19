@@ -58,7 +58,7 @@
                 <ul id="dropdown-tables" class="collapse list-unstyled pt-0">
                     <li><a href="{{route('session.index')}}">Book List Manager</a></li>
                     <li><a href="{{route('session.index')}}">Book Issu Report</a></li>
-                    <li><a href="{{route('session.index')}}">Noticeboard</a></li>
+                    <li><a href="{{route('notice.index')}}">Noticeboard</a></li>
                 </ul>
             </li>
             <li><a href="#school-setting" aria-expanded="false" data-toggle="collapse"><i
