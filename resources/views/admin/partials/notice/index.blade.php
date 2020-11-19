@@ -65,7 +65,7 @@
     </div>
     <!-- End Row -->
 
-    <!--Add Class Modal -->
+    <!--Add Notice Modal -->
     <div class="modal fade" id="addNotice" tabindex="-1" role="dialog" aria-labelledby="addNoticeLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -81,7 +81,6 @@
                     <div class="modal-body">
                         <div id="msg"></div>
                         <div class="form-row">
-
                             <div class="form-group col-md-12">
                                 <label for="title">Notice Title</label>
                                 <input type="text" class="form-control" id="title" name="title" required="">
