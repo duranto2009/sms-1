@@ -78,6 +78,9 @@ Route::middleware(['role:admin','auth'])->prefix('dashboard')->namespace('Admin'
     Route::get('inv/filter','InvoiceController@filter')->name('invoice.filter');
     Route::get('inv/export/url','InvoiceController@export')->name('invoice.export');
 
+    Route::resource('notice','NoticeController');
+    Route::get('read-notice', 'NoticeController@readData')->name('notice.readData');
+
 
     //fullcalender
     // Route::get('events','EventController@index');
