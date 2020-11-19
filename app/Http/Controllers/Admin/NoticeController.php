@@ -52,7 +52,7 @@ class NoticeController extends Controller
     public function readData()
     {
         $session = SessionYear::where('status', 1)->first();
-        $notices = Notice::where('session_year_id',$session->id)->orderBy('date', 'asc')->paginate(7);
+        $notices = Notice::where('session_year_id',$session->id)->orderBy('date', 'asc')->paginate(10);
         $notice = '';
         $i = 1;
         foreach ($notices as $evt) {
@@ -68,7 +68,9 @@ class NoticeController extends Controller
             $notice.='</td>';
             $notice.='</tr>';
         }
-        $notice .= '<tr><td colspan="4">'.$notices->links().'</td></tr>';
+        if ($notices->count() >= 10) {
+            $notice .= '<tr><td colspan="4">'.$notices->links().'</td></tr>';
+        }
         return json_encode(['status'=>200,'data'=>$notice]);
     }
 

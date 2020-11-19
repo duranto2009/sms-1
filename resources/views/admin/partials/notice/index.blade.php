@@ -120,7 +120,7 @@
                     </div>
                 </div>
             </form>
-            
+
         </div>
     </div>
 
@@ -132,30 +132,8 @@
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.9.0/dist/fullcalendar.min.js"></script>
 <script>
 $(document).ready(function() {
-// refreshEventCalendar();
 readData();
 });
-var refreshEventCalendar = function (){
-    var url = '{{route("calendar.index")}}';
-    $.ajax({
-        type : 'GET',
-        url: url,
-        dataType: 'json',
-        success : function(response) {
-            var event_calendar = [];
-            for(let i = 0; i < response.length; i++) {
-                var obj;
-                obj={"title" : response[i].title, "start" : response[i].start, "end" : response[i].end};
-                event_calendar.push(obj);
-            }
-            $('#calendar').fullCalendar({
-                disableDragging: true,
-                events: event_calendar,
-                displayEventTime: false,
-            });
-        }
-    });
-}
 $("#addNoticeForm").submit(function(e){
     e.preventDefault();
     const data = new FormData(this);
@@ -198,13 +176,13 @@ function readData(){
             res = $.parseJSON(res);
             if(res.status == 200){
                 $(".event-content").html(res.data);
-                refreshEventCalendar();
             }else{
                 toast('error',res.error);
             }
         }
     });
 }
+// Start For paginations
 $(window).on('hashchange', function() {
     if (window.location.hash) {
         var page = window.location.hash.replace('#', '');
@@ -225,7 +203,7 @@ $(document).on('click', '.pagination a',function(event){
 });
 function getData(page){
     $.ajax({
-        url: '{{route('calendar.readData')}}?page=' + page,
+        url: '{{route('notice.readData')}}?page=' + page,
         type: "get",
         datatype: "html"
     }).done(res=>{
@@ -236,5 +214,6 @@ function getData(page){
         alert('No response from server');
     });
 }
+// End For paginations
 </script>
 @endsection
