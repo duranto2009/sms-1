@@ -215,9 +215,6 @@ $("#className").on('change',(e)=>{
 
 $("#student_admission").submit(function(e){
     e.preventDefault();
-    // const data = $("#student_admission").serialize();
-    console.log(this);
-
     const data = new FormData(this);
     const url = $("#student_admission").attr('action');
     const method = $("#student_admission").attr('method');

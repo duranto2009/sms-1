@@ -31,25 +31,23 @@
             <!-- Sorting -->
             <div class="widget has-shadow">
                 <div class="widget-header bordered no-actions d-flex align-items-center">
-                    <h1> <i class="la la-calendar"></i> All Event List</h1>
+                    <h1> <i class="la la-calendar"></i> All Notice List</h1>
                     <span class="ml-auto">
-                        <button class="btn btn-outline-info" data-toggle="modal" data-target="#addEvent">
-                            <i class="la la-plus"></i> Add New Event
+                        <button class="btn btn-outline-info" data-toggle="modal" data-target="#addNotice">
+                            <i class="la la-plus"></i> Add New Notice
                         </button>
                     </span>
                 </div>
                 <div class="widget-body">
                     <div class="row">
-                        <div class="col-md-6">
-                            <div id='calendar'></div>
-                        </div>
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="table-responsive">
                                 <table class="table table-hover table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>Event Name</th>
-                                            <th>Event Time</th>
+                                            <th>Notice Name</th>
+                                            <th>Notice Date</th>
+                                            <th>Notice File</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -68,39 +66,51 @@
     <!-- End Row -->
 
     <!--Add Class Modal -->
-    <div class="modal fade" id="addEvent" tabindex="-1" role="dialog" aria-labelledby="addEventLabel"
+    <div class="modal fade" id="addNotice" tabindex="-1" role="dialog" aria-labelledby="addNoticeLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <form id='addEventForm' action="{{route('calendar.store')}}" method="POST" autocomplete="off">
+            <form id='addNoticeForm' action="{{route('notice.store')}}" method="POST" autocomplete="off">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3 class="modal-title" id="addEventLabel">Add New Event</h3>
+                        <h3 class="modal-title" id="addNoticeLabel">Add New Event</h3>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div id="msg"></div>
-                        <div class="form-group row">
-                            <label for="title" class="col-md-3 col-form-label text-md-right">'Event Name</label>
-                            <div class="col-md-8">
-                                <input id="title" type="text" class="form-control" name="title" required
-                                    autocomplete="off" autofocus>
+                        <div class="form-row">
+
+                            <div class="form-group col-md-12">
+                                <label for="title">Notice Title</label>
+                                <input type="text" class="form-control" id="title" name="title" required="">
+                                <small id="name_help" class="form-text text-muted">Provide Title Name</small>
                             </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="start" class="col-md-3 col-form-label text-md-right">'Start Date</label>
-                            <div class="col-md-8">
-                                <input id="start" type="datetime-local" class="form-control" name="start" required
-                                    autocomplete="off">
+                            <div class="form-group col-md-12">
+                                <label for="date">Date</label>
+                                <input type="date" class="form-control" id="date" name="date" required>
+                                <small id="name_help" class="form-text text-muted">Provide Date</small>
                             </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="end" class="col-md-3 col-form-label text-md-right">'End Date</label>
-                            <div class="col-md-8">
-                                <input id="end" type="datetime-local" class="form-control" name="end" required
-                                    autocomplete="off">
+
+                            <div class="form-group col-md-12">
+                                <label for="notice">Notice</label>
+                                <textarea name="notice" class="form-control" rows="8" cols="80" required ></textarea>
+                                <small id="name_help" class="form-text text-muted">Provide Notice Details</small>
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label for="show">Show On Website</label>
+                                <select name="show" id="show" class="form-control">
+                                    <option value="1" data-select2-id="2">Show</option>
+                                    <option value="0">Do Not Need To Show</option>
+                                </select>
+                                <small id="" class="form-text text-muted">Notice Status</small>
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label for="file">Upload Notice Photo</label>
+                                <input type="file" class="form-control" id="file" name="file" >
                             </div>
                         </div>
                     </div>
@@ -120,11 +130,6 @@
 <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.9.0/dist/fullcalendar.min.js"></script>
 <script>
-    // var calendar = $('#calendar').fullCalendar({
-//     editable: true,
-//     events: '{{route("calendar.index")}}',
-//     displayEventTime: true
-// });
 $(document).ready(function() {
 // refreshEventCalendar();
 readData();
@@ -150,21 +155,24 @@ var refreshEventCalendar = function (){
         }
     });
 }
-$("#addEventForm").on('submit',(e)=>{
+$("#addNoticeForm").submit(function(e){
     e.preventDefault();
-    const data = $("#addEventForm").serialize();
-    const url = $("#addEventForm").attr('action');
-    const method = $("#addEventForm").attr('method');
+    const data = new FormData(this);
+    const url = $("#addNoticeForm").attr('action');
+    const method = $("#addNoticeForm").attr('method');
     $.ajax({
         url:url,
         method:method,
+        cache:false,
+        contentType: false,
+        processData: false,
         data:data,
         success: res=>{
             res = $.parseJSON(res);
             if(res.status == 200){
                 $("form").trigger("reset");
                 toast('success',res.message);
-                $("#addEvent .close").click();
+                $("#addNotice .close").click();
                 readData();
             }else{
                 toast('error',res.message);
