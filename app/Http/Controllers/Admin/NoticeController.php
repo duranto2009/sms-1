@@ -151,6 +151,18 @@ class NoticeController extends Controller
 
     public function destroy(Notice $notice)
     {
-        //
+        try {
+            $path1 = public_path() . $notice->file;
+            if ($notice->file) {
+                if (File::exists($path1)) {
+                    File::delete($path1);
+                }
+            }
+            $notice->delete();
+            return json_encode(['status'=>200,'message'=>'Notice Deleted Succesful!','data'=>$notice]);
+        } catch (\Exception $e) {
+            return json_encode(['status'=>500,'message'=>$e->getMessage()]);
+        }
+
     }
 }
