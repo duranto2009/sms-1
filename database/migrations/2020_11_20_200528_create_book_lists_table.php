@@ -15,6 +15,10 @@ class CreateBookListsTable extends Migration
     {
         Schema::create('book_lists', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('author');
+            $table->integer('copies');
+            $table->integer('aval_copies');
             $table->timestamps();
         });
     }
