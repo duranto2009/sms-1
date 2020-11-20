@@ -8,78 +8,43 @@ use App\Http\Controllers\Controller;
 
 class BookListController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
+    {
+        $booklists = BookList::all();
+        return view('admin.partials.book.index',compact('booklists'));
+    }
+
+    public function readData()
     {
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\BookList  $bookList
-     * @return \Illuminate\Http\Response
-     */
-    public function show(BookList $bookList)
+    public function show(BookList $booklist)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\BookList  $bookList
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(BookList $bookList)
+    public function edit(BookList $booklist)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\BookList  $bookList
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, BookList $bookList)
+    public function update(Request $request, BookList $booklist)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\BookList  $bookList
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(BookList $bookList)
+    public function destroy(BookList $booklist)
     {
         //
     }

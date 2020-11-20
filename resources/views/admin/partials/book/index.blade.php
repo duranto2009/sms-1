@@ -10,10 +10,10 @@
             <!-- Sorting -->
             <div class="widget has-shadow">
                 <div class="widget-header bordered no-actions d-flex align-items-center">
-                    <h1> <i class="la la-paste"></i> All Department List</h1>
+                    <h1> <i class="la la-book"></i> All Book List</h1>
                     <span class="ml-auto">
                         <button class="btn btn-outline-info" data-toggle="modal" data-target="#addDepartment">
-                            <i class="la la-plus"></i> Add New Department
+                            <i class="la la-plus"></i> Add Book
                         </button>
                     </span>
                 </div>
@@ -30,7 +30,7 @@
                                         </tr>
                                     </thead>
                                     <tbody class="table-content">
-                                        @foreach ($depts as $i=>$dep)
+                                        @foreach ($booklists as $i=>$dep)
                                         <tr>
                                             <td>{{$i+1}}</td>
                                             <td>{{$dep->name}}</td>
