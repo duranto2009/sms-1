@@ -12,7 +12,7 @@
                 <div class="widget-header bordered no-actions d-flex align-items-center">
                     <h1> <i class="la la-book"></i> All Book List</h1>
                     <span class="ml-auto">
-                        <button class="btn btn-outline-info" data-toggle="modal" data-target="#addDepartment">
+                        <button class="btn btn-outline-info" data-toggle="modal" data-target="#addBook">
                             <i class="la la-plus"></i> Add Book
                         </button>
                     </span>
@@ -35,10 +35,10 @@
                                             <td>{{$i+1}}</td>
                                             <td>{{$dep->name}}</td>
                                             <td class="td-actions">
-                                                <a href="javascript:void(0);" onclick="editModal('{{route('department.edit', $dep->id)}}','Update Section')">
+                                                <a href="javascript:void(0);" onclick="editModal('{{route('booklist.edit', $dep->id)}}','Update Section')">
                                                     <i data-id='.$cls->id.' id="edit" class="la la-edit edit" title="Edit Class"></i>
                                                 </a>
-                                                <a href="javascript:void(0);" onclick="deleteModal('{{route('department.destroy', $dep->id)}}','Delete Section')">
+                                                <a href="javascript:void(0);" onclick="deleteModal('{{route('booklist.destroy', $dep->id)}}','Delete Section')">
                                                     <i data-id='.$cls->id.' id="delete" class="la la-close delete" title="Delete Class"></i>
                                                 </a>
                                             </td>
@@ -57,30 +57,40 @@
     <!-- End Row -->
 
     <!--Add Class Modal -->
-    <div class="modal fade" id="addDepartment" tabindex="-1" role="dialog" aria-labelledby="addDepartmentLabel"
+    <div class="modal fade" id="addBook" tabindex="-1" role="dialog" aria-labelledby="addBookLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <form id='addDepartmentForm' action="{{route('department.store')}}" method="POST" autocomplete="off">
+            <form id='addBookForm' action="{{route('booklist.store')}}" method="POST" autocomplete="off">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3 class="modal-title" id="addDepartmentLabel">Add New Department</h3>
+                        <h3 class="modal-title" id="addBookLabel">Add Book</h3>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div id="msg"></div>
-                        <div class="form-group row">
-                            <label for="name" class="col-md-3 col-form-label text-md-right">{{ __('Department') }}</label>
-                            <div class="col-md-8">
-                                <input id="name" type="text" class="form-control" name="name"  required autocomplete="off" autofocus>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="name">Book Name</label>
+                                <input type="text" class="form-control" id="name" name="name" required="">
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label for="author">Author</label>
+                                <input type="text" class="form-control" id="author" name="author" required="">
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label for="copies">Number Of Copy</label>
+                                <input type="number" class="form-control" id="copies" name="copies" min="0" required="">
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-outline-info">Save</button>
+                        <button type="submit" class="btn btn-outline-info">Add</button>
                     </div>
                 </div>
             </form>
@@ -97,11 +107,11 @@
     $('select').attr('name','example_length').addClass('form-control');
     $('input').attr('aria-controls','example').addClass('form-control');
     readData();
-$("#addDepartmentForm").on('submit',(e)=>{
+$("#addBookForm").on('submit',(e)=>{
     e.preventDefault();
-    const data = $("#addDepartmentForm").serialize();
-    const url = $("#addDepartmentForm").attr('action');
-    const method = $("#addDepartmentForm").attr('method');
+    const data = $("#addBookForm").serialize();
+    const url = $("#addBookForm").attr('action');
+    const method = $("#addBookForm").attr('method');
     $.ajax({
         url:url,
         method:method,
@@ -110,8 +120,8 @@ $("#addDepartmentForm").on('submit',(e)=>{
             res = $.parseJSON(res);
             if(res.status == 200){
                 $("form").trigger("reset");
-                toast('success','Department Create Successful!');
-                $("#addDepartment .close").click();
+                toast('success','Book Create Successful!');
+                $("#addBook .close").click();
                 readData();
             }else{
                 toast('error',res.error);
@@ -128,7 +138,7 @@ $("#addDepartmentForm").on('submit',(e)=>{
     });
 });
 function readData(){
-    const url = '{{route("department.readData")}}';
+    const url = '{{route("booklist.readData")}}';
     $.ajax({
         url:url,
         method:'get',

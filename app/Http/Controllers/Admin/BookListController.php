@@ -26,7 +26,19 @@ class BookListController extends Controller
 
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'name'=>'required',
+            'author'=>'required',
+            'copies'=>'required',
+        ]);
+        $data['aval_copies'] = $request->copies;
+        try {
+            BookList::create($data);
+            return json_encode(['status'=>200,'data'=>$data]);
+        } catch (\Exception $e) {
+            return json_encode(['status'=>500,'error'=>$e->getMessage()]);
+        }
+
     }
 
     public function show(BookList $booklist)
