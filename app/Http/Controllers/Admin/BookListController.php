@@ -59,6 +59,12 @@ class BookListController extends Controller
 
     public function destroy(BookList $booklist)
     {
-        //
+        try {
+            $booklist->delete();
+            return json_encode(['status'=>200,'message'=>'Book Deleted Successful!']);
+        } catch (\Exception $e) {
+            return json_encode(['status'=>500,'message'=>$e->getMessage()]);
+        }
+
     }
 }
