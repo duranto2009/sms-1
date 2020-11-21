@@ -16,7 +16,8 @@ class BookListController extends Controller
 
     public function readData()
     {
-        //
+        $books = BookList::all();
+        return response()->json(['status'=>200,'books'=>$books]);
     }
 
     public function create()

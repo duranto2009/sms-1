@@ -25,20 +25,26 @@
                                     <thead>
                                         <tr>
                                             <th>SL</th>
-                                            <th>Department</th>
+                                            <th>Book Name</th>
+                                            <th>Author</th>
+                                            <th>Copies</th>
+                                            <th>Available Copies</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody class="table-content">
-                                        @foreach ($booklists as $i=>$dep)
+                                        @foreach ($booklists as $i=>$book)
                                         <tr>
                                             <td>{{$i+1}}</td>
-                                            <td>{{$dep->name}}</td>
+                                            <td>{{$book->name}}</td>
+                                            <td>{{$book->author}}</td>
+                                            <td>{{$book->copies}}</td>
+                                            <td>{{$book->aval_copies}}</td>
                                             <td class="td-actions">
-                                                <a href="javascript:void(0);" onclick="editModal('{{route('booklist.edit', $dep->id)}}','Update Section')">
+                                                <a href="javascript:void(0);" onclick="editModal('{{route('booklist.edit', $book->id)}}','Update Section')">
                                                     <i data-id='.$cls->id.' id="edit" class="la la-edit edit" title="Edit Class"></i>
                                                 </a>
-                                                <a href="javascript:void(0);" onclick="deleteModal('{{route('booklist.destroy', $dep->id)}}','Delete Section')">
+                                                <a href="javascript:void(0);" onclick="deleteModal('{{route('booklist.destroy', $book->id)}}','Delete Section')">
                                                     <i data-id='.$cls->id.' id="delete" class="la la-close delete" title="Delete Class"></i>
                                                 </a>
                                             </td>
@@ -56,7 +62,7 @@
     </div>
     <!-- End Row -->
 
-    <!--Add Class Modal -->
+    <!--Add Book Modal -->
     <div class="modal fade" id="addBook" tabindex="-1" role="dialog" aria-labelledby="addBookLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -143,9 +149,22 @@ function readData(){
         url:url,
         method:'get',
         success: res=>{
-            res = $.parseJSON(res);
             if(res.status == 200){
-                $(".table-content").html(res.data);
+                let book = '';
+                $.each(res.books,function(i,v){
+                    book +='<tr>';
+                    book += '<td>'+(i+1)+'</td>'
+                    book += '<td>'+v.name+'</td>'
+                    book += '<td>'+v.author+'</td>'
+                    book += '<td>'+v.copies+'</td>'
+                    book += '<td>'+v.aval_copies+'</td>'
+                    book +='<td class="td-actions">';
+                    book+='<a href="javascript:void(0);" onclick="editModal('+"'"+document.URL+'/'+v.id+'/edit'+"','Update book'"+')"><i data-id='+ v.id +' id="edit" class="la la-edit edit" title="Edit book"></i></a>';
+                    book+='<a href="javascript:void(0);" onclick="deleteModal('+"'"+document.URL+'/'+v.id+"','Delete book'"+')"><i data-id='+ v.id +' id="delete" class="la la-close delete" title="Delete Class"></i></a>';
+                    book +='</td>';
+                    book +='</tr>';
+                });
+                $(".table-content").html(book);
             }else{
                 toast('error',res.error);
             }
