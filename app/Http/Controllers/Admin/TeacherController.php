@@ -20,7 +20,7 @@ class TeacherController extends Controller
     {
         $teachers = Teacher::all();
         $departments = Department::all();
-        return view('admin.partials.teacher.index',compact('teachers','departments'));
+        return view('admin.partials.teacher.index', compact('teachers', 'departments'));
     }
     public function create()
     {
@@ -50,8 +50,8 @@ class TeacherController extends Controller
             $user = User::create($user);
             $data['user_id'] = $user->id;
             $teacher = Teacher::create($data);
-            foreach($class as $cls){
-                foreach(json_decode($cls->section) as $section){
+            foreach ($class as $cls) {
+                foreach (json_decode($cls->section) as $section) {
                     $permission = [
                         'teacher_id' => $teacher->id,
                         'class_table_id' => $cls->id,
@@ -67,7 +67,6 @@ class TeacherController extends Controller
         } catch (\Exception $e) {
             return json_encode(['status'=>200,'message'=>$e->getMessage()]);
         }
-
     }
     public function readData()
     {
@@ -85,14 +84,13 @@ class TeacherController extends Controller
             $editRoute = route("teacher.edit", $dept->id);
             $deleteRoute = route("teacher.destroy", $dept->id);
             $permissionRoute = route("teacher.getPermission", $dept->id);
-            $html.='<a href="javascript:void(0);" onclick="editModal('. "'{$editRoute}'".','."'Update Teacher'" .')"><i data-id='.$dept->id.' id="edit" class="la la-edit edit" title="Edit Teacher"></i></a>';
-            $html.='<a href="javascript:void(0);" onclick="deleteModal('. "'{$deleteRoute}'".','."'Delete Teacher'" .')"><i data-id='.$dept->id.' id="delete" class="la la-close delete" title="Delete Teacher"></i></a>';
-            $html.='<a href="javascript:void(0);" onclick="permissionModal('. "'{$permissionRoute}'".','."'Delete Teacher'" .')"><i data-id='.$dept->id.' id="permission" class="la la-key delete" title="Show Permission"></i></a>';
+            $html.='<a href="javascript:void(0);" onclick="editModal('. "'{$editRoute}'".', '."'Update Teacher'" .')"><i data-id='.$dept->id.' id="edit" class="la la-edit edit" title="Edit Teacher"></i></a>';
+            $html.='<a href="javascript:void(0);" onclick="deleteModal('. "'{$deleteRoute}'".', '."'Delete Teacher'" .')"><i data-id='.$dept->id.' id="delete" class="la la-close delete" title="Delete Teacher"></i></a>';
+            $html.='<a href="javascript:void(0);" onclick="permissionModal('. "'{$permissionRoute}'".', '."'Delete Teacher'" .')"><i data-id='.$dept->id.' id="permission" class="la la-key delete" title="Show Permission"></i></a>';
             $html.='</td>';
             $html.='</tr>';
         }
         return json_encode(['status'=>200,'data'=>$html]);
-
     }
     public function edit(Teacher $teacher)
     {
@@ -117,10 +115,10 @@ class TeacherController extends Controller
                 <div class="form-group col-md-12">
                     <label for="department">Department</label>
                     <select name="department" id="department" class="form-control" required>';
-                        foreach ($depts as $dept){
-                            $form .='<option  '.($teacher->department == $dept->name ? "selected":"").'  value="'.$dept->name.'">'.$dept->name.'</option>';
-                        }
-                $form .='   </select>
+        foreach ($depts as $dept) {
+            $form .='<option  '.($teacher->department == $dept->name ? "selected":"").'  value="'.$dept->name.'">'.$dept->name.'</option>';
+        }
+        $form .='   </select>
                 </div>
 
                 <div class="form-group col-md-12">
@@ -210,7 +208,6 @@ class TeacherController extends Controller
 
         $route = route("teacher.update", $teacher->id);
         return json_encode(['data'=>$teacher,'status'=>200,'section'=>$form,'route'=>$route]);
-
     }
     public function update(TeacherUpdateRequest $request, Teacher $teacher)
     {
@@ -238,7 +235,6 @@ class TeacherController extends Controller
         } catch (\Exception $e) {
             return json_encode(['status'=>500,'message'=>$e->getMessage()]);
         }
-
     }
     public function destroy(Teacher $teacher)
     {
@@ -255,10 +251,10 @@ class TeacherController extends Controller
         } catch (\Exception $e) {
             return json_encode(['status'=>500,'message'=>$e->getMessage()]);
         }
-
     }
-    public function getPermission(Teacher $teacher){
-        $permissions = TeacherPermission::with('teacher','class')->where('teacher_id', $teacher->id)->orderBy('class_table_id')->orderBy('section')->get();
+    public function getPermission(Teacher $teacher)
+    {
+        $permissions = TeacherPermission::with('teacher', 'class')->where('teacher_id', $teacher->id)->orderBy('class_table_id')->orderBy('section')->get();
         $html = '';
         $html .= '<h2 class="text-center text-info mb-3">'.$teacher->name.'</h2>';
         foreach ($permissions as $permission) {
@@ -301,12 +297,14 @@ class TeacherController extends Controller
         }
         return json_encode(['data'=>$teacher,'status'=>200,'permission'=>$html]);
     }
-    public function readPermission(){
+    public function readPermission()
+    {
         $class = ClassTable::all();
-        return view('admin.partials.teacher.permission',compact('class'));
+        return view('admin.partials.teacher.permission', compact('class'));
     }
-    public function filter(Request $r){
-        $teachers = TeacherPermission::with('teacher','class')
+    public function filter(Request $r)
+    {
+        $teachers = TeacherPermission::with('teacher', 'class')
                     ->where('class_table_id', $r->className)
                     ->where('section', $r->section)
                     ->get();
@@ -322,18 +320,18 @@ class TeacherController extends Controller
         $teacher .='            </tr>';
         $teacher .='        </thead>';
         $teacher .='        <tbody>';
-        foreach ($teachers as $i=>$ts) {
+        foreach ($teachers as $i => $ts) {
             $teacher.='<tr>';
             $teacher.='<td><span class="text-danger">'.($i+1).'</span></td>';
             $teacher.='<td>'.($ts->teacher->name).'</td>';
             $teacher.= '<td>
                             <input type="checkbox" value="'.$ts->marks.'" id="marks'.$ts->id.'" data-switch="success"'.($ts->marks == "1"?"checked":"").'
-                                onchange="togglePermission(this.id,'. "'marks'".','. "'$ts->teacher_id'".')">
+                                onchange="togglePermission(this.id,'. "'marks'".', '. "'$ts->teacher_id'".')">
                             <label for="marks'.$ts->id.'" data-on-label="Yes" data-off-label="No"></label>
                         </td>';
             $teacher.= '<td>
                             <input type="checkbox" value="'.$ts->attendance.'" id="attendance'.$ts->id.'" data-switch="success" '.($ts->attendance == "1"?"checked":"").'
-                                onchange="togglePermission(this.id,'. "'attendance'".','. "'$ts->teacher_id'".')">
+                                onchange="togglePermission(this.id,'. "'attendance'".', '. "'$ts->teacher_id'".')">
                             <label for="attendance'.$ts->id.'" data-on-label="Yes" data-off-label="No"></label>
                         </td>';
             $teacher.='</tr>';
@@ -344,7 +342,8 @@ class TeacherController extends Controller
         $teacher .='</div>';
         return json_encode(['status'=>200,'student'=>$teacher]);
     }
-    public function modifyPermision(Request $r){
+    public function modifyPermision(Request $r)
+    {
         $r->validate([
             'class_id'    => 'required|numeric',
             'column_name' => 'required|string',
@@ -352,9 +351,9 @@ class TeacherController extends Controller
             'teacher_id'  => 'required|numeric',
             'value'       => 'required|numeric',
         ]);
-        $permission = TeacherPermission::where('class_id',$r->class_id)
-                    ->where('section',$r->section)
-                    ->where('teacher_id',$r->teacher_id)
+        $permission = TeacherPermission::where('class_table_id', $r->class_id)
+                    ->where('section', $r->section)
+                    ->where('teacher_id', $r->teacher_id)
                     ->first();
         try {
             $permission->update([$r->column_name => $r->value]);

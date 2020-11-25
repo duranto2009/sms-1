@@ -2,10 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
-
-
-Route::view('widget','admin.partials.widget');
-Route::middleware(['role:admin','auth'])->prefix('dashboard')->namespace('Admin')->group(function () {
+Route::view('widget', 'admin.partials.widget');
+Route::middleware(['role:admin', 'auth'])->prefix('dashboard')->namespace('Admin')->group(function () {
     Route::resource('admin', 'AdminController')->only('index');
     Route::resource('class', 'ClassTableController');
     Route::get('read-data/class', 'ClassTableController@readData')->name('class.readData');
@@ -32,7 +30,7 @@ Route::middleware(['role:admin','auth'])->prefix('dashboard')->namespace('Admin'
     Route::get('read/teacher-permission/{teacher}', 'TeacherController@getPermission')->name('teacher.getPermission');
     Route::get('/permission/teacher', 'TeacherController@readPermission')->name('teacher.readPermission');
     Route::get('/permission/filter', 'TeacherController@filter')->name('teacher.filter');
-    Route::get('/permission/modify/','TeacherController@modifyPermision')->name('teacher.modifyPermision');
+    Route::get('/permission/modify/', 'TeacherController@modifyPermision')->name('teacher.modifyPermision');
     Route::resource('accountant', 'AccountantController');
     Route::get('read-accountant', 'AccountantController@readData')->name('accountant.readData');
     Route::resource('librarian', 'LibrarianController');
@@ -65,30 +63,28 @@ Route::middleware(['role:admin','auth'])->prefix('dashboard')->namespace('Admin'
     Route::get('get_student', 'MarkController@getStudent')->name('mark.student');
 
     Route::resource('expense', 'ExpenseController');
-    Route::get('expense_filter','ExpenseController@filter')->name('expense.filter');
+    Route::get('expense_filter', 'ExpenseController@filter')->name('expense.filter');
     Route::get('read-expense', 'ExpenseController@getData')->name('expense.getData');
     Route::resource('expense_category', 'ExpenseCategoryController');
     Route::get('read-expense-category', 'ExpenseCategoryController@readData')->name('expense_category.readData');
 
     Route::resource('invoice', 'InvoiceController');
-    Route::post('inv/massStore','InvoiceController@massStore')->name('invoice.massStore');
-    Route::get('inv/student_list','InvoiceController@getStudent')->name('invoice.getStudent');
-    Route::get('inv/section_list','InvoiceController@getSection')->name('invoice.getSection');
-    Route::get('inv/all','InvoiceController@getInv')->name('invoice.getInv');
-    Route::get('inv/filter','InvoiceController@filter')->name('invoice.filter');
-    Route::get('inv/export/url','InvoiceController@export')->name('invoice.export');
+    Route::post('inv/massStore', 'InvoiceController@massStore')->name('invoice.massStore');
+    Route::get('inv/student_list', 'InvoiceController@getStudent')->name('invoice.getStudent');
+    Route::get('inv/section_list', 'InvoiceController@getSection')->name('invoice.getSection');
+    Route::get('inv/all', 'InvoiceController@getInv')->name('invoice.getInv');
+    Route::get('inv/filter', 'InvoiceController@filter')->name('invoice.filter');
+    Route::get('inv/export/url', 'InvoiceController@export')->name('invoice.export');
 
-    Route::resource('notice','NoticeController');
+    Route::resource('notice', 'NoticeController');
     Route::get('read-notice', 'NoticeController@readData')->name('notice.readData');
-    Route::resource('booklist','BookListController');
+    Route::resource('booklist', 'BookListController');
     Route::get('read-book', 'BookListController@readData')->name('booklist.readData');
 
 
     //fullcalender
-    // Route::get('events','EventController@index');
-    // Route::post('events/create','EventController@create');
-    // Route::post('events/update','EventController@update');
-    // Route::post('events/delete','EventController@destroy');
-
-
+    // Route::get('events', 'EventController@index');
+    // Route::post('events/create', 'EventController@create');
+    // Route::post('events/update', 'EventController@update');
+    // Route::post('events/delete', 'EventController@destroy');
 });
