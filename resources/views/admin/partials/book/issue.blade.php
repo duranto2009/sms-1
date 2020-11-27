@@ -2,6 +2,7 @@
 @section('css')
 {{-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap3.min.css"> --}}
 <link rel="stylesheet" href="{{asset('admin/css/datatables/datatables.min.css')}}">
+<link rel="stylesheet" href="{{asset('admin/css/bootstrap-select/bootstrap-select.min.css')}}">
 @endsection
 @section('content')
 <div class="container-fluid">
@@ -36,12 +37,12 @@
                                     <tbody class="table-content">
                                         @foreach ($issues as $i=>$issue)
                                         <tr>
-                                            <td>{{$i+1}}</td>
+                                            <td>{{$i+1}} </td>
                                             <td>{{$issue->book->name}}</td>
                                             <td>{{$issue->issue_date->format('D d-M-Y')}}</td>
                                             <td>{{$issue->student->name}}</td>
                                             <td>{{$issue->class->name}}</td>
-                                            <td>{{$issue->status}}</td>
+                                            <td>{!!$issue->status_name!!}</td>
                                             <td class="td-actions">
                                                 <a href="javascript:void(0);" onclick="editModal('{{route('bookIssue.edit', $issue->id)}}','Update Book Issue')">
                                                     <i data-id='.$cls->id.' id="edit" class="la la-edit edit" title="Edit Class"></i>
@@ -80,9 +81,40 @@
                     <div class="modal-body">
                         <div id="msg"></div>
                         <div class="form-group row">
-                            <label for="name" class="col-md-3 col-form-label text-md-right">kl</label>
+                            <label for="name" class="col-md-3 col-form-label text-md-right">Issue Date</label>
                             <div class="col-md-8">
-                                <input id="name" type="text" class="form-control" name="name"  required autocomplete="off" autofocus>
+                                <input type="date" class="form-control" name="issue_date">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="name" class="col-md-3 col-form-label text-md-right">Class</label>
+                            <div class="col-md-8">
+                                <select id="className" name="class_table_id" class="selectpicker show-menu-arrow form-control" data-live-search="true" required onchange="getStudent(this.value)">
+                                    <option disabled selected>Select Class</option>
+                                    @foreach ($class as $cls)
+                                    <option value="{{$cls->id}}">{{$cls->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="name" class="col-md-3 col-form-label text-md-right">Student</label>
+                            <div class="col-md-8">
+                                <select id="student_id" name="student_id" required>
+                                    <option disabled selected>Select Student</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="name" class="col-md-3 col-form-label text-md-right">Book</label>
+                            <div class="col-md-8">
+                                <select id="book_id" name="book_list_id" class="selectpicker show-menu-arrow form-control" data-live-search="true"
+                                    required>
+                                    <option disabled selected>Select Class</option>
+                                    @foreach ($books as $book)
+                                    <option value="{{$book->id}}">{{$book->name}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -100,11 +132,27 @@
 @endsection
 @section('js')
 <script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script src="{{asset('admin/vendors/js/bootstrap-select/bootstrap-select.js')}}"></script>
 <script>
     $('#example').DataTable();
-    $('select').attr('name','example_length').addClass('form-control');
-    $('input').attr('aria-controls','example').addClass('form-control');
+    $('select').addClass('form-control');
+    $('input').addClass('form-control');
     // readData();
+function getStudent(class_id)
+{
+$.ajax({
+    url:'{{route("bookIssue.student")}}',
+    method:'get',
+    data:{id:class_id},
+    success:res=>{
+        let opt = '<option disabled selected>Select Student</option>';
+        $.each(res.students,function(i,v){
+            opt += '<option value="'+v.id+'">'+v.name+'</option>'
+        });
+        $("#student_id").html(opt);
+    },
+});
+}
 $("#addIssuForm").on('submit',(e)=>{
     e.preventDefault();
     const data = $("#addIssuForm").serialize();
@@ -115,14 +163,13 @@ $("#addIssuForm").on('submit',(e)=>{
         method:method,
         data:data,
         success: res=>{
-            res = $.parseJSON(res);
             if(res.status == 200){
                 $("form").trigger("reset");
-                toast('success','Department Create Successful!');
+                toast('success',res.message);
                 $("#addIssu .close").click();
-                readData();
+                // readData();
             }else{
-                toast('error',res.error);
+                toast('error',res.message);
             }
         },
         error: err=>{

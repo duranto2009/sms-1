@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Models\BookIssue;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\BookList;
+use App\Models\ClassTable;
+use App\Models\Student;
 
 class BookIssueController extends Controller
 {
@@ -16,9 +19,15 @@ class BookIssueController extends Controller
     public function index()
     {
         $issues = BookIssue::all();
-        return view('admin.partials.book.issue', compact('issues'));
+        $class = ClassTable::all();
+        $books = BookList::all();
+        return view('admin.partials.book.issue', compact('issues', 'class', 'books'));
     }
-
+    public function getStudent(Request $request)
+    {
+        $students = Student::where('class_table_id', $request->id)->get();
+        return response()->json(['status'=>200, 'students'=>$students]);
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -37,7 +46,20 @@ class BookIssueController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'issue_date'     => 'required',
+            'class_table_id' => 'required',
+            'student_id'     => 'required',
+            'book_list_id'        => 'required',
+        ]);
+        try {
+            $booklist = BookList::find($request->book_list_id);
+            $booklist->update(['aval_copies'=>$booklist->aval_copies - 1]);
+            BookIssue::create($data);
+            return response()->json(['status'=>200,'message'=>'Book Issue success']);
+        } catch (\Throwable $th) {
+            return response()->json(['status'=>500,'message'=>'Book Not Issued']);
+        }
     }
 
     /**
