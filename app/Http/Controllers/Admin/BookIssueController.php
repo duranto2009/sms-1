@@ -15,7 +15,8 @@ class BookIssueController extends Controller
      */
     public function index()
     {
-        //
+        $issues = BookIssue::all();
+        return view('admin.partials.book.issue', compact('issues'));
     }
 
     /**

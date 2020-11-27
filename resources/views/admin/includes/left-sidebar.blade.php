@@ -57,7 +57,7 @@
                         class="la la-th-large"></i><span>Back Office</span></a>
                 <ul id="dropdown-tables" class="collapse list-unstyled pt-0">
                     <li><a href="{{route('booklist.index')}}">Book List Manager</a></li>
-                    <li><a href="{{route('session.index')}}">Book Issu Report</a></li>
+                    <li><a href="{{route('bookIssue.index')}}">Book Issu Report</a></li>
                     <li><a href="{{route('notice.index')}}">Noticeboard</a></li>
                 </ul>
             </li>
