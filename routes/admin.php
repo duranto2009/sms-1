@@ -78,8 +78,12 @@ Route::middleware(['role:admin', 'auth'])->prefix('dashboard')->namespace('Admin
 
     Route::resource('notice', 'NoticeController');
     Route::get('read-notice', 'NoticeController@readData')->name('notice.readData');
+
     Route::resource('booklist', 'BookListController');
     Route::get('read-book', 'BookListController@readData')->name('booklist.readData');
+
+    Route::resource('bookIssue', 'BookIssueController');
+    Route::get('read-issue', 'BookIssueController@readData')->name('bookIssue.readData');
 
 
     //fullcalender
