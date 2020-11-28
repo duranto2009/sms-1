@@ -137,7 +137,7 @@
     $('#example').DataTable();
     $('select').addClass('form-control');
     $('input').addClass('form-control');
-    // readData();
+    readData();
 function getStudent(class_id)
 {
 $.ajax({
@@ -167,7 +167,7 @@ $("#addIssuForm").on('submit',(e)=>{
                 $("form").trigger("reset");
                 toast('success',res.message);
                 $("#addIssu .close").click();
-                // readData();
+                readData();
             }else{
                 toast('error',res.message);
             }
@@ -183,14 +183,28 @@ $("#addIssuForm").on('submit',(e)=>{
     });
 });
 function readData(){
-    const url = '{{route("department.readData")}}';
+    const url = '{{route("bookIssue.readData")}}';
     $.ajax({
         url:url,
         method:'get',
         success: res=>{
-            res = $.parseJSON(res);
             if(res.status == 200){
-                $(".table-content").html(res.data);
+                let issue = '';
+                $.each(res.issues,function(i,v){
+                    issue +='<tr>';
+                    issue +='<td>'+ (i+1) +'</td>';
+                    issue +='<td>'+ v.book.name+'</td>';
+                    issue +='<td>'+ moment(v.created_at).format('ddd, MMM D, YYYY') +'</td>';
+                    issue +='<td>'+ v.student.name +'</td>';
+                    issue +='<td>'+v.class.name+'</td>';
+                    issue +='<td>'+(v.status == 0?'<i class="la la-bullseye font-weight-bold text-danger"></i> Pending':'<i class="la la-bullseye font-weight-bold text-success"></i> Returned')+'</td>';
+                    issue +='<td class="td-actions">';
+                    issue+='<a href="javascript:void(0);" onclick="editModal('+"'"+document.URL+'/'+v.id+'/edit'+"','Update issue'"+')"><i data-id='+ v.id +' id="edit" class="la la-edit edit" title="Edit issue"></i></a>';
+                    issue+='<a href="javascript:void(0);" onclick="deleteModal('+"'"+document.URL+'/'+v.id+"','Delete issue'"+')"><i data-id='+ v.id +' id="delete" class="la la-close delete" title="Delete Class"></i></a>';
+                    issue +='</td>';
+                    issue +='</tr>';
+                });
+                $(".table-content").html(issue);
             }else{
                 toast('error',res.error);
             }

@@ -83,7 +83,7 @@ Route::middleware(['role:admin', 'auth'])->prefix('dashboard')->namespace('Admin
     Route::get('read-book', 'BookListController@readData')->name('booklist.readData');
 
     Route::resource('bookIssue', 'BookIssueController');
-    Route::get('read-issue', 'BookIssueController@readData')->name('bookIssue.readData');
+    Route::get('bookissue/index', 'BookIssueController@index')->name('bookIssue.readData');
     Route::get('get-students', 'BookIssueController@getStudent')->name('bookIssue.student');
 
 
