@@ -31,7 +31,7 @@
                                             <th>Student Name</th>
                                             <th>Class</th>
                                             <th>Status</th>
-                                            <th>Actions</th>
+                                            <th>Make Return</th>
                                         </tr>
                                     </thead>
                                     <tbody class="table-content">
@@ -44,11 +44,8 @@
                                             <td>{{$issue->class->name}}</td>
                                             <td>{!!$issue->status_name!!}</td>
                                             <td class="td-actions">
-                                                <a href="javascript:void(0);" onclick="editModal('{{route('bookIssue.edit', $issue->id)}}','Update Book Issue')">
-                                                    <i data-id='.$cls->id.' id="edit" class="la la-edit edit" title="Edit Class"></i>
-                                                </a>
-                                                <a href="javascript:void(0);" onclick="deleteModal('{{route('bookIssue.destroy', $issue->id)}}','Delete Book Issue')">
-                                                    <i data-id='.$cls->id.' id="delete" class="la la-close delete" title="Delete Class"></i>
+                                                <a href="{{route('bookIssue.return', $issue->id)}}">
+                                                    <i class="la la-check-circle text-success" title="Make Return!"></i>
                                                 </a>
                                             </td>
                                         </tr>
@@ -198,15 +195,26 @@ function readData(){
                     issue +='<td>'+ v.student.name +'</td>';
                     issue +='<td>'+v.class.name+'</td>';
                     issue +='<td>'+(v.status == 0?'<i class="la la-bullseye font-weight-bold text-danger"></i> Pending':'<i class="la la-bullseye font-weight-bold text-success"></i> Returned')+'</td>';
-                    issue +='<td class="td-actions">';
-                    issue+='<a href="javascript:void(0);" onclick="editModal('+"'"+document.URL+'/'+v.id+'/edit'+"','Update issue'"+')"><i data-id='+ v.id +' id="edit" class="la la-edit edit" title="Edit issue"></i></a>';
-                    issue+='<a href="javascript:void(0);" onclick="deleteModal('+"'"+document.URL+'/'+v.id+"','Delete issue'"+')"><i data-id='+ v.id +' id="delete" class="la la-close delete" title="Delete Class"></i></a>';
-                    issue +='</td>';
+                    issue +='<td class="td-actions text-center"><a href="javascript:void(0);" onclick="returnBook('+v.id+')"><i class="la la-check-circle text-success" title="Make Return!"></i></a></td>';
                     issue +='</tr>';
                 });
                 $(".table-content").html(issue);
             }else{
                 toast('error',res.error);
+            }
+        }
+    });
+}
+function returnBook(id){
+    $.ajax({
+        url:document.URL+'/return'+'/'+id,
+        method:'get',
+        success:res=>{
+            if(res.status == 200){
+                toast('success',res.message);
+                readData();
+            }else{
+                toast('error',res.message);
             }
         }
     });

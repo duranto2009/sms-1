@@ -32,6 +32,17 @@ class BookIssueController extends Controller
         $students = Student::where('class_table_id', $request->id)->get();
         return response()->json(['status'=>200, 'students'=>$students]);
     }
+    public function return(BookIssue $issue)
+    {
+        try {
+            $issue->delete();
+            $booklist = BookList::find($issue->book_list_id);
+            $booklist->update(['aval_copies'=>$booklist->aval_copies + 1]);
+            return response()->json(['status'=>200,'message'=>'Book returned thanks '.$issue->student->name]);
+        } catch (\Throwable $th) {
+            return response()->json(['status'=>500,'message'=>'Error happend!']);
+        }
+    }
     /**
      * Show the form for creating a new resource.
      *

@@ -85,6 +85,7 @@ Route::middleware(['role:admin', 'auth'])->prefix('dashboard')->namespace('Admin
     Route::resource('bookIssue', 'BookIssueController');
     Route::get('bookissue/index', 'BookIssueController@index')->name('bookIssue.readData');
     Route::get('get-students', 'BookIssueController@getStudent')->name('bookIssue.student');
+    Route::get('bookIssue/return/{issue}', 'BookIssueController@return')->name('bookIssue.return');
 
 
     //fullcalender
